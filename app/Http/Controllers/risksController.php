@@ -72,13 +72,16 @@ class risksController extends Controller
     public function delete($id)
     {
         $risk = Risks::find($id);
+        $projectId = $risk->project_id; 
         $risk->delete();
-        return redirect()->route('project-data-one');
+        return response()->json(['projectId' => $projectId]);
     }
 
     public function update(Request $request, $id) {
         $risk = Risks::find($id);
-    
+        if (!$risk) {
+            return response()->json(['message' => 'Risk record not found'], 404);
+        }
         $risk->risk_probability = intval($request->input('risk_probability'));
         $risk->risk_influence = intval($request->input('risk_influence'));
 
@@ -91,7 +94,8 @@ class risksController extends Controller
     
 
         $risk->save();
+        $projectId = $request->input('projectId');
     
-        return redirect()->route('project-data-one');
+        return redirect()->route('project-data-one', ['id' => $projectId]);
     }
 }

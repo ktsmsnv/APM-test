@@ -27,7 +27,7 @@
             </thead>
             <tbody>
                 @foreach ($project->risks ?? [] as $item)
-                    <tr data-id="{{ $item->id }}">
+                    <tr data-id="{{ $item->id }}" data-project-id="{{ $project->id }}">
                         <td>{{ $item->id }}</td>
                         <td>{{ $item->risk_name }}</td>
                         <td>
@@ -89,12 +89,14 @@
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <form id="editRisksForm" action="{{ route('risks-update', ['id' => $item->id]) }}" method="post">
                 @csrf
+                @method('put')
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="editRisksLabel">Редактирование риска "{{ $item->risk_name }}"</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
+                        <input type="hidden" name="projectId" value="{{ $project->id }}">
                         <input type="hidden" name="editItemId" id="editItemId">
                         <input type="hidden" name="jsonData" id="jsonData">
 
@@ -184,15 +186,17 @@
                     <h5 class="modal-title" id="confirmationModalLabel">Подтверждение действия</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                Вы уверены что хотите удалить риск "{{ $item->risk_name }}"?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
-                <button type="button" class="btn btn-danger" id="confirmDelete">Удалить</button>
+                <div class="modal-body">
+                    <input type="hidden" name="projectId" class="modalId" data-id="{{ $project->id }}">
+                    Вы уверены что хотите удалить риск "{{ $item->risk_name }}"?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <button type="button" class="btn btn-danger" id="confirmDelete">Удалить</button>
+                </div>
             </div>
         </div>
     </div>
-
 @else
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#risksModal">
         Добавить риски
@@ -215,7 +219,7 @@
                     <div id="dependentFields" class="input-field">
                         <div class="form-group mb-3">
                             <label for="risk_name">Наименование риска</label>
-                            <select class="form-select" name="risk_name" id="risk_name">
+                            <select class="form-select" name="risk_name" id="risk_name" required >
                                 <option value="" disabled selected>Выберите наименование</option>
                                 @foreach ($baseRisks as $baseRisk)
                                     <option value="{{ $baseRisk->nameRisk }}">
@@ -253,7 +257,7 @@
 
                         <div class="form-group mb-3 d-flex flex-column">
                             <label for="risk_probability">Вероятность: </label>
-                            <select name="risk_probability" id="risk_probability-select">
+                            <select name="risk_probability" id="risk_probability-select" required >
                                 <option value="">Выберите вероятность</option>
                                 <option value="1">1</option>
                                 <option value="2">2</option>
@@ -265,7 +269,7 @@
 
                         <div class="form-group mb-3 d-flex flex-column">
                             <label for="risk_influence">Влияние: </label>
-                            <select name="risk_influence" id="risk_influence-select">
+                            <select name="risk_influence" id="risk_influence-select" required >
                                 <option value="">Выберите влияние</option>
                                 <option value="1">1</option>
                                 <option value="2">2</option>
@@ -277,7 +281,7 @@
 
                         <div class="form-group mb-3 d-flex flex-column">
                             <label for="risk_mark">Отметка о реализации мероприятий в отношении рисков: </label>
-                            <select name="risk_mark" id="risk_mark-select">
+                            <select name="risk_mark" id="risk_mark-select" required >
                                 <option value="">Выберите отметку</option>
                                 <option value="Выполнено">Выполнено</option>
                                 <option value="Не выполнено">Не выполнено</option>
@@ -287,19 +291,19 @@
                         <div class="form-group mb-3 d-flex flex-column">
                             <label for="risk_resp">Отвественный за выполнение мероприятий</label>
                             <input class="input_editable" id="risk_resp" type="text" name="risk_resp"
-                                placeholder="Введите ФИО и должность">
+                                placeholder="Введите ФИО и должность" required >
                         </div>
                         <div class="form-group mb-3 d-flex flex-column">
                             <label for="risk_endTerm">Срок</label>
                             <input class="input_editable" id="risk_endTerm" type="text" name="risk_endTerm"
-                                placeholder="Введите срок">
+                                placeholder="Введите срок" required >
                         </div>
 
                     </div>
                 </div>
                 {{-- Кнопки --}}
                 <div class="modal-footer d-flex justify-content-between">
-                    <button type="submit" class="btn btn-success mt-3">Сохранить</button>
+                    <button type="submit" class="btn btn-success mt-3" id='submitBtn'>Сохранить</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
                 </div>
             </div>
@@ -307,7 +311,7 @@
     </div>
 </div>
 
-<script>    
+<script>
     // таблица DataTable
     $(document).ready(function() {
 
@@ -334,14 +338,14 @@
                     // Обновляем переменные и отображаем данные
                     response.reasonData.forEach(function(reason, index) {
                         $('#reasonList').append(
-                            '<li class="mb-3"><input type="text" class="input_editable" readonly name="risk_reason[' +
+                            '<li class="mb-3"><input type="text" class="input_editable" required readonly name="risk_reason[' +
                             index + '][reasonRisk]" value="' + reason
                             .reasonRisk + '"</li>');
                     });
 
                     response.consequenceData.forEach(function(consequence) {
                         $('#consequenceList').append(
-                            '<li class="mb-3"><input type="text" class="input_editable" readonly name="risk_consequences[' +
+                            '<li class="mb-3"><input type="text" class="input_editable" required readonly name="risk_consequences[' +
                             index + '][conseqRiskOnset]" value="' + consequence
                             .conseqRiskOnset + '"</li>');
                     });
@@ -349,7 +353,7 @@
                     if (Array.isArray(response.counteringRiskData)) {
                         response.counteringRiskData.forEach(function(counteringRisk) {
                             $('#counteringRiskList').append(
-                                '<li class="mb-3"><input type="text" class="input_editable" readonly name="risk_counteraction[' +
+                                '<li class="mb-3"><input type="text" class="input_editable" required readonly name="risk_counteraction[' +
                                 index + '][counteringRisk]" value="' +
                                 counteringRisk
                                 .counteringRisk + '"</li>');
@@ -363,7 +367,7 @@
                                 for (var prop in measure) {
                                     if (measure.hasOwnProperty(prop)) {
                                         $('#riskManagMeasuresList').append(
-                                            '<li class="mb-3"><input type="text" class="input_editable" readonly name="risk_measures[' +
+                                            '<li class="mb-3"><input type="text" class="input_editable" required readonly name="risk_measures[' +
                                             index +
                                             '][riskManagMeasures]" value="' +
                                             measure[prop] + '"</li>');
@@ -399,15 +403,47 @@
                 url: `/project-maps/risk-delete/${itemIdToDelete}`,
                 success: function(data) {
                     toastr.success('Запись была удалена', 'Успешно');
+                    let projectId = data.projectId;
                     setTimeout(function() {
-                        window.location.reload(1);
+                        window.location.href = `/project-maps/all/${projId}`;
                     }, 2000);
                 },
                 error: function(error) {
-                    toastr.error('Ошибка удаления', 'Ошибка');
+                    if (error.responseText) {
+                        toastr.error(error.responseText, 'Ошибка');
+                    } else {
+                        toastr.error('Ошибка удаления', 'Ошибка');
+                    }
                 }
             });
             $('#confirmationModal').modal('hide');
         });
+
+
+        // Обязательные поля ввода
+        function validateAndSubmit() {
+            // Удаление предыдущих стилей ошибок
+            $('.required-field').removeClass('required-field');
+            $('.error-message').remove();
+
+            // Проверка каждого обязательного поля
+            $('#dependentFields :input[required]').each(function() {
+                const fieldValue = $(this).val();
+                if (!fieldValue.trim()) {
+                    // Выделение пустого поля красной рамкой
+                    $(this).addClass('required-field');
+
+                    // Отображение сообщения об ошибке
+                    const errorMessage = $('<div class="error-message">Обязательное поле для заполнения</div>');
+                    $(this).parent().append(errorMessage);
+                }
+            });
+        }
+        // Привязка функции validateAndSubmit к событию клика кнопки отправки
+        $('#submitBtn').click(function() {
+            console.log('Button clicked!');
+            validateAndSubmit();
+        });
+
     });
 </script>

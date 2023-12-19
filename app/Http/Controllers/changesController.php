@@ -47,6 +47,44 @@ class changesController extends Controller
             Change::insert($data_changes);
         }
         return redirect()->route('project-data-one');
-        
+    }
+
+
+    public function delete($id)
+    {
+        $change = Change::find($id);
+
+        if (!$change) {
+            return response()->json(['message' => 'Change record not found'], 404);
+        }
+
+        $projectId = $change->project_id; 
+
+        $change->delete();
+
+        return response()->json(['projectId' => $projectId]);
+    }
+
+
+    public function update(Request $request, $id)
+    {
+        $change = Change::find($id);
+
+
+        $change->contractor = $request->input('contractor');
+        $change->contract_num = $request->input('contract_num');
+        $change->change = $request->input('change');
+        $change->impact = $request->input('impact');
+        $change->stage = $request->input('stage');
+        $change->corrective = $request->input('corrective');
+        $change->responsible = $request->input('responsible');
+
+        // Save the changes
+        $change->save();
+
+        // Get the project ID from the change record
+        $projectId = $change->project_num;
+
+        return redirect()->route('project-data-one', ['id' => $projectId]);
     }
 }
