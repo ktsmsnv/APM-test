@@ -445,7 +445,6 @@ class ProjectController extends Controller
         return redirect()->route('project-data-one', $id)->with('success', 'Project data successfully updated');
     }
 
-
     // редактирование карты проекта -> ИЗМЕНЕНИЯ (открыывает страницу редактирования по id записи)
     public function updateChanges($id)
     {
