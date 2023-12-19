@@ -19,8 +19,12 @@ class Change extends Model
     ];
 
     protected $table = 'changes';
-        public function project()
+    
+    public function project()
     {
         return $this->belongsTo(Projects::class,  'project_num', 'projNum');
     }
+
+    protected $primaryKey = 'id';
+
 }

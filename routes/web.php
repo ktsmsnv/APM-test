@@ -81,8 +81,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/project-maps/create/changes-{id}/create', 'App\Http\Controllers\changesController@create')->name('changes-create');
     // создание карты проекта ИЗМЕНЕНИЯ -> сохранение в БД
     Route::post('/project-maps/create/changes-{id}/save', 'App\Http\Controllers\changesController@storeNew')->name('changes-store');
+    // обновление (редактирование) карты проекта ИЗМЕНЕНИЯ 
+    Route::put('/project-maps/changes-update/{id}', 'App\Http\Controllers\ChangesController@update')->name('changes-update');
     // ссоздание карты проекта ИЗМЕНЕНИЯ -> вывод связанных таблиц
     Route::get('/project-maps/create/changes-{id}', 'App\Http\Controllers\changesController@showDataCalculation')->name('changes-create');
+     // ссоздание карты проекта ИЗМЕНЕНИЯ ->удаление
+    Route::get('/project-maps/changes-delete/{id}', 'App\Http\Controllers\changesController@delete')->name('changes-delete');
 
 
 
@@ -102,7 +106,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/project-maps/all/{id}/store-risks', 'App\Http\Controllers\risksController@store')->name('risks-store');
     Route::get('/getRiskData', 'App\Http\Controllers\risksController@getRiskData');
 
-    Route::post('/project-maps/risk-update/{id}', 'App\Http\Controllers\risksController@update')->name('risks-update');
+    // Route::post('/project-maps/risk-update/{id}', 'App\Http\Controllers\risksController@update')->name('risks-update');
+    Route::put('/project-maps/risk-update/{id}', 'App\Http\Controllers\RisksController@update')->name('risks-update');
 
     Route::get('/project-maps/risk-delete/{id}', 'App\Http\Controllers\risksController@delete')->name('risks-delete');
 

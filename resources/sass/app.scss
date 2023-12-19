@@ -357,3 +357,14 @@ table.dataTable {
     }
   }
 }
+
+
+// обязательны поля ввода
+.required-field {
+  border: 1px solid red;
+}
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
+}
