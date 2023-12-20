@@ -41,26 +41,26 @@
                 <div class="tab-content mytab-content" id="myTabContent">
                     <div class="tab-pane fade show active" id="calculation" role="tabpanel"
                         aria-labelledby="calculation-tab">
-                        @include('tables.calculation-projectMap')
+                        {{-- @include('tables.calculation-projectMap') --}}
                     </div>
                     <div class="tab-pane fade" id="realization" role="tabpanel"
                         aria-labelledby="realization-tab">
-                        @include('tables.realization-projectMap')
+                        {{-- @include('tables.realization-projectMap') --}}
                     </div>
                     <div class="tab-pane fade" id="risks" role="tabpanel" aria-labelledby="risks-tab">
-                        @include('tables.risks-projectMap')
+                        {{-- @include('tables.risks-projectMap') --}}
                     </div>
                     <div class="tab-pane fade" id="changes" role="tabpanel" aria-labelledby="changes-tab">
-                        @include('tables.changes-projectMap')
+                        {{-- @include('tables.changes-projectMap') --}}
                     </div>
                     <div class="tab-pane fade" id="report" role="tabpanel" aria-labelledby="report-tab">
-                        @include('tables.report-projectMap')
+                        {{-- @include('tables.report-projectMap') --}}
                     </div>
                     <div class="tab-pane fade" id="smk" role="tabpanel" aria-labelledby="smk-tab">
                         СМК
                     </div>
                     <div class="tab-pane fade" id="notes" role="tabpanel" aria-labelledby="notes-tab">
-                        @include('tables.notes-projectMap')
+                        {{-- @include('tables.notes-projectMap') --}}
                     </div>
                 </div>
 

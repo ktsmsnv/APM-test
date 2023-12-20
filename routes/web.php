@@ -20,9 +20,7 @@ Route::middleware(['auth'])->group(function () {
 
 
     // ТАБЫ на странице КАРТА ПРОЕКТА
-    Route::get('/tables/{tab}', 'App\Http\Controllers\TabController@show');
-    Route::get('/tables/report','App\Http\Controllers\TabController@show')->name('report-tab');
-    Route::get('/tables/calculation','App\Http\Controllers\TabController@show')->name('calculation-tab');
+    Route::get('/tables/{tab}', 'App\Http\Controllers\TabController@show')->name('tab.show');
 
 
 
