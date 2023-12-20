@@ -5,71 +5,65 @@
         <div class="row justify-content-center">
             <div class="col-md-18">
                 <h1 class="mb-5">Карта проекта Вн. Номер: {{ $project->projNum }}</h1>
-                <ul class="nav nav-pills mb-5" id="pills-tab" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="pills-calculation-tab" data-bs-toggle="pill"
-                            data-bs-target="#pills-calculation" type="button" role="tab" aria-controls="pills-home"
-                            aria-selected="true">Расчет</button>
+
+                <ul class="nav nav-mytabs mb-5" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="calculation-tab" data-toggle="tab" href="#calculation" role="tab"
+                            aria-controls="calculation" aria-selected="true">Расчет</a>
                     </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="pills-realization-tab" data-bs-toggle="pill"
-                            data-bs-target="#pills-realization" type="button" role="tab"
-                            aria-controls="pills-realization" aria-selected="false">Реализация</button>
+                    <li class="nav-item">
+                        <a class="nav-link" id="realization-tab" data-toggle="tab" href="#realization" role="tab"
+                            aria-controls="realization" aria-selected="false">Реализация</a>
                     </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="pills-risks-tab" data-bs-toggle="pill" data-bs-target="#pills-risks"
-                            type="button" role="tab" aria-controls="pills-risks" aria-selected="false">Риски</button>
+                    <li class="nav-item">
+                        <a class="nav-link" id="risks-tab" data-toggle="tab" href="#risks" role="tab"
+                            aria-controls="risks" aria-selected="false">Риски</a>
                     </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="pills-changes-tab" data-bs-toggle="pill"
-                            data-bs-target="#pills-changes" type="button" role="tab" aria-controls="pills-changes"
-                            aria-selected="false">Изменения</button>
+                    <li class="nav-item">
+                        <a class="nav-link" id="changes-tab" data-toggle="tab" href="#changes" role="tab"
+                            aria-controls="changes" aria-selected="false">Изменения</a>
                     </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="pills-report-tab" data-bs-toggle="pill" data-bs-target="#pills-report"
-                            type="button" role="tab" aria-controls="pills-report" aria-selected="false">Отчет</button>
+                    <li class="nav-item">
+                        <a class="nav-link" id="report-tab" data-toggle="tab" href="#report" role="tab"
+                            aria-controls="report" aria-selected="false">Отчет</a>
                     </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="pills-smk-tab" data-bs-toggle="pill" data-bs-target="#pills-smk"
-                            type="button" role="tab" aria-controls="pills-smk" aria-selected="false">СМК</button>
+                    <li class="nav-item">
+                        <a class="nav-link" id="smk-tab" data-toggle="tab" href="#smk" role="tab"
+                            aria-controls="smk" aria-selected="false">СМК</a>
                     </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="pills-diary-tab" data-bs-toggle="pill" data-bs-target="#pills-diary"
-                            type="button" role="tab" aria-controls="pills-diary" aria-selected="false">Дневник
-                            проекта</button>
+                    <li class="nav-item">
+                        <a class="nav-link" id="notes-tab" data-toggle="tab" href="#notes" role="tab"
+                            aria-controls="notes" aria-selected="false">Дневник проекта</a>
                     </li>
                 </ul>
 
-                <div class="tab-content" id="pills-tabContent">
-                    {{-- Расчет --}}
-                    <div class="tab-pane fade show active" id="pills-calculation" role="tabpanel"
-                        aria-labelledby="pills-calculation-tab">
+
+                <div class="tab-content mytab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="calculation" role="tabpanel"
+                        aria-labelledby="calculation-tab">
                         @include('tables.calculation-projectMap')
                     </div>
-                    {{-- Реализация --}}
-                    <div class="tab-pane fade" id="pills-realization" role="tabpanel"
-                        aria-labelledby="pills-realization-tab">
+                    <div class="tab-pane fade" id="realization" role="tabpanel"
+                        aria-labelledby="realization-tab">
                         @include('tables.realization-projectMap')
                     </div>
-                    {{-- Риски --}}
-                    <div class="tab-pane fade" id="pills-risks" role="tabpanel" aria-labelledby="pills-risks-tab">
+                    <div class="tab-pane fade" id="risks" role="tabpanel" aria-labelledby="risks-tab">
                         @include('tables.risks-projectMap')
                     </div>
-                    {{-- Изменения --}}
-                    <div class="tab-pane fade" id="pills-changes" role="tabpanel" aria-labelledby="pills-changes-tab">
+                    <div class="tab-pane fade" id="changes" role="tabpanel" aria-labelledby="changes-tab">
                         @include('tables.changes-projectMap')
                     </div>
-                    {{-- Отчет --}}
-                    <div class="tab-pane fade" id="pills-report" role="tabpanel" aria-labelledby="pills-report-tab">
+                    <div class="tab-pane fade" id="report" role="tabpanel" aria-labelledby="report-tab">
                         @include('tables.report-projectMap')
                     </div>
-                    {{-- СМК --}}
-                    <div class="tab-pane fade" id="pills-smk" role="tabpanel" aria-labelledby="pills-smk-tab">СМК</div>
-                    {{-- Дневник --}}
-                    <div class="tab-pane fade" id="pills-diary" role="tabpanel" aria-labelledby="pills-diary-tab">
-                        @include('tables.notes-panel')
+                    <div class="tab-pane fade" id="smk" role="tabpanel" aria-labelledby="smk-tab">
+                        СМК
+                    </div>
+                    <div class="tab-pane fade" id="notes" role="tabpanel" aria-labelledby="notes-tab">
+                        @include('tables.notes-projectMap')
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
@@ -85,6 +79,54 @@
                 language: {
                     emptyTable: "Нет данных",
                 }
+            });
+        });
+
+
+        $(document).ready(() => {
+            let url = location.href.replace(/\/$/, "");
+
+            // Function to load content for a specific tab
+            function loadTabContent(tabId) {
+                // Use AJAX to fetch content dynamically
+                $.ajax({
+                    url: `/tables/${tabId}`, // Use the new endpoint
+                    type: 'GET',
+                    success: function(response) {
+                        // Update the content of the tab with the received data
+                        $(`#${tabId}`).html(response.content);
+
+                        // Show the tab
+                        $(`#myTab a[href="#${tabId}"]`).tab("show");
+                    },
+                    error: function(error) {
+                        console.error('Error fetching tab content:', error);
+                    }
+                });
+            }
+
+            // Show the tab if there's a hash in the URL
+            if (location.hash) {
+                const hash = url.split("#");
+                loadTabContent(hash[1]);
+                url = location.href.replace(/\/#/, "#");
+                history.replaceState(null, null, url);
+                setTimeout(() => {
+                    $(window).scrollTop(0);
+                }, 400);
+            }
+
+            // Handle tab clicks
+            $('a[data-toggle="tab"]').on("click", function() {
+                // Construct a new URL based on the clicked tab's hash
+                const newUrl = `${url.split("#")[0]}${$(this).attr("href")}/`;
+
+                // Replace the current state in the history with the new URL
+                history.replaceState(null, null, newUrl);
+
+                // Load content for the clicked tab
+                const tabId = $(this).attr("aria-controls");
+                loadTabContent(tabId);
             });
         });
     </script>
