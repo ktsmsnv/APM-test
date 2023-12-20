@@ -23,8 +23,8 @@ main {
 }
 .container {
   position: relative;
-  width: 95%;
-  max-width: none;
+  width: 95%!important;
+  max-width: none!important;
   margin: 0 auto;
   padding: 0;
 }
@@ -367,4 +367,33 @@ table.dataTable {
   color: red;
   font-size: 14px;
   margin-top: 5px;
+}
+
+
+.nav-mytabs {
+  margin-top: 2rem;
+}
+.nav-mytabs li:not(:last-child) {
+  margin-right: 7px;
+}
+.nav-mytabs a {
+  position: relative;
+  top: 4px;
+  padding: 10px 25px;
+  border-radius: 2px 2px 0 0;
+  background: white;
+  color: black;
+  opacity: 0.7;
+  transition: all 0.1s ease-in-out;
+}
+.nav-mytabs a.active, 
+.nav-mytabs a:hover {
+  opacity: 1;
+  top: 0;
+}
+.mytab-content {
+  position: relative;
+  z-index: 2;
+  border-radius: 0 4px 4px 4px;
+  background: white;
 }

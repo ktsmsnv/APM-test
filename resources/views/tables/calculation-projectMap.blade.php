@@ -152,13 +152,14 @@
                                     <td>{{ $expense->check }}</td>
                                 </tr>
                     </tbody>
+                    @endforeach
                     <tfoot>
                         <tr>
                             <th colspan="2" class="text-align-right">Всего</th>
                             <th>{{ $expense->total }}</th>
                         </tr>
                     </tfoot>
-                    @endforeach
+                  
                     @else
                     @endif
                 </table>

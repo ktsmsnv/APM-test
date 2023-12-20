@@ -19,6 +19,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/project-maps/all/{id}', 'App\Http\Controllers\ProjectController@showOneMessage')->name('project-data-one');
 
 
+    // ТАБЫ на странице КАРТА ПРОЕКТА
+    Route::get('/tables/{tab}', 'App\Http\Controllers\TabController@show');
+    Route::get('/tables/report','App\Http\Controllers\TabController@show')->name('report-tab');
+    Route::get('/tables/calculation','App\Http\Controllers\TabController@show')->name('calculation-tab');
+
+
 
     // обновление (редактирование) карты проекта -> РАСЧЕТ
     Route::get('/project-maps/all/{id}/calculation-update', 'App\Http\Controllers\ProjectController@updateCalculation')->name('project-map-update');
