@@ -7,6 +7,13 @@ use Illuminate\Support\Facades\Auth;
 
 Auth::routes();
 
+// Маршрут для главной страницы входа доступен только неаутентифицированным пользователям
+Route::middleware(['guest'])->group(function () {
+    Route::get('/', function () {
+        return view('auth.login');
+    });
+});
+
 // Все маршруты доступны только аутентифицированным пользователям
 Route::middleware(['auth'])->group(function () {
 
@@ -16,7 +23,7 @@ Route::middleware(['auth'])->group(function () {
     // Все карты проекта
     Route::get('/project-maps/all', 'App\Http\Controllers\ProjectController@allData')->name('project-maps');
     // одна карта проекта
-    Route::get('/project-maps/all/{id}', 'App\Http\Controllers\ProjectController@showOneMessage')->name('project-data-one');
+    Route::get('/project-maps/all/{id}/', 'App\Http\Controllers\ProjectController@showOneMessage')->name('project-data-one');
 
 
     // ТАБЫ на странице КАРТА ПРОЕКТА
@@ -121,9 +128,3 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/search-projects', 'App\Http\Controllers\ProjectController@search')->name('search-projects');
 });
 
-// Маршрут для главной страницы входа доступен только неаутентифицированным пользователям
-Route::middleware(['guest'])->group(function () {
-    Route::get('/', function () {
-        return view('auth.login');
-    });
-});

@@ -163,7 +163,8 @@ class reportController extends Controller
         $ReportReflection->save();
 
         //примечания
-        $ReportNotes = new ReportNotes;
+        $ReportNotes = ReportNotes::where('project_num', $project->projNum)->first();
+        // $ReportNotes = new ReportNotes;
         $ReportNotes->project_num = $project->projNum;
         $ReportNotes->projNotes = $req->projNotes;
         $ReportNotes->teamNotes = $req->teamNotes;

@@ -85,18 +85,12 @@
 
         $(document).ready(() => {
             let url = location.href.replace(/\/$/, "");
-
-            // Function to load content for a specific tab
             function loadTabContent(tabId) {
-                // Use AJAX to fetch content dynamically
                 $.ajax({
-                    url: `/tables/${tabId}`, // Use the new endpoint
+                    url: `/tables/${tabId}`, 
                     type: 'GET',
                     success: function(response) {
-                        // Update the content of the tab with the received data
                         $(`#${tabId}`).html(response.content);
-
-                        // Show the tab
                         $(`#myTab a[href="#${tabId}"]`).tab("show");
                     },
                     error: function(error) {
@@ -105,7 +99,7 @@
                 });
             }
 
-            // Show the tab if there's a hash in the URL
+            
             if (location.hash) {
                 const hash = url.split("#");
                 loadTabContent(hash[1]);
@@ -115,16 +109,10 @@
                     $(window).scrollTop(0);
                 }, 400);
             }
-
-            // Handle tab clicks
             $('a[data-toggle="tab"]').on("click", function() {
-                // Construct a new URL based on the clicked tab's hash
                 const newUrl = `${url.split("#")[0]}${$(this).attr("href")}/`;
-
-                // Replace the current state in the history with the new URL
                 history.replaceState(null, null, newUrl);
 
-                // Load content for the clicked tab
                 const tabId = $(this).attr("aria-controls");
                 loadTabContent(tabId);
             });

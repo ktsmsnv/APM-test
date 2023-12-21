@@ -363,7 +363,7 @@
                                                             <div class="col-3">
                                                                 <input type="text"
                                                                     name="markup[{{ $index }}][id]"
-                                                                    value="{{ $markup->id }}" class="input_editable">
+                                                                    value="{{ $markup->id }}" class="input_editable" readonly>
                                                             </div>
                                                         </td>
                                                         <td>
@@ -425,7 +425,7 @@
                                                                     <input type="text"
                                                                         name="contact[{{ $index }}][id]"
                                                                         value="{{ $contact->id }}"
-                                                                        class="input_editable">
+                                                                        class="input_editable" readonly>
                                                                 </div>
                                                             </td>
                                                             <td>
@@ -486,7 +486,7 @@
                                                                     <input type="text"
                                                                         name="risk[{{ $index }}][id]"
                                                                         value="{{ $risk->id }}"
-                                                                        class="input_editable">
+                                                                        class="input_editable" readonly>
                                                                 </div>
                                                             </td>
                                                             <td>

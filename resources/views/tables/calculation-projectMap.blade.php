@@ -7,7 +7,7 @@
             </button>
         </h2>
         <div id="calculation-collapseOne" class="accordion-collapse collapse show"
-            aria-labelledby="calculation-headingOne">
+            aria-labelledby="calculation-headingOne" >
             <div class="accordion-body">
                 <div class="d-flex flex-column">
                     <div class="d-flex gap-3">
@@ -309,6 +309,7 @@
         </div>
     </div>
 </div>
+
 
 <div class="d-flex gap-3 mt-5">
     <a href="{{ route('project-map-update', $project->id) }}"><button class="btn btn-primary">Редактировать</button></a>

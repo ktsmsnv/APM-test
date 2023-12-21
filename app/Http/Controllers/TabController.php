@@ -35,7 +35,6 @@ class TabController extends Controller
             return response()->json(['content' => $content]);
         }
 
-        // Handle case when the view file does not exist
         return response()->json(['error' => 'Tab not found'], 404);
     }
 }
