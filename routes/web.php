@@ -7,6 +7,13 @@ use Illuminate\Support\Facades\Auth;
 
 Auth::routes();
 
+// Маршрут для главной страницы входа доступен только неаутентифицированным пользователям
+Route::middleware(['guest'])->group(function () {
+    Route::get('/', function () {
+        return view('auth.login');
+    });
+});
+
 // Все маршруты доступны только аутентифицированным пользователям
 Route::middleware(['auth'])->group(function () {
 
@@ -16,7 +23,7 @@ Route::middleware(['auth'])->group(function () {
     // Все карты проекта
     Route::get('/project-maps/all', 'App\Http\Controllers\ProjectController@allData')->name('project-maps');
     // одна карта проекта
-    Route::get('/project-maps/all/{id}', 'App\Http\Controllers\ProjectController@showOneMessage')->name('project-data-one');
+    Route::get('/project-maps/all/{id}/{tab?}', 'App\Http\Controllers\ProjectController@showOneMessage')->name('project-data-one');
 
 
     // ТАБЫ на странице КАРТА ПРОЕКТА
@@ -25,15 +32,15 @@ Route::middleware(['auth'])->group(function () {
 
 
     // обновление (редактирование) карты проекта -> РАСЧЕТ
-    Route::get('/project-maps/all/{id}/calculation-update', 'App\Http\Controllers\ProjectController@updateCalculation')->name('project-map-update');
+    Route::get('/project-maps/all/{id}/{tab}/update-calculation', 'App\Http\Controllers\ProjectController@updateCalculation')->name('project-map-update');
     Route::post('/project-maps/all/{id}/calculation-update', 'App\Http\Controllers\ProjectController@updateCalculationSubmit')->name('project-map-update-submit');
 
     // обновление (редактирование) карты проекта -> РЕАЛИЗАЦИЯ
-    Route::get('/project-maps/all/{id}/realization-update', 'App\Http\Controllers\ProjectController@updateRealization')->name('update-realization');
+    Route::get('/project-maps/all/{id}/{tab}/update-realization', 'App\Http\Controllers\ProjectController@updateRealization')->name('update-realization');
     Route::post('/project-maps/all/{id}/realization-update', 'App\Http\Controllers\ProjectController@updateRealizationSubmit')->name('realization-update-submit');
 
     // обновление (редактирование) карты проекта -> ИЗМЕНЕНИЯ
-    Route::get('/project-maps/all/{id}/changes-update', 'App\Http\Controllers\ProjectController@updateChanges')->name('update-changes');
+    Route::get('/project-maps/all/{id}/{tab}/update-changes', 'App\Http\Controllers\ProjectController@updateChanges')->name('update-changes');
     Route::post('/project-maps/all/{id}/changes-update', 'App\Http\Controllers\ProjectController@updateChangesSubmit')->name('changes-update-submit');
 
 
@@ -99,9 +106,9 @@ Route::middleware(['auth'])->group(function () {
     // карта проекта ОТЧЕТ -> выгрузка в word
     Route::get('/project-maps/all/{id}/{projNum}/export-word', 'App\Http\Controllers\reportController@exportWord')->name('report-word');
     // обновление (редактирование) карты проекта ОТЧЕТ 
-    Route::post('/project-maps/all/{id}/report-update', 'App\Http\Controllers\reportController@updateMessageSubmit')->name('report-update-submit');
+    Route::post('/project-maps/all/{id}/{tab}/update-report', 'App\Http\Controllers\reportController@updateMessageSubmit')->name('report-update-submit');
     //удаление карты проекта ОТЧЕТ 
-    Route::get('/project-maps/all/{id}/report-delete', 'App\Http\Controllers\reportController@deleteMessage')->name('report-delete');
+    Route::post('/project-maps/all/{id}/report-delete', 'App\Http\Controllers\reportController@deleteMessage')->name('report-delete');
 
 
 
@@ -121,9 +128,3 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/search-projects', 'App\Http\Controllers\ProjectController@search')->name('search-projects');
 });
 
-// Маршрут для главной страницы входа доступен только неаутентифицированным пользователям
-Route::middleware(['guest'])->group(function () {
-    Route::get('/', function () {
-        return view('auth.login');
-    });
-});

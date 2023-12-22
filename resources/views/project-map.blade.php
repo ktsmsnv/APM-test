@@ -8,8 +8,8 @@
 
                 <ul class="nav nav-mytabs mb-5" id="myTab" role="tablist">
                     <li class="nav-item">
-                        <a class="nav-link active" id="calculation-tab" data-toggle="tab" href="#calculation" role="tab"
-                            aria-controls="calculation" aria-selected="true">Расчет</a>
+                        <a class="nav-link{{ $tab === 'calculation' ? ' active' : '' }}"id="calculation-tab" data-toggle="tab"
+                            href="#calculation" role="tab" aria-controls="calculation" aria-selected="true">Расчет</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" id="realization-tab" data-toggle="tab" href="#realization" role="tab"
@@ -43,8 +43,7 @@
                         aria-labelledby="calculation-tab">
                         {{-- @include('tables.calculation-projectMap') --}}
                     </div>
-                    <div class="tab-pane fade" id="realization" role="tabpanel"
-                        aria-labelledby="realization-tab">
+                    <div class="tab-pane fade" id="realization" role="tabpanel" aria-labelledby="realization-tab">
                         {{-- @include('tables.realization-projectMap') --}}
                     </div>
                     <div class="tab-pane fade" id="risks" role="tabpanel" aria-labelledby="risks-tab">
@@ -70,6 +69,8 @@
     </div>
     <script>
         $(document).ready(function() {
+            $('#{{ $tab }}-tab').tab('show');
+
             new DataTable('.projMap', {
                 responsive: true,
                 searching: false, // Отключаем поиск
@@ -86,18 +87,16 @@
         $(document).ready(() => {
             let url = location.href.replace(/\/$/, "");
 
-            // Function to load content for a specific tab
             function loadTabContent(tabId) {
-                // Use AJAX to fetch content dynamically
                 $.ajax({
-                    url: `/tables/${tabId}`, // Use the new endpoint
+                    url: `/tables/${tabId}`,
                     type: 'GET',
                     success: function(response) {
-                        // Update the content of the tab with the received data
                         $(`#${tabId}`).html(response.content);
-
-                        // Show the tab
                         $(`#myTab a[href="#${tabId}"]`).tab("show");
+
+                        const newUrl = `${url.split("#")[0]}#${tabId}`;
+                        history.replaceState(null, null, newUrl);
                     },
                     error: function(error) {
                         console.error('Error fetching tab content:', error);
@@ -105,7 +104,11 @@
                 });
             }
 
-            // Show the tab if there's a hash in the URL
+            const fragment = window.location.hash.substring(1);
+            if (fragment) {
+                loadTabContent(fragment);
+            }
+
             if (location.hash) {
                 const hash = url.split("#");
                 loadTabContent(hash[1]);
@@ -116,15 +119,13 @@
                 }, 400);
             }
 
-            // Handle tab clicks
+            const tabMatch = location.href.match(/#(\w+)$/);
+            if (tabMatch) {
+                const tabId = tabMatch[1];
+                loadTabContent(tabId);
+            }
+
             $('a[data-toggle="tab"]').on("click", function() {
-                // Construct a new URL based on the clicked tab's hash
-                const newUrl = `${url.split("#")[0]}${$(this).attr("href")}/`;
-
-                // Replace the current state in the history with the new URL
-                history.replaceState(null, null, newUrl);
-
-                // Load content for the clicked tab
                 const tabId = $(this).attr("aria-controls");
                 loadTabContent(tabId);
             });

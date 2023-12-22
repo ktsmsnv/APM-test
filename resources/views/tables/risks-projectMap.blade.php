@@ -219,7 +219,7 @@
                     <div id="dependentFields" class="input-field">
                         <div class="form-group mb-3">
                             <label for="risk_name">Наименование риска</label>
-                            <select class="form-select" name="risk_name" id="risk_name" required >
+                            <select class="form-select" name="risk_name" id="risk_name" required>
                                 <option value="" disabled selected>Выберите наименование</option>
                                 @foreach ($baseRisks as $baseRisk)
                                     <option value="{{ $baseRisk->nameRisk }}">
@@ -257,7 +257,7 @@
 
                         <div class="form-group mb-3 d-flex flex-column">
                             <label for="risk_probability">Вероятность: </label>
-                            <select name="risk_probability" id="risk_probability-select" required >
+                            <select name="risk_probability" id="risk_probability-select" required>
                                 <option value="">Выберите вероятность</option>
                                 <option value="1">1</option>
                                 <option value="2">2</option>
@@ -269,7 +269,7 @@
 
                         <div class="form-group mb-3 d-flex flex-column">
                             <label for="risk_influence">Влияние: </label>
-                            <select name="risk_influence" id="risk_influence-select" required >
+                            <select name="risk_influence" id="risk_influence-select" required>
                                 <option value="">Выберите влияние</option>
                                 <option value="1">1</option>
                                 <option value="2">2</option>
@@ -281,7 +281,7 @@
 
                         <div class="form-group mb-3 d-flex flex-column">
                             <label for="risk_mark">Отметка о реализации мероприятий в отношении рисков: </label>
-                            <select name="risk_mark" id="risk_mark-select" required >
+                            <select name="risk_mark" id="risk_mark-select" required>
                                 <option value="">Выберите отметку</option>
                                 <option value="Выполнено">Выполнено</option>
                                 <option value="Не выполнено">Не выполнено</option>
@@ -291,12 +291,12 @@
                         <div class="form-group mb-3 d-flex flex-column">
                             <label for="risk_resp">Отвественный за выполнение мероприятий</label>
                             <input class="input_editable" id="risk_resp" type="text" name="risk_resp"
-                                placeholder="Введите ФИО и должность" required >
+                                placeholder="Введите ФИО и должность" required>
                         </div>
                         <div class="form-group mb-3 d-flex flex-column">
                             <label for="risk_endTerm">Срок</label>
                             <input class="input_editable" id="risk_endTerm" type="text" name="risk_endTerm"
-                                placeholder="Введите срок" required >
+                                placeholder="Введите срок" required>
                         </div>
 
                     </div>
@@ -343,7 +343,7 @@
                             .reasonRisk + '"</li>');
                     });
 
-                    response.consequenceData.forEach(function(consequence) {
+                    response.consequenceData.forEach((consequence, index) => {
                         $('#consequenceList').append(
                             '<li class="mb-3"><input type="text" class="input_editable" required readonly name="risk_consequences[' +
                             index + '][conseqRiskOnset]" value="' + consequence
@@ -351,17 +351,17 @@
                     });
 
                     if (Array.isArray(response.counteringRiskData)) {
-                        response.counteringRiskData.forEach(function(counteringRisk) {
+                        response.counteringRiskData.forEach(function(counteringRisk,
+                            index) {
                             $('#counteringRiskList').append(
                                 '<li class="mb-3"><input type="text" class="input_editable" required readonly name="risk_counteraction[' +
                                 index + '][counteringRisk]" value="' +
-                                counteringRisk
-                                .counteringRisk + '"</li>');
+                                counteringRisk.counteringRisk + '"</li>');
                         });
                     }
 
                     if (Array.isArray(response.riskManagMeasuresData)) {
-                        response.riskManagMeasuresData.forEach(function(measure) {
+                        response.riskManagMeasuresData.forEach(function(measure, index) {
                             if (typeof measure === 'object') {
                                 // Если это объект, выведите свойства объекта
                                 for (var prop in measure) {
@@ -405,8 +405,8 @@
                     toastr.success('Запись была удалена', 'Успешно');
                     let projectId = data.projectId;
                     setTimeout(function() {
-                        window.location.href = `/project-maps/all/${projId}`;
-                    }, 2000);
+                        window.location.href = `/project-maps/all/${projId}/#risks`;
+                    }, 1000);
                 },
                 error: function(error) {
                     if (error.responseText) {
@@ -434,7 +434,8 @@
                     $(this).addClass('required-field');
 
                     // Отображение сообщения об ошибке
-                    const errorMessage = $('<div class="error-message">Обязательное поле для заполнения</div>');
+                    const errorMessage = $(
+                        '<div class="error-message">Обязательное поле для заполнения</div>');
                     $(this).parent().append(errorMessage);
                 }
             });

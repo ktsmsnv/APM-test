@@ -23,8 +23,8 @@ main {
 }
 .container {
   position: relative;
-  width: 95%!important;
-  max-width: none!important;
+  width: 95% !important;
+  max-width: none !important;
   margin: 0 auto;
   padding: 0;
 }
@@ -171,6 +171,10 @@ table tr:hover td {
   cursor: default;
 }
 
+tbody#changes-inputs td {
+  line-height: 5px;
+}
+
 .notes {
   width: 95%;
   margin: 20px auto;
@@ -232,15 +236,22 @@ table tr:hover td {
 }
 
 .modal-dialog {
-  max-width: 90%;
-  margin-right: auto;
-  margin-left: auto;
-  display: block;
+  max-width: 90% !important;
+  margin-right: auto !important;
+  margin-left: auto !important;
+  display: block !important;
   form {
     height: calc(100% - var(--bs-modal-margin) * 2);
     display: flex;
     align-items: center;
     min-height: calc(100% - var(--bs-modal-margin) * 2);
+  }
+}
+
+#confirmationModal {
+  .modal-dialog
+  {
+    max-width: 30%!important;
   }
 }
 
@@ -329,8 +340,6 @@ table.dataTable {
   padding: 20px 0 20px;
 }
 
-
-
 // поиск по каратм проекта
 .search {
   position: relative;
@@ -358,7 +367,6 @@ table.dataTable {
   }
 }
 
-
 // обязательны поля ввода
 .required-field {
   border: 1px solid red;
@@ -368,7 +376,6 @@ table.dataTable {
   font-size: 14px;
   margin-top: 5px;
 }
-
 
 .nav-mytabs {
   margin-top: 2rem;
@@ -381,19 +388,13 @@ table.dataTable {
   top: 4px;
   padding: 10px 25px;
   border-radius: 2px 2px 0 0;
-  background: white;
+  background: rgb(61 96 141 / 51%);
   color: black;
-  opacity: 0.7;
-  transition: all 0.1s ease-in-out;
+  transition: all 0.3s ease-in-out;
 }
-.nav-mytabs a.active, 
+.nav-mytabs a.active,
 .nav-mytabs a:hover {
-  opacity: 1;
   top: 0;
-}
-.mytab-content {
-  position: relative;
-  z-index: 2;
-  border-radius: 0 4px 4px 4px;
-  background: white;
+  color: white;
+  background: rgb(61 96 141);
 }

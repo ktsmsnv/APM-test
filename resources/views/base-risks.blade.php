@@ -62,8 +62,12 @@
                                 </td>
                                 <td>
                                     <div class="d-flex gap-2">
-                                        <a class="editProduct btn btn-xs btn-info" href="#" data-bs-toggle="modal" data-bs-target="#editBaseRisks" data-id="{{ $item->id }}"><i class="fa-solid fa-edit"></i></a>
-                                        <a class="deleteProduct btn btn-xs btn-danger" href="#" data-bs-toggle="modal" data-bs-target="#confirmationModal" data-id="{{ $item->id }}"><i class="fa-solid fa-trash-can"></i></a>
+                                        <a class="editProduct btn btn-xs btn-info" href="#" data-bs-toggle="modal"
+                                            data-bs-target="#editBaseRisks" data-id="{{ $item->id }}"><i
+                                                class="fa-solid fa-edit"></i></a>
+                                        <a class="deleteProduct btn btn-xs btn-danger" href="#" data-bs-toggle="modal"
+                                            data-bs-target="#confirmationModal" data-id="{{ $item->id }}"><i
+                                                class="fa-solid fa-trash-can"></i></a>
                                     </div>
                                 </td>
                             </tr>
@@ -74,82 +78,82 @@
         </div>
         {{-- Модальное окно формирование нового риска --}}
         <div class="modal fade" id="addBaseRisks" tabindex="-1" aria-labelledby="addBaseRisksLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                    <form action="{{ route('baseRisks-store') }}" method="post">
-                        @csrf
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="addBaseRisksLabel">Добавление базовых рисков</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-    
-                                <div class="form-group mb-3">
-                                    <label>Наименование риска</label>
-                                    <input type="text" class="form-control" name="nameRisk" id="nameRisk"
-                                        placeholder="Введите наименование риска">
-                                </div>
-    
-                                <div id="reason_risk-inputs">
-                                    <div class="form-group mb-2">
-                                        <label>Причина риска</label>
-                                        <input type="text" class="form-control" name="reason_risk[0][reasonRisk]"
-                                            id="reasonRisk" placeholder="Введите причину риска">
-                                    </div>
-                                </div>
-                                <button id="addMore-reason_risk" data-target="reason_risk"
-                                    class="btn btn-secondary addMore-button mb-3">Добавить еще риск</button>
-    
-                                <div id="conseq_risk-inputs">
-                                    <div class="form-group mb-3">
-                                        <label>Последствия наступления риска</label>
-                                        <input type="text" class="form-control" name="conseq_risk[0][conseqRiskOnset]"
-                                            id="conseqRiskOnset" placeholder="Введите последствия наступления риска">
-                                    </div>
-                                </div>
-                                <button id="addMore-conseq_risk" data-target="conseq_risk"
-                                    class="btn btn-secondary addMore-button mb-3">Добавить еще последствия</button>
-                                <div id="countering_risk-inputs">
-                                    <div class="form-group mb-3">
-                                        <label>Противодействие риску</label>
-                                        <input type="text" class="form-control" name="countering_risk[0][counteringRisk]"
-                                            id="counteringRisk" placeholder="Введите противодействие риску">
-                                    </div>
-                                </div>
-                                <button id="addMore-countering_risk" data-target="countering_risk"
-                                    class="btn btn-secondary addMore-button mb-3">Добавить еще противодействие</button>
-    
-                                <div class="form-group mb-3">
-                                    <label>Срок</label>
-                                    <input type="text" class="form-control" name="term" id="term"
-                                        placeholder="Введите срок">
-                                </div>
-                                <div id="measures_risk-inputs">
-                                    <div class="form-group mb-3">
-                                        <label>Мероприятия при осуществлении риска</label>
-                                        <input type="text" class="form-control" name="measures_risk[0][riskManagMeasures]"
-                                            id="riskManagMeasures" placeholder="Введите мероприятия при осуществлении риска">
-                                    </div>
-                                </div>
-                                <button id="addMore-measures_risk" data-target="measures_risk"
-                                    class="btn btn-secondary addMore-button mb-3">Добавить еще мероприятия</button>
-    
-                            </div>
-                            {{-- Кнопки --}}
-                            <div class="modal-footer d-flex justify-content-between">
-                                <button type="submit" class="btn btn-success">Добавить</button>
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-                            </div>
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <form action="{{ route('baseRisks-store') }}" method="post">
+                    @csrf
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addBaseRisksLabel">Добавление базовых рисков</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                    </form>
-                </div>
+                        <div class="modal-body">
+
+                            <div class="form-group mb-3">
+                                <label>Наименование риска</label>
+                                <input type="text" class="form-control" name="nameRisk" id="nameRisk"
+                                    placeholder="Введите наименование риска">
+                            </div>
+
+                            <div id="reason_risk-inputs">
+                                <div class="form-group mb-2">
+                                    <label>Причина риска</label>
+                                    <input type="text" class="form-control" name="reason_risk[0][reasonRisk]"
+                                        id="reasonRisk" placeholder="Введите причину риска">
+                                </div>
+                            </div>
+                            <button id="addMore-reason_risk" data-target="reason_risk"
+                                class="btn btn-secondary addMore-button mb-3">Добавить еще риск</button>
+
+                            <div id="conseq_risk-inputs">
+                                <div class="form-group mb-3">
+                                    <label>Последствия наступления риска</label>
+                                    <input type="text" class="form-control" name="conseq_risk[0][conseqRiskOnset]"
+                                        id="conseqRiskOnset" placeholder="Введите последствия наступления риска">
+                                </div>
+                            </div>
+                            <button id="addMore-conseq_risk" data-target="conseq_risk"
+                                class="btn btn-secondary addMore-button mb-3">Добавить еще последствия</button>
+                            <div id="countering_risk-inputs">
+                                <div class="form-group mb-3">
+                                    <label>Противодействие риску</label>
+                                    <input type="text" class="form-control" name="countering_risk[0][counteringRisk]"
+                                        id="counteringRisk" placeholder="Введите противодействие риску">
+                                </div>
+                            </div>
+                            <button id="addMore-countering_risk" data-target="countering_risk"
+                                class="btn btn-secondary addMore-button mb-3">Добавить еще противодействие</button>
+
+                            <div class="form-group mb-3">
+                                <label>Срок</label>
+                                <input type="text" class="form-control" name="term" id="term"
+                                    placeholder="Введите срок">
+                            </div>
+                            <div id="measures_risk-inputs">
+                                <div class="form-group mb-3">
+                                    <label>Мероприятия при осуществлении риска</label>
+                                    <input type="text" class="form-control" name="measures_risk[0][riskManagMeasures]"
+                                        id="riskManagMeasures" placeholder="Введите мероприятия при осуществлении риска">
+                                </div>
+                            </div>
+                            <button id="addMore-measures_risk" data-target="measures_risk"
+                                class="btn btn-secondary addMore-button mb-3">Добавить еще мероприятия</button>
+
+                        </div>
+                        {{-- Кнопки --}}
+                        <div class="modal-footer d-flex justify-content-between">
+                            <button type="submit" class="btn btn-success">Добавить</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
 
         {{-- если заиси в таблице рисков существуют --}}
         @if ($baseRisks->count() > 0)
             {{-- Модальное окно редактирования риска --}}
-            <div class="modal fade" id="editBaseRisks" tabindex="-1" role="dialog" aria-labelledby="editBaseRisksLabel"
-                aria-hidden="true">
+            <div class="modal fade" id="editBaseRisks" tabindex="-1" role="dialog"
+                aria-labelledby="editBaseRisksLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                     <form id="editBaseRisksForm" action="{{ route('baseRisks-update', ['id' => $item->id]) }}"
                         method="post">
@@ -222,7 +226,8 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="confirmationModalLabel">Подтверждение действия</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             Вы уверены что хотите удалить риск "{{ $item->nameRisk }}"?
@@ -234,9 +239,7 @@
                     </div>
                 </div>
             </div>
-            
         @else
-
         @endif
     </div>
     <script>
@@ -285,6 +288,10 @@
                         next: 'Следующая',
                         previous: 'Предыдущая',
                     },
+                },
+                initComplete: function() {
+                    var select = $('select[name="baseRisksTable_length"]');
+                    select.find('option[value="-1"]').text('Все');
                 },
             });
         });

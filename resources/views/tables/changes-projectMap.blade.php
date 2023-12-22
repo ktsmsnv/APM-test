@@ -46,11 +46,13 @@
                 @endforeach
             </tbody>
         </table>
-        <a href="{{ route('update-changes', $project->id) }}"><button class="btn btn-secondary">
-            Добавить изменения</button></a>
+        <a href="{{ route('update-changes', ['id' => $project->id, 'tab' => 'changes']) }}"><button
+                class="btn btn-secondary">
+                Добавить изменения</button></a>
     </div>
     <div class="d-flex gap-3 mt-5">
-        <a href="{{ route('update-changes', $project->id) }}"><button class="btn btn-primary">РЕДАКТИРОВАТЬ
+        <a href="{{ route('update-changes', ['id' => $project->id, 'tab' => 'changes']) }}"><button
+                class="btn btn-primary">РЕДАКТИРОВАТЬ
                 ВСЕ</button></a>
     </div>
 
@@ -130,11 +132,13 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
-                    <button type="button" class="btn btn-danger" id="confirmDeleteChanges">Удалить</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteChanges"
+                        data-id="{{ $item->id }}">Удалить</button>
                 </div>
             </div>
         </div>
     </div>
+
 @elseif (!$project->changes()->exists() && !$project->basicReference()->exists())
     {{-- если отчета и реализации нет --}}
     <h4 class="mb-3">Заполните сначала реализацию</h4>
@@ -147,12 +151,14 @@
 
 @endif
 
+
 <script>
     let existingRows = {{ count($project->changes ?? []) }};
     let newIndex = existingRows;
     $(document).ready(function() {
-        $('.editChanges').click(function() {
+        $(document).on('click', '.editChanges', function() {
             let changeId = $(this).data('id');
+            console.log('Change ID:', changeId);
             let projectNum = $(this).closest('tr').find('td:eq(1)').text().trim();
             let contractor = $(this).closest('tr').find('td:eq(2)').text().trim();
             let contractNum = $(this).closest('tr').find('td:eq(3)').text().trim();
@@ -172,7 +178,7 @@
             $('#edit_corrective').val(corrective);
             $('#edit_responsible').val(responsible);
 
-            $('form').attr('action', '/project-maps/changes-update/' + changeId);
+            $('form').attr('action', '/project-maps/changes-update/' + changeId + '#changes');
 
             $('#editChanges').modal('show');
         });
@@ -185,6 +191,7 @@
         });
 
         $('#confirmDeleteChanges').click(function() {
+            console.log('Item ID to delete:', itemIdToDelete);
             $.ajax({
                 method: 'GET',
                 url: `/project-maps/changes-delete/${itemIdToDelete}`,
@@ -193,7 +200,8 @@
                     let projectId = data.projectId;
                     setTimeout(function() {
                         // window.location.reload(1);
-                        window.location.href = `/project-maps/all/${projId}`;
+                        window.location.href =
+                            `/project-maps/all/${projId}/#changes`;
                     }, 2000);
                 },
                 error: function(error) {

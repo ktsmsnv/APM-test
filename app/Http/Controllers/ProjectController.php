@@ -19,6 +19,7 @@ use App\Models\workGroup;
 use App\Models\Change;
 use App\Models\baseRisks;
 use App\Models\CalcRisk;
+use App\Models\Report;
 
 class ProjectController extends Controller
 {
@@ -31,14 +32,26 @@ class ProjectController extends Controller
     }
 
     // Отображение одного проекта и связанных данных (отображает данные по id) на странице карты проекта
-    public function showOneMessage($id)
+    public function showOneMessage($id, $tab = null)
     {
-        $project = Projects::with('equipment', 'expenses', 'totals', 'markups', 'contacts', 'risks', 'notes', 'workGroup', 'basicReference', 'basicInfo', 'notes')->find($id); //'basicReference', 'basicInfo', 'notes'
+        $project = Projects::with('equipment', 'expenses', 'totals', 'markups', 'contacts', 'risks', 'notes', 'workGroup', 'basicReference', 'basicInfo', 'notes')->find($id);
+
         $notes = $project->notes;
         $baseRisks = baseRisks::all();
-        return view('project-map', compact('project', 'notes', 'baseRisks'));
-    }
 
+        $defaultTab = 'calculation';
+
+        if ($tab === null) {
+            $tab = $defaultTab;
+        }
+
+        if (view()->exists("tables.{$tab}-projectMap")) {
+            $data = compact('project', 'tab', 'notes', 'baseRisks');
+            return view('project-map', $data);
+        } else {
+            abort(404, 'Tab not found');
+        }
+    }
 
     // удаление карты проекта (НЕАКТУАЛЬНО )
     public function deleteMessage($id)
@@ -56,7 +69,7 @@ class ProjectController extends Controller
         $note->date = now(); // указываем текущую дату
         $note->project_num = $project->projNum;
         $note->save();
-        return back();
+        return redirect()->route('project-data-one', ['id' => $project->projNum, 'tab' => '#notes'])->with('success', 'Project data successfully updated');
     }
     //метод для удаления записи из дневника
     public function destroy(Projects $project, Note $note)
@@ -64,7 +77,7 @@ class ProjectController extends Controller
         if ($project->projNum === $note->project_num) {
             $note->delete();
         }
-        return back();
+        return redirect()->route('project-data-one', ['id' => $project->projNum, 'tab' => '#notes'])->with('success', 'Project data successfully updated');
     }
     public function edit(Projects $project, Note $note)
     {
@@ -74,7 +87,7 @@ class ProjectController extends Controller
     {
         $note->update(['comment' => $request->comment]);
         $note->update(['date' => now()]);
-        return back();
+        return redirect()->route('project-data-one', ['id' => $project->projNum, 'tab' => '#notes'])->with('success', 'Project data successfully updated');
     }
 
 
@@ -236,12 +249,16 @@ class ProjectController extends Controller
     }
 
 
-
     // редактирование карты проекта -> РАСЧЕТ (открыывает страницу редактирования по id записи)
     public function updateCalculation($id)
     {
-        $project = new Projects;
-        return view('project-map-update', ['project' => $project->find($id)]);
+        $project = Projects::find($id);
+
+        if (!$project) {
+            return response()->json(['error' => 'Project not found'], 404);
+        }
+
+        return view('project-map-update', ['project' => $project]);
     }
     // РЕДАКТИРОВАНИЕ данных для карты проекта -> РАСЧЕТ
     public function updateCalculationSubmit($id, Request $req)
@@ -378,7 +395,7 @@ class ProjectController extends Controller
             }
         }
 
-        return redirect()->route('project-data-one', $id)->with('success', 'Project data successfully updated');
+        return redirect()->route('project-data-one', ['id' => $id, 'tab' => '#calculation'])->with('success', 'Project data successfully updated');
     }
 
 
@@ -442,20 +459,20 @@ class ProjectController extends Controller
         $workGroup->logistics = $req->logistics;
         $workGroup->save();
 
-        return redirect()->route('project-data-one', $id)->with('success', 'Project data successfully updated');
+        return redirect()->route('project-data-one', ['id' => $id, 'tab' => '#realization'])->with('success', 'Project data successfully updated');
     }
 
     // редактирование карты проекта -> ИЗМЕНЕНИЯ (открыывает страницу редактирования по id записи)
     public function updateChanges($id)
     {
-        $project = new Projects;
-        return view('update-changes', ['project' => $project->find($id)]);
+        $project = Projects::find($id);
+        return view('update-changes', ['project' => $project]);
     }
-    // РЕДАКТИРОВАНИЕ данных для карты проекта -> ИЗМЕНЕНИЯ
+ 
     public function updateChangesSubmit($id, Request $req)
     {
         $project = Projects::find($id);
-
+    
         // Ensure the request has the 'changes' key and it's an array
         if ($req->has('changes') && is_array($req->input('changes'))) {
             foreach ($req->input('changes') as $index => $ChangesData) {
@@ -477,8 +494,8 @@ class ProjectController extends Controller
                 );
             }
         }
-
-        return redirect()->route('project-data-one', $id)->with('success', 'Project data successfully updated');
+    
+        return redirect()->route('project-data-one', ['id' => $id, 'tab' => '#changes'])->with('success', 'Project data successfully updated');
     }
 
 
@@ -486,17 +503,17 @@ class ProjectController extends Controller
     public function search(Request $request)
     {
         $search_text = $request->input('search');
-        
-        $data = Projects::where('projManager', 'LIKE', '%'.$search_text.'%')
-                        ->orWhere('projNum', 'LIKE', '%'.$search_text.'%')
-                        ->orWhere('objectName', 'LIKE', '%'.$search_text.'%')
-                        ->get();
-    
+
+        $data = Projects::where('projManager', 'LIKE', '%' . $search_text . '%')
+            ->orWhere('projNum', 'LIKE', '%' . $search_text . '%')
+            ->orWhere('objectName', 'LIKE', '%' . $search_text . '%')
+            ->get();
+
         if ($data->isEmpty()) {
             // Выводим текст, если результаты поиска пусты
             return view('search', ['noResults' => true]);
         }
-    
+
         return view('search', compact('data'));
     }
 }

@@ -15,15 +15,18 @@
             </form>
         </div>
         <div id="resultsContainer"> <!-- Этот блок будет содержать результаты поиска -->
+            @if(count($data) > 0)
             @foreach ($data as $el)
                 <div class="alert alert-info">
                     <h3>{{ $el->projNum }}</h3>
                     <p>{{ $el->projManager }}</p>
                     <p><small>{{ $el->objectName }}</small></p>
-                    <a href="{{ route('project-data-one', $el->id) }}"><button
-                            class="btn btn-warning">Детальнее</button></a>
+                    <a href="{{ route('project-data-one', ['id' => $el->id, 'tab' => '#calculation']) }}"><button class="btn btn-warning">Детальнее</button></a>
                 </div>
             @endforeach
+        @else
+            <p>Нет карт проекта.</p>
+        @endif
         </div>
         <a href="{{ route('project-create') }}" class="btn btn-primary">Добавить карту</a>
     </div>

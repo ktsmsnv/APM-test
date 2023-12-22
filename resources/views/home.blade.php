@@ -371,13 +371,12 @@
                                 previous: 'Предыдущая',
                             },
                         },
-                    });
-
-                    // Заменяем -1 на "Все" в меню выбора количества записей
-                    table.on('length.dt', function(e, settings, len) {
-                        var select = $(target + ' table').closest('.dataTables_wrapper').find(
-                            '.dataTables_length select');
-                        select.find('option[value="-1"]').text('Все');
+                        // Добавьте следующий блок для замены -1 на "все"
+                        initComplete: function() {
+                            var select = $('select[name="equipment-datatable-' + target
+                                .substring(1) + '_length"]');
+                            select.find('option[value="-1"]').text('Все');
+                        }
                     });
                 }
             });

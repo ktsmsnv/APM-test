@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('risks', function (Blueprint $table) {
             $table->id();
+
+            $table->foreign('project_num')->references('projNum')->on('projects')->onDelete('cascade')->onUpdate('cascade');
+            
             $table->string('risk_name')->nullable();
             $table->json('risk_reason')->nullable();
             $table->json('risk_consequences')->nullable();
@@ -29,7 +32,6 @@ return new class extends Migration
             $table->string('project_num')->index();
             $table->timestamps();
 
-            $table->foreign('project_num')->references('projNum')->on('projects')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 
