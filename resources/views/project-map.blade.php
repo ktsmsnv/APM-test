@@ -8,8 +8,8 @@
 
                 <ul class="nav nav-mytabs mb-5" id="myTab" role="tablist">
                     <li class="nav-item">
-                        <a class="nav-link active" id="calculation-tab" data-toggle="tab" href="#calculation" role="tab"
-                            aria-controls="calculation" aria-selected="true">Расчет</a>
+                        <a class="nav-link{{ $tab === 'calculation' ? ' active' : '' }}"id="calculation-tab" data-toggle="tab"
+                            href="#calculation" role="tab" aria-controls="calculation" aria-selected="true">Расчет</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" id="realization-tab" data-toggle="tab" href="#realization" role="tab"
@@ -43,8 +43,7 @@
                         aria-labelledby="calculation-tab">
                         {{-- @include('tables.calculation-projectMap') --}}
                     </div>
-                    <div class="tab-pane fade" id="realization" role="tabpanel"
-                        aria-labelledby="realization-tab">
+                    <div class="tab-pane fade" id="realization" role="tabpanel" aria-labelledby="realization-tab">
                         {{-- @include('tables.realization-projectMap') --}}
                     </div>
                     <div class="tab-pane fade" id="risks" role="tabpanel" aria-labelledby="risks-tab">
@@ -70,6 +69,8 @@
     </div>
     <script>
         $(document).ready(function() {
+            $('#{{ $tab }}-tab').tab('show');
+
             new DataTable('.projMap', {
                 responsive: true,
                 searching: false, // Отключаем поиск
@@ -85,13 +86,17 @@
 
         $(document).ready(() => {
             let url = location.href.replace(/\/$/, "");
+
             function loadTabContent(tabId) {
                 $.ajax({
-                    url: `/tables/${tabId}`, 
+                    url: `/tables/${tabId}`,
                     type: 'GET',
                     success: function(response) {
                         $(`#${tabId}`).html(response.content);
                         $(`#myTab a[href="#${tabId}"]`).tab("show");
+
+                        const newUrl = `${url.split("#")[0]}#${tabId}`;
+                        history.replaceState(null, null, newUrl);
                     },
                     error: function(error) {
                         console.error('Error fetching tab content:', error);
@@ -99,7 +104,11 @@
                 });
             }
 
-            
+            const fragment = window.location.hash.substring(1);
+            if (fragment) {
+                loadTabContent(fragment);
+            }
+
             if (location.hash) {
                 const hash = url.split("#");
                 loadTabContent(hash[1]);
@@ -109,10 +118,14 @@
                     $(window).scrollTop(0);
                 }, 400);
             }
-            $('a[data-toggle="tab"]').on("click", function() {
-                const newUrl = `${url.split("#")[0]}${$(this).attr("href")}/`;
-                history.replaceState(null, null, newUrl);
 
+            const tabMatch = location.href.match(/#(\w+)$/);
+            if (tabMatch) {
+                const tabId = tabMatch[1];
+                loadTabContent(tabId);
+            }
+
+            $('a[data-toggle="tab"]').on("click", function() {
                 const tabId = $(this).attr("aria-controls");
                 loadTabContent(tabId);
             });

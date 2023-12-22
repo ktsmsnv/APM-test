@@ -145,7 +145,14 @@ class reportController extends Controller
                     'roleBonus' => $rolesData['roleBonus'],
                     'premium_part' => $rolesData['premiumPart'],
                 ];
-                $project->report_team()->create($teamMember);
+    
+                $existingRole = $project->report_team()->find($rolesData['roleId']);
+    
+                if ($existingRole) {
+                    $existingRole->update($teamMember);
+                } else {
+                    $project->report_team()->create($teamMember);
+                }
             }
         }
 
@@ -171,7 +178,7 @@ class reportController extends Controller
         $ReportNotes->resume = $req->resume;
         $ReportNotes->save();
 
-        return redirect()->route('project-data-one', $id)->with('success', 'Данные отчеты были успешно обновлены');
+        return redirect()->route('project-data-one', ['id' => $id, 'tab' => 'report'])->with('success', 'Changes successfully updated');
     }
 
 
@@ -179,14 +186,17 @@ class reportController extends Controller
     public function deleteMessage($id)
     {
         $project = Projects::find($id);
-
-        // Удаление связанных записей
+    
+        if (!$project) {
+            return abort(404); 
+        }
+    
         $project->reports()->delete();
         $project->report_notes()->delete();
         $project->report_reflection()->delete();
         $project->report_team()->delete();
-
-        return redirect()->route('project-data-one')->with('success', 'Отчет был удален');
+    
+        return redirect()->route('project-data-one', ['id' => $id, 'tab' => '#report'])->with('success', 'Project data successfully updated');
     }
 
 

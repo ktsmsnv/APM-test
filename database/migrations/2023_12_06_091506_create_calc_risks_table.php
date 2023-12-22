@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('calc_risks', function (Blueprint $table) {
             $table->id();
 
-             $table->string('project_num');
+            $table->string('project_num');
             $table->foreign('project_num')->references('projNum')->on('projects');
             $table->string('calcRisk_name');
 

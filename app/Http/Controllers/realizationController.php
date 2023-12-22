@@ -79,6 +79,7 @@ class realizationController extends Controller
             $workGroup->logistics = $request->logistics;
             $workGroup->save();
     
-            return redirect()->route('project-data-one', $id)->with('success');
+
+        return redirect()->route('project-data-one', $id)->with('success');
         }
 }

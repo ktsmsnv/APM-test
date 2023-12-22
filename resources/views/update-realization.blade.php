@@ -173,7 +173,7 @@
                                             </td>
                                             <td>
                                                 <div class="col-3">
-                                                    <input type="text" name="end_date_fact" id="end_date_fact"
+                                                    <input type="date" name="end_date_fact" id="end_date_fact"
                                                         value="{{ $item->end_date_fact }}" class="input_editable">
                                                 </div>
                                             </td>

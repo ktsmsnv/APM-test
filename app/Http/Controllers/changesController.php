@@ -34,6 +34,7 @@ class changesController extends Controller
             foreach ($request->input('changes') as $index => $ChangesData) {
                 $item = array(
                     'project_num' => $project->projNum,
+                    'project' => $project->projNum,
                     'contractor' => $ChangesData['contractor'],
                     'contract_num' => $ChangesData['contract_num'],
                     'change' => $ChangesData['change'],
@@ -46,7 +47,7 @@ class changesController extends Controller
             }
             Change::insert($data_changes);
         }
-        return redirect()->route('project-data-one');
+        return redirect()->route('project-data-one', ['id' => $id, 'tab' => '#changes'])->with('success', 'Project data successfully updated');
     }
 
 

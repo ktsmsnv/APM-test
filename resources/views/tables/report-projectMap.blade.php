@@ -1,4 +1,8 @@
-@if ($project->reports()->exists() && $project->reports->first() && $project->basicReference()->exists() && $project->basicReference->first())
+@if (
+    $project->reports()->exists() &&
+        $project->reports->first() &&
+        $project->basicReference()->exists() &&
+        $project->basicReference->first())
     {{-- если отчет существует и реализация существует --}}
 
     {{-- Отчет --}}
@@ -314,8 +318,11 @@
         <div class="d-flex gap-2">
             <button class="btn btn-primary" data-bs-toggle="modal"
                 data-bs-target="#reportChange">Редактировать</button>
-            <a href="{{ route('realization-create', $project->id) }}"><button
-                    class="btn btn-danger">Удалить</button></a>
+                {{-- <form action="{{ route('report-delete', $project->id) }}" method="post">
+                    @csrf
+                    @method('delete') 
+                    <button type="submit" class="btn btn-danger">Удалить</button>
+                </form> --}}
         </div>
     </div>
 
@@ -323,7 +330,8 @@
     <div class="modal fade" id="reportChange" tabindex="-1" aria-labelledby="reportChangeLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-            <form action="{{ route('report-update-submit', $project->id) }}" method="post">
+            <form action="{{ route('report-update-submit', ['id' => $project->id, 'tab' => 'report']) }}"
+                method="post">
                 @csrf
                 <div class="modal-content">
                     <div class="modal-header">
@@ -502,8 +510,13 @@
                                     <tr>
                                         <th class="projNotes green">Примечания к проекту:</th>
                                         <td colspan="2">
-                                            <textarea type="text" class="form-control" name="projNotes" id="projNotes_change"
-                                                placeholder="Введите примечания к проекту" value="{{ $project->report_notes->first()->projNotes }}"></textarea>
+                                            <textarea type="text" class="form-control" name="projNotes" id="projNotes_change" placeholder="Введите примечания к проекту">
+                                                @if ($project && $project->report_notes->first())
+                                                    {{ $project->report_notes->first()->projNotes }}
+                                                @else
+                                                    нет записей
+                                                @endif
+                                            </textarea>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -563,11 +576,10 @@
                                     <tr>
                                         <th class="premiumPart gray">Размер премиальной части проекта, руб. без НДС
                                         </th>
-                                            <td colspan="3" class="gray"><input type="text"
-                                                    class="form-control" name="roles[0][premiumPart]" id="premium_part_change"
-                                                    value="{{ $project->report_team->first()->premium_part }}"
-                                                    readonly>
-                                            </td>
+                                        <td colspan="3" class="gray"><input type="text" class="form-control"
+                                                name="roles[0][premiumPart]" id="premium_part_change"
+                                                value="{{ $project->report_team->first()->premium_part }}" readonly>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <th class="projTeam blue">Команда проекта</th>
@@ -582,31 +594,36 @@
                                         <th class="roleBonus blue">Дополнительная премия, руб. без НДС</th>
                                     </tr>
                                     @foreach ($project->report_team ?? [] as $index => $item)
-                                    <tr>
-                                        <td class="blue"><input type="text" class="form-control"
-                                                name="roles[{{ $index }}][roleFio]" id="roleFio_change"
-                                                placeholder="Введите ФИО (роль в проекте)"
-                                                value="{{ $item->roleFio }}"></td>
-                                        <td class="blue"><input type="text" class="form-control"
-                                                name="roles[{{ $index }}][roleDescription]"
-                                                id="roleDescription_change"
-                                                placeholder="Введите расширенное описание роли"
-                                                value="{{ $item->roleDescription }}">
-                                        </td>
-                                        <td><input type="text" class="form-control"
-                                                name="roles[{{ $index }}][roleImpact]" id="roleImpact_change"
-                                                placeholder="Введите вклад в успех проекта, %"
-                                                value="{{ $item->roleImpact }}"></td>
-                                        <td class="gray"><input type="text" class="form-control"
-                                                name="roles[{{ $index }}][roleBonus]" id="roleBonus_change"
-                                                placeholder="Введите дополнительную премию, руб. без НДС"
-                                                value="{{ $item->roleBonus }}"></td>
-                                                <td class="gray"><input type="text" class="form-control"
-                                                    name="roles[{{ $index }}][premiumPart]" id="premiumPart_change"
+                                        <tr>
+                                            <input type="hidden" name="roles[{{ $index }}][roleId]"
+                                                value="{{ $item->id }}">
+                                            <td class="blue"><input type="text" class="form-control"
+                                                    name="roles[{{ $index }}][roleFio]" id="roleFio_change"
+                                                    placeholder="Введите ФИО (роль в проекте)"
+                                                    value="{{ $item->roleFio }}"></td>
+                                            <td class="blue"><input type="text" class="form-control"
+                                                    name="roles[{{ $index }}][roleDescription]"
+                                                    id="roleDescription_change"
+                                                    placeholder="Введите расширенное описание роли"
+                                                    value="{{ $item->roleDescription }}">
+                                            </td>
+                                            <td><input type="text" class="form-control"
+                                                    name="roles[{{ $index }}][roleImpact]"
+                                                    id="roleImpact_change"
+                                                    placeholder="Введите вклад в успех проекта, %"
+                                                    value="{{ $item->roleImpact }}"></td>
+                                            <td class="gray"><input type="text" class="form-control"
+                                                    name="roles[{{ $index }}][roleBonus]"
+                                                    id="roleBonus_change"
+                                                    placeholder="Введите дополнительную премию, руб. без НДС"
+                                                    value="{{ $item->roleBonus }}"></td>
+                                            <td class="gray"><input type="hidden" class="form-control"
+                                                    name="roles[{{ $index }}][premiumPart]"
+                                                    id="premiumPart_change"
                                                     placeholder="Введите дополнительную премию, руб. без НДС"
                                                     value="{{ $item->premium_part }}"></td>
-                                    </tr>
-                                @endforeach
+                                        </tr>
+                                    @endforeach
                                 </tbody>
                                 <tfoot>
                                     <tr>
@@ -616,13 +633,13 @@
                                     <tr>
                                         <th class="teamNotes green">Примечания к команде проекта:</th>
                                         <td colspan="3">
-                                            @if ($project && $project->report_notes->first())
-                                                <textarea type="text" class="form-control" name="teamNotes" id="teamNotes_change"
-                                                    placeholder="Введите примечания к команде проекта" value="{{ $project->report_notes->first()->teamNotes }}"></textarea>
-                                            @else
-                                                нет записей
-                                            @endif
-
+                                            <textarea type="text" class="form-control" name="teamNotes" id="teamNotes_change" placeholder="Введите примечания к команде проекта">
+                                                @if ($project && $project->report_notes->first())
+                                                    {{ $project->report_notes->first()->teamNotes }}
+                                                @else
+                                                    нет записей
+                                                @endif
+                                            </textarea>
                                         </td>
                                     </tr>
                                 </tfoot>
@@ -724,13 +741,13 @@
                                     <tr>
                                         <th class="resume green">Общее резюме по проекту (что улучшить, точки роста)
                                         </th>
-                                        <td colspan="2">
-                                            @if ($project && $project->report_notes->first())
-                                                <textarea type="text" class="form-control" name="resume" id="resume"
-                                                    placeholder="Введите общее резюме по проекту" value="{{ $project->report_notes->first()->resume }}"></textarea>
-                                            @else
-                                                нет записей
-                                            @endif
+                                        <td colspan="2"> <textarea type="text" class="form-control" name="resume" id="resume" placeholder=""Введите общее резюме по проекту">
+                                                @if ($project && $project->report_notes->first())
+                                                    {{ $project->report_notes->first()->resume }}
+                                                @else
+                                                    нет записей
+                                                @endif
+                                            </textarea>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -755,11 +772,105 @@
         </div>
     </div>
 
+    {{-- Доп. строки для реадктирования --}}
+    <script>
+        let index = 1;
+        $(document).ready(function() {
+            $("#addMoreChange-reportTeam").click(function(event) {
+                event.preventDefault();
+                index++;
+
+                const sum = Math.round(parseFloat($('#expenseMaterialFact_change').val() || 0) +
+                    parseFloat($('#expenseDeliveryFact_change').val() || 0) +
+                    parseFloat($('#expenseWorkFact_change').val() || 0) +
+                    parseFloat($('#expenseOtherFact_change').val() || 0) +
+                    parseFloat($('#expenseOpoxFact_change').val() || 0));
+                const difference = Math.round(parseFloat($('#costRubW_change').val() || 0) - sum);
+                const premium_part = Math.round(difference * 0.01);
+
+
+                const newRow = $(getHtml(index, premium_part));
+                newRow.appendTo(`#reportTeamChange-inputs`);
+
+                newRow.find('.deleteChange-btn').on('click', function() {
+                    newRow.remove();
+                })
+            });
+        });
+
+        function getHtml(index, premium_part) {
+            return `
+        <tr>
+            <input type="hidden" name="roles[${index}][roleId]" value="">
+            <th class="premiumPart gray d-none">Размер премиальной части проекта, руб. без НДС</th>
+            <td colspan="3" class="gray d-none"><input type="text" class="form-control"
+                name="roles[${index}][premiumPart]" id="premium_part_change_${index}" value="${premium_part}"></td>
+        </tr>
+        <tr>
+        <td class="blue"><input type="text" class="form-control" name="roles[${index}][roleFio]"
+            id="roleFio_change" placeholder="Введите ФИО (роль в проекте)"></td>
+        <td class="blue"><input type="text" class="form-control" name="roles[${index}][roleDescription]"
+            id="roleDescription_change" placeholder="Введите расширенное описание роли"></td>
+        <td><input type="text" class="form-control" name="roles[${index}][roleImpact]"
+             id="roleImpact_change" placeholder="Введите вклад в успех проекта, %"></td>
+        <td class="gray"><input type="text" class="form-control" name="roles[${index}][roleBonus]"
+            id="roleBonus_change" placeholder="Введите дополнительную премию, руб. без НДС"></td>
+        <td><button type="button" class="btn btn-danger btn-sm deleteChange-btn"><i class="fas fa-times"></i></button></td></td>
+       </tr>
+        `
+        }
+    </script>
+    {{-- Расчет полей для редактирования --}}
+    <script>
+        function calculateAndUpdateFields() {
+            const sum_change = Math.round(parseFloat($('#expenseMaterialFact_change').val() || 0) +
+                parseFloat($('#expenseDeliveryFact_change').val() || 0) +
+                parseFloat($('#expenseWorkFact_change').val() || 0) +
+                parseFloat($('#expenseOtherFact_change').val() || 0) +
+                parseFloat($('#expenseOpoxFact_change').val() || 0));
+
+            const difference_change = Math.round(parseFloat($('#costRubW_change').val() || 0) - sum_change);
+
+            const marginalityFact_change = Math.round(parseFloat($('#marginProfitFact_change').val() || 0) /
+                parseFloat($('#costRubW_change').val() || 0));
+
+            const profitPlan_change = (parseFloat($('#marginProfitPlan_change').val() || 0) - parseFloat($(
+                '#expenseOpoxPlan_change').val() || 0));
+
+            const profitFact_change = difference_change - parseFloat($('#expenseOpoxFact_change').val() || 0);
+
+            const projProfitPlan_change = Math.round(parseFloat($('#profitPlan_change').val() || 0) / parseFloat($(
+                '#costRubW_change').val() || 0));
+
+            const projProfitFact_change = Math.round(parseFloat($('#profitFact_change').val() || 0) / parseFloat($(
+                '#costRubW_change').val() || 0));
+
+            const premium_part_change = Math.round(difference_change * 0.01);
+
+            // Обновляем поля
+            $('#expenseDirectFact_change').val(sum_change);
+            $('#marginProfitFact_change').val(difference_change);
+            $('#marginalityFact_change').val(marginalityFact_change);
+            $('#profitPlan_change').val(profitPlan_change);
+            $('#profitFact_change').val(profitFact_change);
+            $('#projProfitPlan_change').val(projProfitPlan_change);
+            $('#projProfitFact_change').val(projProfitFact_change);
+
+            $('#premium_part_change').val(premium_part_change);
+        }
+
+        $(document).ready(function() {
+            // Указываем, что при изменении текстовых полей нужно вызывать функцию:
+            $("#expenseMaterialFact_change, #expenseDeliveryFact_change, #expenseWorkFact_change, #expenseOtherFact_change, #expenseOpoxFact_change, #costRubW_change, #expenseDirectFact_change, #marginProfitFact_change, #marginalityPlan_change, #expenseOpoxPlan_change, #expenseOpoxFact_change, #profitPlan_change, #profitFact_change, #premium_part_change")
+                .on('input', calculateAndUpdateFields);
+        });
+    </script>
 
 @elseif (!$project->reports()->exists() && !$project->basicReference()->exists())
     {{-- если отчета и реализации нет --}}
     <h4 class="mb-3">Заполните сначала реализацию</h4>
-    <a href="{{ route('realization-create', $project->id) }}"><button class="btn btn-danger">Заполнить реализацию</button></a>
+    <a href="{{ route('realization-create', $project->id) }}"><button class="btn btn-danger">Заполнить
+            реализацию</button></a>
 @else
     {{-- если только отчета нет --}}
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
@@ -1060,8 +1171,9 @@
                                     </tr>
                                     <tr>
                                         <th class="projContractor gray">Контрагент:</th>
-                                        <td colspan="2" class="gray"><input type="text" class="form-control"
-                                                value="{{ $project->contractor }}" readonly></td>
+                                        <td colspan="2" class="gray"><input type="text"
+                                                class="form-control" value="{{ $project->contractor }}" readonly>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <th class="projManager gray">Руководитель проекта:</th>
@@ -1234,100 +1346,5 @@
         // Указываем, что при изменении текстовых полей нужно вызывать функцию:
         $("#expenseMaterialFact, #expenseDeliveryFact, #expenseWorkFact, #expenseOtherFact, #expenseOpoxFact, #costRubW, #expenseDirectFact, #marginProfitFact, #marginalityPlan, #expenseOpoxPlan, #expenseOpoxFact, #profitPlan, #profitFact, #premium_part")
             .on('input', calculateFields);
-    });
-</script>
-
-
-
-{{-- Доп. строки для реадктирования --}}
-<script>
-    let index = 1;
-    $(document).ready(function() {
-        $("#addMoreChange-reportTeam").click(function(event) {
-            event.preventDefault();
-            index++;
-
-            const sum = Math.round(parseFloat($('#expenseMaterialFact_change').val() || 0) +
-                parseFloat($('#expenseDeliveryFact_change').val() || 0) +
-                parseFloat($('#expenseWorkFact_change').val() || 0) +
-                parseFloat($('#expenseOtherFact_change').val() || 0) +
-                parseFloat($('#expenseOpoxFact_change').val() || 0));
-            const difference = Math.round(parseFloat($('#costRubW_change').val() || 0) - sum);
-            const premium_part = Math.round(difference * 0.01);
-
-
-            const newRow = $(getHtml(index, premium_part));
-            newRow.appendTo(`#reportTeamChange-inputs`);
-
-            newRow.find('.deleteChange-btn').on('click', function() {
-                newRow.remove();
-            })
-        });
-    });
-
-    function getHtml(index, premium_part) {
-        return `
-        <tr>
-            <th class="premiumPart gray d-none">Размер премиальной части проекта, руб. без НДС</th>
-            <td colspan="3" class="gray d-none"><input type="text" class="form-control"
-                name="roles[${index}][premiumPart]" id="premium_part_change_${index}" value="${premium_part}"></td>
-        </tr>
-        <tr>
-        <td class="blue"><input type="text" class="form-control" name="roles[${index}][roleFio]"
-            id="roleFio_change" placeholder="Введите ФИО (роль в проекте)"></td>
-        <td class="blue"><input type="text" class="form-control" name="roles[${index}][roleDescription]"
-            id="roleDescription_change" placeholder="Введите расширенное описание роли"></td>
-        <td><input type="text" class="form-control" name="roles[${index}][roleImpact]"
-             id="roleImpact_change" placeholder="Введите вклад в успех проекта, %"></td>
-        <td class="gray"><input type="text" class="form-control" name="roles[${index}][roleBonus]"
-            id="roleBonus_change" placeholder="Введите дополнительную премию, руб. без НДС"></td>
-        <td><button type="button" class="btn btn-danger btn-sm deleteChange-btn"><i class="fas fa-times"></i></button></td></td>
-       </tr>
-        `
-    }
-</script>
-{{-- Расчет полей для редактирования --}}
-<script>
-    function calculateAndUpdateFields() {
-        const sum_change = Math.round(parseFloat($('#expenseMaterialFact_change').val() || 0) +
-            parseFloat($('#expenseDeliveryFact_change').val() || 0) +
-            parseFloat($('#expenseWorkFact_change').val() || 0) +
-            parseFloat($('#expenseOtherFact_change').val() || 0) +
-            parseFloat($('#expenseOpoxFact_change').val() || 0));
-
-        const difference_change = Math.round(parseFloat($('#costRubW_change').val() || 0) - sum_change);
-
-        const marginalityFact_change = Math.round(parseFloat($('#marginProfitFact_change').val() || 0) /
-            parseFloat($('#costRubW_change').val() || 0));
-
-        const profitPlan_change = (parseFloat($('#marginProfitPlan_change').val() || 0) - parseFloat($(
-            '#expenseOpoxPlan_change').val() || 0));
-
-        const profitFact_change = difference_change - parseFloat($('#expenseOpoxFact_change').val() || 0);
-
-        const projProfitPlan_change = Math.round(parseFloat($('#profitPlan_change').val() || 0) / parseFloat($(
-            '#costRubW_change').val() || 0));
-
-        const projProfitFact_change = Math.round(parseFloat($('#profitFact_change').val() || 0) / parseFloat($(
-            '#costRubW_change').val() || 0));
-
-        const premium_part_change = Math.round(difference_change * 0.01);
-
-        // Обновляем поля
-        $('#expenseDirectFact_change').val(sum_change);
-        $('#marginProfitFact_change').val(difference_change);
-        $('#marginalityFact_change').val(marginalityFact_change);
-        $('#profitPlan_change').val(profitPlan_change);
-        $('#profitFact_change').val(profitFact_change);
-        $('#projProfitPlan_change').val(projProfitPlan_change);
-        $('#projProfitFact_change').val(projProfitFact_change);
-
-        $('#premium_part_change').val(premium_part_change);
-    }
-
-    $(document).ready(function() {
-        // Указываем, что при изменении текстовых полей нужно вызывать функцию:
-        $("#expenseMaterialFact_change, #expenseDeliveryFact_change, #expenseWorkFact_change, #expenseOtherFact_change, #expenseOpoxFact_change, #costRubW_change, #expenseDirectFact_change, #marginProfitFact_change, #marginalityPlan_change, #expenseOpoxPlan_change, #expenseOpoxFact_change, #profitPlan_change, #profitFact_change, #premium_part_change")
-            .on('input', calculateAndUpdateFields);
     });
 </script>

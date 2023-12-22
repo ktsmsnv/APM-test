@@ -312,19 +312,26 @@
 
 
 <div class="d-flex gap-3 mt-5">
-    <a href="{{ route('project-map-update', $project->id) }}"><button class="btn btn-primary">Редактировать</button></a>
+    <a href="{{ route('project-map-update', ['id' => $project->id, 'tab' => 'calculation']) }}">
+        <button class="btn btn-primary">Редактировать</button>
+    </a>
+    
     {{-- <a href="{{ route('project-map-delete', $project->id) }}"><button class="btn btn-danger">Удалить</button></a> --}}
 </div>
 
 <script>
-    window.onload = function() {
-    var values = document.getElementsByClassName('total-equipment');
-    var total = 0;
-    for (var i = 0; i < values.length; i++) {
-      total += parseFloat(values[i].innerText);
-    }   
+    $(document).ready(function() {
+        var values = $('.total-equipment');
+        var total = 0;
 
-    var footer = document.getElementById('equipment-footer');
-    footer.innerText = total;
-}
+        values.each(function() {
+            var value = parseFloat($(this).text().replace(',', '.'));
+            console.log('Value:', value, 'Type:', typeof value);
+            if (!isNaN(value)) {
+                total += value;
+            }
+        });
+
+        $('#equipment-footer').text(total.toFixed(2));
+    });
 </script>
