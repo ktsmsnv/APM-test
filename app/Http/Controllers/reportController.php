@@ -242,8 +242,8 @@ class reportController extends Controller
         $templateProcessor->setValue('projName', $project->basicReference->first()->projName);
         $templateProcessor->setValue('projNum', $project->projNum);
         $templateProcessor->setValue('projContractor', $project->contractor);
-        $templateProcessor->setValue('costRubW', $project->reports->first()->costRubW);
-        $templateProcessor->setValue('costRub', $project->reports->first()->costRub);
+        $templateProcessor->setValue('costRubW', $project->basicInfo->first()->contract_price *1.2);
+        $templateProcessor->setValue('costRub', $project->basicInfo->first()->contract_price);
         $templateProcessor->setValue('expenseDirectPlan', $project->reports->first()->expenseDirectPlan);
         $templateProcessor->setValue('expenseDirectFact', $project->reports->first()->expenseDirectFact);
         $templateProcessor->setValue('expenseMaterialPlan', $project->reports->first()->expenseMaterialPlan);

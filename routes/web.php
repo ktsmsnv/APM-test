@@ -74,6 +74,14 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/base-risks/baseRisks-update/{id}', 'App\Http\Controllers\BaseRisksController@update')->name('baseRisks-update');
 
 
+    //создание новой записи в базе рисков
+    Route::post('/base-risks/basePossibilities-store', 'App\Http\Controllers\BasePossibilitiesController@store')->name('basePossibilities-store');
+    // удаление записи из базы рисков
+    Route::get('/base-risks/basePossibilities-delete/{id}', 'App\Http\Controllers\BasePossibilitiesController@delete')->name('basePossibilities-delete');
+    // редактирование записи в базе рисков
+    Route::post('/base-risks/basePossibilities-update/{id}', 'App\Http\Controllers\BasePossibilitiesController@update')->name('basePossibilities-update');
+
+
     // создание карты проекта -> РАСЧЕТ
     Route::get('/project-maps/create', 'App\Http\Controllers\ProjectController@create')->name('project-create');
     // создание карты проекта РАСЧЕТ -> сохранение в БД
@@ -96,7 +104,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/project-maps/changes-update/{id}', 'App\Http\Controllers\ChangesController@update')->name('changes-update');
     // ссоздание карты проекта ИЗМЕНЕНИЯ -> вывод связанных таблиц
     Route::get('/project-maps/create/changes-{id}', 'App\Http\Controllers\changesController@showDataCalculation')->name('changes-create');
-     // ссоздание карты проекта ИЗМЕНЕНИЯ ->удаление
+    // ссоздание карты проекта ИЗМЕНЕНИЯ ->удаление
     Route::get('/project-maps/changes-delete/{id}', 'App\Http\Controllers\changesController@delete')->name('changes-delete');
 
 
@@ -127,4 +135,3 @@ Route::middleware(['auth'])->group(function () {
     // обработка запросов поиска на странице все карты проекта
     Route::get('/search-projects', 'App\Http\Controllers\ProjectController@search')->name('search-projects');
 });
-

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\baseRisks;
+use App\Models\basePossibilities;
 use Illuminate\Support\Facades\Log;
 
 class BaseRisksController extends Controller
@@ -11,8 +12,9 @@ class BaseRisksController extends Controller
     public function index()
     {
         $baseRisks = baseRisks::all();
+        $basePossibilities = basePossibilities::all();
 
-        return view('base-risks', compact('baseRisks'));
+        return view('base-risks', compact('baseRisks', 'basePossibilities'));
     }
 
     // сохранение полей в бд

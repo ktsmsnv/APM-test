@@ -41,8 +41,8 @@
                     </tr>
                     <tr>
                         <th class="costContract blue">Стоимость по контракту:</th>
-                        <td class="gray">{{ $item->costRubW }}</td>
-                        <td class="gray">{{ $item->costRub }}</td>
+                        <td class="gray">{{$project->basicInfo->first()->contract_price  }}</td>
+                        <td class="gray">{{$project->basicInfo->first()->contract_price * 1.2 }}</td>
                     </tr>
                     <tr>
                         <td class="blue"></td>
@@ -318,7 +318,7 @@
         <div class="d-flex gap-2">
             <button class="btn btn-primary" data-bs-toggle="modal"
                 data-bs-target="#reportChange">Редактировать</button>
-                {{-- <form action="{{ route('report-delete', $project->id) }}" method="post">
+            {{-- <form action="{{ route('report-delete', $project->id) }}" method="post">
                     @csrf
                     @method('delete') 
                     <button type="submit" class="btn btn-danger">Удалить</button>
@@ -378,12 +378,12 @@
                                         <tr>
                                             <th class="costContract blue">Стоимость по контракту:</th>
                                             <td class="gray"><input type="text" class="form-control"
+                                                    name="costRub" id="costRub_change" value="{{ $project->basicInfo->first()->contract_price }}">
+                                            </td>
+                                            <td class="gray"><input type="text" class="form-control"
                                                     name="costRubW" id="costRubW_change"
                                                     value="{{ $project->basicInfo->first()->contract_price * 1.2 }}"
                                                     readonly>
-                                            </td>
-                                            <td class="gray"><input type="text" class="form-control"
-                                                    name="costRub" id="costRub_change" value="{{ $item->costRub }}">
                                             </td>
                                         </tr>
                                         <tr>
@@ -510,12 +510,13 @@
                                     <tr>
                                         <th class="projNotes green">Примечания к проекту:</th>
                                         <td colspan="2">
-                                            <textarea type="text" class="form-control" name="projNotes" id="projNotes_change" placeholder="Введите примечания к проекту">
+                                            <textarea type="text" class="form-control" name="projNotes" id="projNotes_change"
+                                                placeholder="Введите примечания к проекту">
                                                 @if ($project && $project->report_notes->first())
-                                                    {{ $project->report_notes->first()->projNotes }}
-                                                @else
-                                                    нет записей
-                                                @endif
+{{ $project->report_notes->first()->projNotes }}
+@else
+нет записей
+@endif
                                             </textarea>
                                         </td>
                                     </tr>
@@ -628,17 +629,19 @@
                                 <tfoot>
                                     <tr>
                                         <td colspan="4"><button id="addMoreChange-reportTeam"
-                                                class="btn btn-secondary w-100">Добавить роль</button></td>
+                                                class="btn btn-secondary w-100" type="button">Добавить роль</button>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <th class="teamNotes green">Примечания к команде проекта:</th>
                                         <td colspan="3">
-                                            <textarea type="text" class="form-control" name="teamNotes" id="teamNotes_change" placeholder="Введите примечания к команде проекта">
+                                            <textarea type="text" class="form-control" name="teamNotes" id="teamNotes_change"
+                                                placeholder="Введите примечания к команде проекта">
                                                 @if ($project && $project->report_notes->first())
-                                                    {{ $project->report_notes->first()->teamNotes }}
-                                                @else
-                                                    нет записей
-                                                @endif
+{{ $project->report_notes->first()->teamNotes }}
+@else
+нет записей
+@endif
                                             </textarea>
                                         </td>
                                     </tr>
@@ -741,12 +744,14 @@
                                     <tr>
                                         <th class="resume green">Общее резюме по проекту (что улучшить, точки роста)
                                         </th>
-                                        <td colspan="2"> <textarea type="text" class="form-control" name="resume" id="resume" placeholder=""Введите общее резюме по проекту">
+                                        <td colspan="2">
+                                            <textarea type="text" class="form-control" name="resume" id="resume" placeholder=""Введите общее резюме по
+                                                проекту">
                                                 @if ($project && $project->report_notes->first())
-                                                    {{ $project->report_notes->first()->resume }}
-                                                @else
-                                                    нет записей
-                                                @endif
+{{ $project->report_notes->first()->resume }}
+@else
+нет записей
+@endif
                                             </textarea>
                                         </td>
                                     </tr>
@@ -865,7 +870,6 @@
                 .on('input', calculateAndUpdateFields);
         });
     </script>
-
 @elseif (!$project->reports()->exists() && !$project->basicReference()->exists())
     {{-- если отчета и реализации нет --}}
     <h4 class="mb-3">Заполните сначала реализацию</h4>
@@ -1128,8 +1132,10 @@
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <td colspan="4"><button id="addMore-reportTeam"
-                                                class="btn btn-secondary w-100">Добавить роль</button></td>
+                                        <td colspan="4">
+                                            <button id="addMore-reportTeam" class="btn btn-secondary w-100"
+                                                type="button">Добавить роль</button>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <th class="teamNotes green">Примечания к команде проекта:</th>
@@ -1171,8 +1177,8 @@
                                     </tr>
                                     <tr>
                                         <th class="projContractor gray">Контрагент:</th>
-                                        <td colspan="2" class="gray"><input type="text"
-                                                class="form-control" value="{{ $project->contractor }}" readonly>
+                                        <td colspan="2" class="gray"><input type="text" class="form-control"
+                                                value="{{ $project->contractor }}" readonly>
                                         </td>
                                     </tr>
                                     <tr>
