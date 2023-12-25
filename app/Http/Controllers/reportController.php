@@ -108,32 +108,40 @@ class reportController extends Controller
         $project = Projects::find($id);
 
         // общая информация
-        $Report = Report::where('project_num', $project->projNum)->first();
-        // $Report = new Report;
-        $Report->project_num = $project->projNum;
-        $Report->costRubW = $req->costRubW;
-        $Report->costRub = $req->costRub;
-        $Report->expenseDirectPlan = $req->expenseDirectPlan;
-        $Report->expenseDirectFact = $req->expenseDirectFact;
-        $Report->expenseMaterialPlan = $req->expenseMaterialPlan;
-        $Report->expenseMaterialFact = $req->expenseMaterialFact;
-        $Report->expenseDeliveryPlan = $req->expenseDeliveryPlan;
-        $Report->expenseDeliveryFact = $req->expenseDeliveryFact;
-        $Report->expenseWorkPlan = $req->expenseWorkPlan;
-        $Report->expenseWorkFact = $req->expenseWorkFact;
-        $Report->expenseOtherPlan = $req->expenseOtherPlan;
-        $Report->expenseOtherFact = $req->expenseOtherFact;
-        $Report->expenseOpoxPlan = $req->expenseOpoxPlan;
-        $Report->expenseOpoxFact = $req->expenseOpoxFact;
-        $Report->marginProfitPlan = $req->marginProfitPlan;
-        $Report->marginProfitFact = $req->marginProfitFact;
-        $Report->marginalityPlan = $req->marginalityPlan;
-        $Report->marginalityFact = $req->marginalityFact;
-        $Report->profitPlan = $req->profitPlan;
-        $Report->profitFact = $req->profitFact;
-        $Report->projProfitPlan = $req->projProfitPlan;
-        $Report->projProfitFact = $req->projProfitFact;
-        $Report->save();
+        $report = Report::where('project_num', $project->projNum)->first();
+
+        // If the report doesn't exist, create a new instance
+        if (!$report) {
+            $report = new Report;
+            $report->project_num = $project->projNum;
+        }
+
+        // Update report fields
+        $report->costRubW = $req->costRubW;
+        $report->costRub = $req->costRub;
+        $report->expenseDirectPlan = $req->expenseDirectPlan;
+        $report->expenseDirectFact = $req->expenseDirectFact;
+        $report->expenseMaterialPlan = $req->expenseMaterialPlan;
+        $report->expenseMaterialFact = $req->expenseMaterialFact;
+        $report->expenseDeliveryPlan = $req->expenseDeliveryPlan;
+        $report->expenseDeliveryFact = $req->expenseDeliveryFact;
+        $report->expenseWorkPlan = $req->expenseWorkPlan;
+        $report->expenseWorkFact = $req->expenseWorkFact;
+        $report->expenseOtherPlan = $req->expenseOtherPlan;
+        $report->expenseOtherFact = $req->expenseOtherFact;
+        $report->expenseOpoxPlan = $req->expenseOpoxPlan;
+        $report->expenseOpoxFact = $req->expenseOpoxFact;
+        $report->marginProfitPlan = $req->marginProfitPlan;
+        $report->marginProfitFact = $req->marginProfitFact;
+        $report->marginalityPlan = $req->marginalityPlan;
+        $report->marginalityFact = $req->marginalityFact;
+        $report->profitPlan = $req->profitPlan;
+        $report->profitFact = $req->profitFact;
+        $report->projProfitPlan = $req->projProfitPlan;
+        $report->projProfitFact = $req->projProfitFact;
+
+        $report->save();
+
 
         // команда проекта
         if ($req->has('roles')) {
@@ -145,9 +153,9 @@ class reportController extends Controller
                     'roleBonus' => $rolesData['roleBonus'],
                     'premium_part' => $rolesData['premiumPart'],
                 ];
-    
+
                 $existingRole = $project->report_team()->find($rolesData['roleId']);
-    
+
                 if ($existingRole) {
                     $existingRole->update($teamMember);
                 } else {
@@ -186,16 +194,16 @@ class reportController extends Controller
     public function deleteMessage($id)
     {
         $project = Projects::find($id);
-    
+
         if (!$project) {
-            return abort(404); 
+            return abort(404);
         }
-    
+
         $project->reports()->delete();
         $project->report_notes()->delete();
         $project->report_reflection()->delete();
         $project->report_team()->delete();
-    
+
         return redirect()->route('project-data-one', ['id' => $id, 'tab' => '#report'])->with('success', 'Project data successfully updated');
     }
 
