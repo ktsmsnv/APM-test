@@ -61,7 +61,7 @@
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('baseRisks') }}"
-                                class="nav-link @if (Request::is('base-risks')) active @endif">База рисков</a>
+                                class="nav-link @if (Request::is('base-risks')) active @endif">Реестр рисков и возможностей</a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('rco') }}"
