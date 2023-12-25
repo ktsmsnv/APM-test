@@ -79,7 +79,7 @@ Route::middleware(['auth'])->group(function () {
     // удаление записи из базы рисков
     Route::get('/base-risks/basePossibilities-delete/{id}', 'App\Http\Controllers\BasePossibilitiesController@delete')->name('basePossibilities-delete');
     // редактирование записи в базе рисков
-    Route::post('/base-risks/basePossibilities-update/{id}', 'App\Http\Controllers\BasePossibilitiesController@update')->name('basePossibilities-update');
+    Route::post('/base-possibilities/basePossibilities-update/{id}', 'App\Http\Controllers\BasePossibilitiesController@update')->name('basePossibilities-update');
 
 
     // создание карты проекта -> РАСЧЕТ
