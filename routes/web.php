@@ -87,6 +87,9 @@ Route::middleware(['auth'])->group(function () {
     // создание карты проекта РАСЧЕТ -> сохранение в БД
     Route::post('/project-maps/create/save', 'App\Http\Controllers\ProjectController@storeNew')->name('project-store');
 
+    // АВТОСОХРАНЕНИЕ КАРТЫ ПРОЕКТА
+    Route::post('/autosave-project-data', 'App\Http\Controllers\ProjectController@autoSave')->name('autosave-project-data');
+
 
     // создание карты проекта -> РЕАЛИЗАЦИЯ
     Route::get('/project-maps/create/realization-{id}/create', 'App\Http\Controllers\realizationController@create')->name('realization-create');
@@ -106,6 +109,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/project-maps/create/changes-{id}', 'App\Http\Controllers\changesController@showDataCalculation')->name('changes-create');
     // ссоздание карты проекта ИЗМЕНЕНИЯ ->удаление
     Route::get('/project-maps/changes-delete/{id}', 'App\Http\Controllers\changesController@delete')->name('changes-delete');
+
+
+
+    
+
+    Route::get('/project-maps/all/{id}/{tab}/update-smk', 'App\Http\Controllers\ProjectController@updateSMK')->name('update-smk');
+    Route::get('/project-maps/create/smk-{id}', 'App\Http\Controllers\smkController@showDataSMK')->name('smk-create');
+    Route::put('/project-maps/smk-update/{id}', 'App\Http\Controllers\smkController@update')->name('smk-update');
 
 
 

@@ -249,6 +249,274 @@ class ProjectController extends Controller
     }
 
 
+
+    // АВТОСОХРАНЕНИЕ ДАННЫХ
+    public function autoSave(Request $request)
+    {
+        // Проверка, была ли нажата кнопка "Отмена"
+        if ($request->has('cancelButton')) {
+            // Удаление созданной записи, если она есть
+            Projects::where('projNum', $request->projNumPre . " " . $request->projNumSuf)->delete();
+            return response()->json(['message' => 'Сохранение отменено']);
+        }
+
+
+        // Поиск записи по projNum
+        $project = Projects::where('projNum', $request->projNumPre . " " . $request->projNumSuf)->first();
+
+        if ($project) {
+            // Обновление существующей записи
+            $project->projManager = $request->projManager;
+            $project->objectName = $request->objectName;
+            $project->endCustomer = $request->endCustomer;
+            $project->contractor = $request->contractor;
+            $project->save();
+            // оборудование
+            if ($request->has('equipment')) {
+                $data_equipment = array();
+                $totalPrice = 0;
+                foreach ($request->input('equipment') as $index => $equipmentData) {
+                    // нахождения поля price(стоимость) путем умножения кол-ва на цену за ед. (count*priceUnit)
+                    $count = intval($equipmentData['count']);
+                    $priceUnit = floatval($equipmentData['priceUnit']);
+                    $price = $count * $priceUnit; // Расчёт стоимости
+
+                    $item = array(
+                        'project_num' => $project->projNum,
+                        'nameTMC' => $equipmentData['nameTMC'],
+                        'manufacture' => $equipmentData['manufacture'],
+                        'unit' => $equipmentData['unit'],
+                        'count' => $equipmentData['count'],
+                        'priceUnit' => $equipmentData['priceUnit'],
+                        'price' => $price, //запись в бд расчитанной стоимости
+                    );
+                    array_push($data_equipment, $item);
+                    $totalPrice += $price;
+                }
+                Equipment::insert($data_equipment);
+            }
+            // прочие расходы
+            $expenses = new Expenses;
+            // нахождения поля total(всего) путем сложения значений всех полей
+            $commandir = floatval($request->commandir);
+            $rd = floatval($request->rd);
+            $shmr = floatval($request->shmr);
+            $pnr = floatval($request->pnr);
+            $cert = floatval($request->cert);
+            $delivery = floatval($request->delivery);
+            $rastam = floatval($request->rastam);
+            $ppo = floatval($request->ppo);
+            $guarantee = floatval($request->guarantee);
+            $check = floatval($request->check);
+            $total =  $commandir + $rd + $shmr + $pnr + $cert + $delivery + $rastam + $ppo + $guarantee + $check; // Расчёт всего
+            $expenses->project_num = $project->projNum;
+            $expenses->commandir = $request->commandir;
+            $expenses->rd = $request->rd;
+            $expenses->shmr = $request->shmr;
+            $expenses->pnr = $request->pnr;
+            $expenses->cert = $request->cert;
+            $expenses->delivery = $request->delivery;
+            $expenses->rastam = $request->rastam;
+            $expenses->ppo = $request->ppo;
+            $expenses->guarantee = $request->guarantee;
+            $expenses->check = $request->check;
+
+            $expenses->total =  $total;
+            $expenses->save();
+
+            // итого
+            $totals = new Total;
+            // нахождения поля periodDays(итого срок) путем сложения значений всех полей
+            $kdDays = floatval($request->kdDays);
+            $equipmentDays = floatval($request->equipmentDays);
+            $productionDays = floatval($request->productionDays);
+            $shipmentDays = floatval($request->shipmentDays);
+            $periodDays = $kdDays + $equipmentDays + $productionDays + $shipmentDays; // Расчет итого
+            // нахождения поля price(себестоимость) путем сложения поля всего из таблицы оборудования и всего из проч.расх.
+            $priceTotals = ($totalPrice + $total);
+            $totals->project_num = $project->projNum;
+            $totals->kdDays = $request->kdDays;
+            $totals->equipmentDays = $request->equipmentDays;
+            $totals->productionDays = $request->productionDays;
+            $totals->shipmentDays = $request->shipmentDays;
+
+            $totals->periodDays = $periodDays;
+            $totals->price = $priceTotals;
+            $totals->save();
+
+            // уровень наценки
+            if ($request->has('markups')) {
+                $data_markups = array();
+                foreach ($request->input('markups') as $index => $markupsData) {
+                    $item = array(
+                        'project_num' => $project->projNum,
+                        'date' => $markupsData['date'],
+                        'percentage' => $markupsData['percentage'],
+                        'priceSubTkp' => $markupsData['priceSubTkp'],
+                        'agreedFio' => $markupsData['agreedFio']
+                    );
+                    array_push($data_markups, $item);
+                }
+                Markup::insert($data_markups);
+            }
+            // контакт лист
+            if ($request->has('contacts')) {
+                $data_contacts = array();
+                foreach ($request->input('contacts') as $index => $contactsData) {
+                    $item = array(
+                        'project_num' => $project->projNum,
+                        'fio' => $contactsData['fio'],
+                        'post' => $contactsData['post'],
+                        'responsibility' => $contactsData['responsibility'],
+                        'contact' => $contactsData['contact']
+                    );
+                    array_push($data_contacts, $item);
+                }
+                contacts::insert($data_contacts);
+            }
+            // риски
+            if ($request->has('risks')) {
+                $data_risks = array();
+                foreach ($request->input('risks') as $index => $risksData) {
+                    $item = array(
+                        'project_num' => $project->projNum,
+                        'calcRisk_name' => $risksData['riskName']
+                    );
+                    array_push($data_risks, $item);
+                }
+                CalcRisk::insert($data_risks);
+            }
+        } else {
+            // Создание новой записи
+            $project = new Projects;
+            $project->projNum = $request->projNumPre . " " . $request->projNumSuf;
+            $project->projManager = $request->projManager;
+            $project->objectName = $request->objectName;
+            $project->endCustomer = $request->endCustomer;
+            $project->contractor = $request->contractor;
+            $project->save();
+            // оборудование
+            if ($request->has('equipment')) {
+                $data_equipment = array();
+                $totalPrice = 0;
+                foreach ($request->input('equipment') as $index => $equipmentData) {
+                    // нахождения поля price(стоимость) путем умножения кол-ва на цену за ед. (count*priceUnit)
+                    $count = intval($equipmentData['count']);
+                    $priceUnit = floatval($equipmentData['priceUnit']);
+                    $price = $count * $priceUnit; // Расчёт стоимости
+
+                    $item = array(
+                        'project_num' => $project->projNum,
+                        'nameTMC' => $equipmentData['nameTMC'],
+                        'manufacture' => $equipmentData['manufacture'],
+                        'unit' => $equipmentData['unit'],
+                        'count' => $equipmentData['count'],
+                        'priceUnit' => $equipmentData['priceUnit'],
+                        'price' => $price, //запись в бд расчитанной стоимости
+                    );
+                    array_push($data_equipment, $item);
+                    $totalPrice += $price;
+                }
+                Equipment::insert($data_equipment);
+            }
+            // прочие расходы
+            $expenses = new Expenses;
+            // нахождения поля total(всего) путем сложения значений всех полей
+            $commandir = floatval($request->commandir);
+            $rd = floatval($request->rd);
+            $shmr = floatval($request->shmr);
+            $pnr = floatval($request->pnr);
+            $cert = floatval($request->cert);
+            $delivery = floatval($request->delivery);
+            $rastam = floatval($request->rastam);
+            $ppo = floatval($request->ppo);
+            $guarantee = floatval($request->guarantee);
+            $check = floatval($request->check);
+            $total =  $commandir + $rd + $shmr + $pnr + $cert + $delivery + $rastam + $ppo + $guarantee + $check; // Расчёт всего
+            $expenses->project_num = $project->projNum;
+            $expenses->commandir = $request->commandir;
+            $expenses->rd = $request->rd;
+            $expenses->shmr = $request->shmr;
+            $expenses->pnr = $request->pnr;
+            $expenses->cert = $request->cert;
+            $expenses->delivery = $request->delivery;
+            $expenses->rastam = $request->rastam;
+            $expenses->ppo = $request->ppo;
+            $expenses->guarantee = $request->guarantee;
+            $expenses->check = $request->check;
+
+            $expenses->total =  $total;
+            $expenses->save();
+
+            // итого
+            $totals = new Total;
+            // нахождения поля periodDays(итого срок) путем сложения значений всех полей
+            $kdDays = floatval($request->kdDays);
+            $equipmentDays = floatval($request->equipmentDays);
+            $productionDays = floatval($request->productionDays);
+            $shipmentDays = floatval($request->shipmentDays);
+            $periodDays = $kdDays + $equipmentDays + $productionDays + $shipmentDays; // Расчет итого
+            // нахождения поля price(себестоимость) путем сложения поля всего из таблицы оборудования и всего из проч.расх.
+            $priceTotals = ($totalPrice + $total);
+            $totals->project_num = $project->projNum;
+            $totals->kdDays = $request->kdDays;
+            $totals->equipmentDays = $request->equipmentDays;
+            $totals->productionDays = $request->productionDays;
+            $totals->shipmentDays = $request->shipmentDays;
+
+            $totals->periodDays = $periodDays;
+            $totals->price = $priceTotals;
+            $totals->save();
+
+            // уровень наценки
+            if ($request->has('markups')) {
+                $data_markups = array();
+                foreach ($request->input('markups') as $index => $markupsData) {
+                    $item = array(
+                        'project_num' => $project->projNum,
+                        'date' => $markupsData['date'],
+                        'percentage' => $markupsData['percentage'],
+                        'priceSubTkp' => $markupsData['priceSubTkp'],
+                        'agreedFio' => $markupsData['agreedFio']
+                    );
+                    array_push($data_markups, $item);
+                }
+                Markup::insert($data_markups);
+            }
+            // контакт лист
+            if ($request->has('contacts')) {
+                $data_contacts = array();
+                foreach ($request->input('contacts') as $index => $contactsData) {
+                    $item = array(
+                        'project_num' => $project->projNum,
+                        'fio' => $contactsData['fio'],
+                        'post' => $contactsData['post'],
+                        'responsibility' => $contactsData['responsibility'],
+                        'contact' => $contactsData['contact']
+                    );
+                    array_push($data_contacts, $item);
+                }
+                contacts::insert($data_contacts);
+            }
+            // риски
+            if ($request->has('risks')) {
+                $data_risks = array();
+                foreach ($request->input('risks') as $index => $risksData) {
+                    $item = array(
+                        'project_num' => $project->projNum,
+                        'calcRisk_name' => $risksData['riskName']
+                    );
+                    array_push($data_risks, $item);
+                }
+                CalcRisk::insert($data_risks);
+            }
+        }
+
+        return response()->json(['message' => 'Данные успешно автосохранены']);
+    }
+
+
+
     // редактирование карты проекта -> РАСЧЕТ (открыывает страницу редактирования по id записи)
     public function updateCalculation($id)
     {
@@ -468,11 +736,11 @@ class ProjectController extends Controller
         $project = Projects::find($id);
         return view('update-changes', ['project' => $project]);
     }
- 
+
     public function updateChangesSubmit($id, Request $req)
     {
         $project = Projects::find($id);
-    
+
         // Ensure the request has the 'changes' key and it's an array
         if ($req->has('changes') && is_array($req->input('changes'))) {
             foreach ($req->input('changes') as $index => $ChangesData) {
@@ -494,7 +762,7 @@ class ProjectController extends Controller
                 );
             }
         }
-    
+
         return redirect()->route('project-data-one', ['id' => $id, 'tab' => '#changes'])->with('success', 'Project data successfully updated');
     }
 

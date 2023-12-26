@@ -3,7 +3,7 @@
 @section('content')
     <div class="container">
         <h1>Добавить карту проекта</h1>
-        <form action="{{ route('project-store') }}" method="post">
+        <form action="{{ route('project-store') }}" method="post" id="addMap">
             @csrf
             {{-- Общая информация --}}
             <div class="project-add pt-5">
@@ -250,6 +250,7 @@
             </div>
 
             <button type="submit" class="btn btn-primary mt-4">Создать</button>
+            <a href="/project-maps/all" type="button" class="btn btn-secondary mt-4" id="cancelButton">Отмена</a>
         </form>
     </div>
     <script>
@@ -378,6 +379,32 @@
                 var combinedValue = projNumPre + " " + projNumSuf;
                 $('#projNumCombined').val(combinedValue);
             });
+
+
+            // автосохранение данных
+            // function autoSaveProjectData() {
+            //     var formData = new FormData(document.getElementById('addMap'));
+
+            //     $.ajax({
+            //         url: '{{ route('autosave-project-data') }}',
+            //         type: 'POST',
+            //         data: formData,
+            //         contentType: false,
+            //         processData: false,
+            //         success: function(response) {
+            //             console.log(response);
+            //         },
+            //         error: function(error) {
+            //             console.error(error);
+            //         }
+            //     });
+            // }
+
+            // setInterval(autoSaveProjectData, 5000); // Автосохранение каждые 2 секунды
+
+            // $('#cancelButton').click(function() {
+            //     alert('Сохранение отменено');
+            // });
         });
     </script>
 @endsection
