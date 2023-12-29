@@ -69,7 +69,7 @@ class ProjectController extends Controller
         $note->date = now(); // указываем текущую дату
         $note->project_num = $project->projNum;
         $note->save();
-        return redirect()->route('project-data-one', ['id' => $project->projNum, 'tab' => '#notes'])->with('success', 'Project data successfully updated');
+        return redirect()->route('project-data-one', ['id' => $project->id, 'tab' => '#notes'])->with('success', 'Project data successfully updated');
     }
     //метод для удаления записи из дневника
     public function destroy(Projects $project, Note $note)
@@ -77,7 +77,7 @@ class ProjectController extends Controller
         if ($project->projNum === $note->project_num) {
             $note->delete();
         }
-        return redirect()->route('project-data-one', ['id' => $project->projNum, 'tab' => '#notes'])->with('success', 'Project data successfully updated');
+        return redirect()->route('project-data-one', ['id' => $project->id, 'tab' => '#notes'])->with('success', 'Project data successfully updated');
     }
     public function edit(Projects $project, Note $note)
     {
@@ -87,7 +87,7 @@ class ProjectController extends Controller
     {
         $note->update(['comment' => $request->comment]);
         $note->update(['date' => now()]);
-        return redirect()->route('project-data-one', ['id' => $project->projNum, 'tab' => '#notes'])->with('success', 'Project data successfully updated');
+        return redirect()->route('project-data-one', ['id' => $project->id, 'tab' => '#notes'])->with('success', 'Project data successfully updated');
     }
 
 

@@ -14,12 +14,6 @@ return new class extends Migration
         Schema::create('smk_main', function (Blueprint $table) {
             $table->id();
             $table->string('project_num');
-            $table->text('project_cost_desc');
-            $table->text('project_period_desc');
-            $table->text('project_quality_desc');
-            $table->decimal('project_cost_fi', 10, 2);
-            $table->decimal('project_period_fi', 10, 2);
-            $table->decimal('project_quality_fi', 10, 2);
             $table->decimal('project_cost_ki', 10, 2);
             $table->decimal('project_period_ki', 10, 2);
             $table->decimal('project_quality_ki', 10, 2);

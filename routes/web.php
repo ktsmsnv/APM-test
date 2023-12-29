@@ -27,7 +27,7 @@ Route::middleware(['auth'])->group(function () {
 
 
     // ТАБЫ на странице КАРТА ПРОЕКТА
-    Route::get('/tables/{tab}', 'App\Http\Controllers\TabController@show')->name('tab.show');
+    Route::get('/tables/{tab}/{id}', 'App\Http\Controllers\TabController@show')->name('tab.show');
 
 
 
@@ -115,8 +115,9 @@ Route::middleware(['auth'])->group(function () {
     
 
     Route::get('/project-maps/all/{id}/{tab}/update-smk', 'App\Http\Controllers\ProjectController@updateSMK')->name('update-smk');
-    Route::get('/project-maps/create/smk-{id}', 'App\Http\Controllers\smkController@showDataSMK')->name('smk-create');
-    Route::put('/project-maps/smk-update/{id}', 'App\Http\Controllers\smkController@update')->name('smk-update');
+    Route::get('/project-maps/create/smk-{id}', 'App\Http\Controllers\SmkController@showDataSMK')->name('smk-create');
+    Route::post('/project-maps/create/smk-{id}/save', 'App\Http\Controllers\SmkController@storeNew')->name('smk-store');
+    Route::put('/project-maps/smk-update/{id}', 'App\Http\Controllers\SmkController@update')->name('smk-update');
 
 
 
