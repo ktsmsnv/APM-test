@@ -11,6 +11,17 @@ class Projects extends Model
     {
         return $this->hasMany(Equipment::class, 'project_num', 'projNum');
     }
+
+    public function smk_main()
+    {
+        return $this->hasMany(SmkMain::class, 'project_num', 'projNum');
+    }
+    
+    public function smk_sub()
+    {
+        return $this->hasMany(SmkSub::class, 'project_num', 'projNum');
+    }
+
     public function expenses()
     {
         return $this->hasMany(Expenses::class, 'project_num', 'projNum');

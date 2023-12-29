@@ -69,7 +69,7 @@
     </div>
     <script>
         $(document).ready(function() {
-            $('#{{ $tab }}-tab').tab('show');
+            $('#{{ $tab }}-tab').click();
 
             new DataTable('.projMap', {
                 responsive: true,
@@ -87,9 +87,9 @@
         $(document).ready(() => {
             let url = location.href.replace(/\/$/, "");
 
-            function loadTabContent(tabId) {
+            function loadTabContent(tabId, projectId) {
                 $.ajax({
-                    url: `/tables/${tabId}`,
+                    url: `/tables/${tabId}/${projectId}`, // Use the correct URL with both tabId and projectId
                     type: 'GET',
                     success: function(response) {
                         $(`#${tabId}`).html(response.content);
@@ -106,12 +106,12 @@
 
             const fragment = window.location.hash.substring(1);
             if (fragment) {
-                loadTabContent(fragment);
+                loadTabContent(fragment, '{{ $project->id }}'); // Передаем ID проекта при загрузке страницы
             }
 
             if (location.hash) {
                 const hash = url.split("#");
-                loadTabContent(hash[1]);
+                loadTabContent(hash[1], '{{ $project->id }}'); // Передаем ID проекта при загрузке страницы
                 url = location.href.replace(/\/#/, "#");
                 history.replaceState(null, null, url);
                 setTimeout(() => {
@@ -122,12 +122,12 @@
             const tabMatch = location.href.match(/#(\w+)$/);
             if (tabMatch) {
                 const tabId = tabMatch[1];
-                loadTabContent(tabId);
+                loadTabContent(tabId, '{{ $project->id }}'); // Передаем ID проекта при загрузке страницы
             }
 
             $('a[data-toggle="tab"]').on("click", function() {
                 const tabId = $(this).attr("aria-controls");
-                loadTabContent(tabId);
+                loadTabContent(tabId, '{{ $project->id }}'); // Pass both tabId and projectId
             });
         });
     </script>
