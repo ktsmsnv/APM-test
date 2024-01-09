@@ -21,6 +21,12 @@ body {
 
   background-image: url(/storage/app/public/apm_back.jpg);
 }
+.navbar.bg-white {
+  --bs-bg-opacity: 1;
+  background-color: rgba(var(--bs-white-rgb),var(--bs-bg-opacity))!important;
+  position: fixed;
+  box-shadow: 0px 1px 20px 0px #00000057;
+}
 .h1,
 .h2,
 .h3,
@@ -71,7 +77,7 @@ h3 {
 
 
 main {
-  padding: 80px 0 20px;
+  padding: 140px 0 20px;
 }
 .container {
   position: relative;
