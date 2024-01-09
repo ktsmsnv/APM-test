@@ -1,5 +1,5 @@
 @if (isset($noResults) && $noResults)
-    <p>Нет соответствующих записей</p>
+    <p class="nothing">Нет соответствующих записей</p>
 @else
     @foreach ($data as $el)
         <div class="alert alert-info">

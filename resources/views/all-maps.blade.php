@@ -21,14 +21,14 @@
                     <h3>{{ $el->projNum }}</h3>
                     <p>{{ $el->projManager }}</p>
                     <p><small>{{ $el->objectName }}</small></p>
-                    <a href="{{ route('project-data-one', ['id' => $el->id, 'tab' => '#calculation']) }}"><button class="btn btn-warning">Детальнее</button></a>
+                    <a href="{{ route('project-data-one', ['id' => $el->id, 'tab' => '#calculation']) }}"><button class="btn btn-outline-primary">Детальнее</button></a>
                 </div>
             @endforeach
         @else
             <p>Нет карт проекта.</p>
         @endif
         </div>
-        <a href="{{ route('project-create') }}" class="btn btn-primary">Добавить карту</a>
+        <a href="{{ route('project-create') }}" class="btn btn-primary  btn-lg">Добавить карту</a>
     </div>
 
     <script>

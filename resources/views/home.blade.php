@@ -4,9 +4,12 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-18">
-                <div class="card">
-                    <ul class="nav nav-tabs nav-pills flex-column flex-sm-row text-center bg-light border-2 rounded-nav"
-                        id="myTab" role="tablist">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h2>Реестр</h2>
+                </div>
+
+                <div class="card__main">
+                    <ul class="nav nav-mytabs" id="myTab" role="tablist">
                         <!-- Первая вкладка (активная) -->
                         <li class="nav-item flex-sm-fill">
                             <a class="nav-link border-0 text-uppercase font-weight-bold active" id="SInteg-tab"
@@ -35,7 +38,7 @@
 
                     <div class="tab-content" id="myTabContent">
                         <!-- Содержимое первой вкладки -->
-                        <div class="tab-pane fade px-4 py-5 show active" id="SInteg" role="tabpanel"
+                        <div class="tab-pane fade show active" id="SInteg" role="tabpanel"
                             aria-labelledby="SInteg-tab">
                             <div class="card-body">
                                 <table id="equipment-datatable-SInteg" class="display nowrap table" style="width:100%">
@@ -102,7 +105,7 @@
                             </div>
                         </div>
                         <!-- Содержимое второй вкладки -->
-                        <div class="tab-pane fade px-4 py-5" id="EOB" role="tabpanel" aria-labelledby="EOB-tab">
+                        <div class="tab-pane fade" id="EOB" role="tabpanel" aria-labelledby="EOB-tab">
                             <div class="card-body">
                                 <table id="equipment-datatable-EOB" class="display nowrap table" style="width:100%">
                                     <thead>
@@ -168,7 +171,7 @@
                             </div>
                         </div>
                         <!-- Содержимое третьей вкладки -->
-                        <div class="tab-pane fade px-4 py-5" id="NHRS" role="tabpanel" aria-labelledby="NHRS-tab">
+                        <div class="tab-pane fade" id="NHRS" role="tabpanel" aria-labelledby="NHRS-tab">
                             <div class="card-body">
                                 <table id="equipment-datatable-NHRS" class="display nowrap table" style="width:100%">
                                     <thead>
@@ -236,7 +239,7 @@
                             </div>
                         </div>
                         <!-- Содержимое четвёртой вкладки -->
-                        <div class="tab-pane fade px-4 py-5" id="Other" role="tabpanel" aria-labelledby="Other-tab">
+                        <div class="tab-pane fade" id="Other" role="tabpanel" aria-labelledby="Other-tab">
                             <div class="card-body">
                                 <table id="equipment-datatable-Other" class="display nowrap table" style="width:100%">
                                     <thead>
