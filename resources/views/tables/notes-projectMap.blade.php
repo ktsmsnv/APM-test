@@ -1,5 +1,6 @@
-<h2>Дневник проекта</h2>
+
 <div class="notes">
+    <h2>Дневник проекта</h2>
     <ul>
         @forelse ($notes as $note)
             <li>

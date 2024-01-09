@@ -51,9 +51,12 @@
         {{-- Header --}}
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
-                <a class="navbar-brand" href="{{ url('/home') }}">
-                    {{ config('app.name', 'APM') }}
-                </a>
+                <div class="logo__pages d-flex gap-4">
+                    <img src="{{ asset('/storage/apm_apm.png') }}" alt="лого вход">
+                    {{-- <a class="navbar-brand" href="{{ url('/home') }}">
+                        {{ config('app.name', 'APM') }}
+                    </a> --}}
+                </div>
                 <div class="headerMenu d-flex align-items-center gap-5">
                     <ul class="nav nav-pills">
                         <li class="nav-item">

@@ -6,7 +6,7 @@
             <div class="col-md-18">
                 <h1 class="mb-5">Карта проекта Вн. Номер: {{ $project->projNum }}</h1>
 
-                <ul class="nav nav-mytabs mb-5" id="myTab" role="tablist">
+                <ul class="nav nav-mytabs" id="myTab" role="tablist">
                     <li class="nav-item">
                         <a class="nav-link{{ $tab === 'calculation' ? ' active' : '' }}"id="calculation-tab" data-toggle="tab"
                             href="#calculation" role="tab" aria-controls="calculation" aria-selected="true">Расчет</a>

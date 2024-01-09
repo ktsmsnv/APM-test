@@ -2,11 +2,11 @@
 
 @section('content')
     <div class="container">
-        <h1>Добавить карту проекта</h1>
-        <form action="{{ route('project-store') }}" method="post" id="addMap">
+        <h1 class="pb-5">Добавить карту проекта</h1>
+        <form action="{{ route('project-store') }}" method="post" id="addMap" class="d-flex flex-column">
             @csrf
             {{-- Общая информация --}}
-            <div class="project-add pt-5">
+            <div class="project-add alert">
                 <h2>I Общая информация по проекту</h2>
                 <div class="form-group mb-3">
                     <label for="projNum">Номер проекта по реестру:</label>
@@ -47,7 +47,7 @@
                 </div>
             </div>
             {{-- Оборудование --}}
-            <div class="equipment-add pt-5">
+            <div class="equipment-add alert pt-5">
                 <h2>II Оборудование</h2>
                 <div id="equipment-inputs">
                     <div class="mb-3">
@@ -87,7 +87,7 @@
                     оборудование</button>
             </div>
             {{-- Прочие расходы --}}
-            <div class="expenses-add pt-5">
+            <div class="expenses-add alert pt-5">
                 <h2>III Прочие расходы (руб. без НДС)</h2>
                 <div class="form-group mb-3">
                     <label for="commandir">Командировочные:</label>
@@ -143,7 +143,7 @@
                 </div> --}}
             </div>
             {{-- Итого --}}
-            <div class="total-add pt-5">
+            <div class="total-add alert pt-5">
                 <h2>IV ИТОГО</h2>
                 <div class="form-group mb-3">
                     <label for="kdDays">Разработка РКД (дн.):</label>
@@ -176,7 +176,7 @@
                 </div> --}}
             </div>
             {{-- Уровень наценки --}}
-            <div class="markups-add pt-5">
+            <div class="markups-add alert pt-5">
                 <h2>V Уровень наценки</h2>
                 <div id="markups-inputs">
                     <div class="mb-3">
@@ -206,7 +206,7 @@
                     уровень наценки</button>
             </div>
             {{-- Контакт лист --}}
-            <div class="contacts-add pt-3">
+            <div class="contacts-add alert pt-3">
                 <h4 class="text-center">Контакт лист</h4>
                 <div id="contacts-inputs">
                     <div class="mb-3">
@@ -236,7 +236,7 @@
                     еще контакт</button>
             </div>
             {{-- Риски --}}
-            <div class="risks-add pt-3">
+            <div class="risks-add alert pt-3">
                 <h4 class="text-center">Риски</h4>
                 <div id="risks-inputs">
                     <div class="form-group mb-3">
