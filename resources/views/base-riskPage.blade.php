@@ -25,9 +25,7 @@
                         <td data-label="id">
                             {{ $item->id }}
                         </td>
-                        <td data-label="nameRisk">
-                            {{ $item->nameRisk }}
-                        </td>
+                        <td data-label="nameRisk">{{ $item->nameRisk }}</td>
                         <td data-label="reasonRisk" class="json_array">
                             <ol class="json_field">
                                 @foreach (json_decode($item->reasonRisk) as $reason)
@@ -49,9 +47,7 @@
                                 @endforeach
                             </ol>
                         </td>
-                        <td data-label="term">
-                            {{ $item->term }}
-                        </td>
+                        <td data-label="term">{{ $item->term }}</td>
                         <td data-label="riskManagMeasures" class="json_array">
                             <ol class="json_field">
                                 @foreach (json_decode($item->riskManagMeasures) as $index => $measure)

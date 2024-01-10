@@ -3,7 +3,7 @@
 @section('content')
     <div class="container">
         <h1 class="mb-5">Добавление СМК для {{ $project->projNum }}</h1>
-        <form action="{{ route('smk-store', $project->id) }}" method="post">
+        <form action="{{ route('smk-store', $project->id) }}" method="post" class="smk__create">
             @csrf
             {{-- СМК --}}
             <div class="mb-5">

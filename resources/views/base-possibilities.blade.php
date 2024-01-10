@@ -26,9 +26,7 @@
                          <td data-label="id">
                              {{ $possibility->id }}
                          </td>
-                         <td data-label="nameRisk_possib">
-                             {{ $possibility->nameRisk }}
-                         </td>
+                         <td data-label="nameRisk_possib">{{ $possibility->nameRisk }}</td>
                          <td data-label="reasonRisk_possib" class="json_array">
                              <ol class="json_field">
                                  @foreach (json_decode($possibility->reasonRisk) as $reason)
@@ -50,9 +48,7 @@
                                  @endforeach
                              </ol>
                          </td>
-                         <td data-label="term_possib">
-                             {{ $possibility->term }}
-                         </td>
+                         <td data-label="term_possib">{{ $possibility->term }}</td>
                          <td data-label="riskManagMeasures_possib" class="json_array">
                              <ol class="json_field">
                                  @foreach (json_decode($possibility->riskManagMeasures) as $index => $measure)
