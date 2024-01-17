@@ -18,8 +18,12 @@ use App\Models\BasicReference;
 use App\Models\workGroup;
 use App\Models\Change;
 use App\Models\baseRisks;
-use App\Models\CalcRisk;
-use App\Models\Report;
+use App\Models\ProjectManager;
+
+use App\Models\RegEOB;
+use App\Models\RegNHRS;
+use App\Models\RegOther;
+use App\Models\RegSInteg;
 
 class ProjectController extends Controller
 {
@@ -34,7 +38,11 @@ class ProjectController extends Controller
     // Отображение одного проекта и связанных данных (отображает данные по id) на странице карты проекта
     public function showOneMessage($id, $tab = null)
     {
-        $project = Projects::with('equipment', 'expenses', 'totals', 'markups', 'contacts', 'risks', 'notes', 'workGroup', 'basicReference', 'basicInfo', 'notes')->find($id);
+        $project = Projects::with('equipment', 'expenses', 'totals', 'markups', 'contacts', 'risks', 'workGroup', 'basicReference', 'basicInfo', 'notes')->find($id);
+
+        if (!$project) {
+            abort(404, 'Project not found');
+        }
 
         $notes = $project->notes;
         $baseRisks = baseRisks::all();
@@ -46,8 +54,7 @@ class ProjectController extends Controller
         }
 
         if (view()->exists("tables.{$tab}-projectMap")) {
-            $data = compact('project', 'tab', 'notes', 'baseRisks');
-            return view('project-map', $data);
+            return view('project-map', compact('baseRisks', 'project', 'tab'));
         } else {
             abort(404, 'Tab not found');
         }
@@ -108,7 +115,10 @@ class ProjectController extends Controller
         $currentYear = date('y');
         $projectNum = $newNumber;
 
-        return view('add-map', compact('projectNum', 'currentYear'));
+        $projectManagers = ProjectManager::all();
+        $baseRisks = baseRisks::all();
+
+        return view('add-map', compact('projectNum', 'currentYear', 'projectManagers', 'baseRisks'));
     }
 
     // ДОБАВЛЕНИЕ   новой карты проекта
@@ -120,11 +130,43 @@ class ProjectController extends Controller
         $project = new Projects;
         // $project->projNum = $request->projNum;
         $project->projNum = $request->projNumPre . " " . $request->projNumSuf;
+        $project->projNumSuf = $request->projNumSuf;
         $project->projManager = $request->projManager;
         $project->objectName = $request->objectName;
         $project->endCustomer = $request->endCustomer;
         $project->contractor = $request->contractor;
+
+        $project->date_application = $request->date_application;
+        $project->date_offer = $request->date_offer;
+
+        $project->delivery = $request->has('delivery') ? 1 : 0;
+        $project->pir = $request->has('pir') ? 1 : 0;
+        $project->kd = $request->has('kd') ? 1 : 0;
+        $project->production = $request->has('production') ? 1 : 0;
+        $project->smr = $request->has('smr') ? 1 : 0;
+        $project->pnr = $request->has('pnr') ? 1 : 0;
+        $project->po = $request->has('po') ? 1 : 0;
+        $project->cmr = $request->has('cmr') ? 1 : 0;
+
         $project->save();
+
+        switch ($request->projNumSuf) {
+            case 'СИ':
+                $this->addToRegistrySinteg($project);
+                break;
+            case 'ЭОБ':
+                $this->addToRegistryEob($project);
+                break;
+            case 'НХРС':
+                $this->addToRegistryNhrs($project);
+                break;
+            case 'КСТ':
+                $this->addToRegistryOther($project);
+                break;
+            default:
+                // Обработка, если тип не определен
+                break;
+        }
 
         // оборудование
         if ($request->has('equipment')) {
@@ -236,16 +278,86 @@ class ProjectController extends Controller
         if ($request->has('risks')) {
             $data_risks = array();
             foreach ($request->input('risks') as $index => $risksData) {
+                $risk_probability = intval($risksData['risk_probability']);
+                $risk_influence = intval($risksData['risk_influence']);
+                $risk_estimate = $risk_probability * $risk_influence; 
+                $risk_strategy = ($risk_probability * $risk_influence) > 32
+                ? 'снижение'
+                : (($risk_probability * $risk_influence) == 0
+                    ? null
+                    : 'принятие');
+
                 $item = array(
-                    'project_num' => $project->projNum,
-                    'calcRisk_name' => $risksData['riskName']
+                    'risk_name' => $risksData['risk_name'],
+                    'risk_reason' => json_encode($risksData['risk_reason']),
+                    'risk_consequences' => json_encode($risksData['risk_consequences']),
+                    'risk_probability' => intval($risksData['risk_probability']),
+                    'risk_influence' => intval($risksData['risk_influence']),
+
+                    'risk_estimate' =>  $risk_estimate,
+
+                    'risk_strategy' => $risk_strategy,
+
+                    'risk_counteraction' => json_encode($risksData['risk_counteraction']),
+                    'risk_term' => $risksData['risk_term'],
+                    'risk_mark' => $risksData['risk_mark'],
+                    'risk_measures' => json_encode($risksData['risk_measures']),
+                    'risk_responsible' => $risksData['risk_resp'],
+                    'risk_endTerm' => $risksData['risk_endTerm']
                 );
                 array_push($data_risks, $item);
             }
-            CalcRisk::insert($data_risks);
+            Risks::insert($data_risks);
         }
 
+        // if ($request->has('risks')) {
+        //     foreach ($request->input('risks') as $index => $risksData) {
+        //         $risk = new Risks();
+
+        //         $risk->risk_reason = json_encode($risksData['risk_reason']);
+        //         $risk->risk_consequences = json_encode($risksData['risk_consequences']);
+        //         $risk->risk_counteraction = json_encode($risksData['risk_counteraction']);
+        //         $risk->risk_measures = json_encode($risksData['risk_measures']);
+
+        //         $risk->risk_name = $risksData['risk_name'];
+
+        //         $risk->risk_probability = intval($risksData['risk_probability']);
+        //         $risk->risk_influence = intval($risksData['risk_influence']);
+        //         $risk->risk_estimate = $risk->risk_probability * $risk->risk_influence;
+        //         $risk->risk_strategy = $risk->risk_estimate > 32 ? 'снижение' : ($risk->risk_estimate == 0 ? null : 'принятие');
+        //         $risk->risk_term = $risksData['risk_term'];
+        //         $risk->risk_mark = $risksData['risk_mark'];
+        //         $risk->risk_responsible = $risksData['risk_resp'];
+        //         $risk->risk_endTerm = $risksData['risk_endTerm'];
+        //         $project->risks()->save($risk);
+        //     }
+        // }
+
+
         return redirect()->route('project-maps');
+    }
+
+    // Метод для получения данных по выбранному риску
+    public function getRiskData(Request $request)
+    {
+        // Получаем выбранный риск из запроса
+        $selectedRisk = $request->input('risk');
+
+        $baseRisk = baseRisks::where('nameRisk', $selectedRisk)->first();
+
+        if ($baseRisk) {
+            // Возвращаем данные в формате JSON
+            return response()->json([
+                'reasonData' => json_decode($baseRisk->reasonRisk),
+                'consequenceData' => json_decode($baseRisk->conseqRiskOnset),
+                'counteringRiskData' => json_decode($baseRisk->counteringRisk),
+                'riskManagMeasuresData' => json_decode($baseRisk->riskManagMeasures),
+                'term' => $baseRisk->term,
+            ]);
+        } else {
+            // Риск не найден
+            return response()->json(['error' => 'Риск не найден'], 404);
+        }
     }
 
 
@@ -539,10 +651,35 @@ class ProjectController extends Controller
         $project->objectName = $req->input('objectName');
         $project->endCustomer = $req->input('endCustomer');
         $project->contractor = $req->input('contractor');
+        $project->contractor = $req->input('date_application');
+        $project->contractor = $req->input('date_offer');
+
+        $project->delivery = $req->has('delivery') ? 1 : 0;
+        $project->pir = $req->has('pir') ? 1 : 0;
+        $project->kd = $req->has('kd') ? 1 : 0;
+        $project->production = $req->has('production') ? 1 : 0;
+        $project->smr = $req->has('smr') ? 1 : 0;
+        $project->pnr = $req->has('pnr') ? 1 : 0;
+        $project->po = $req->has('po') ? 1 : 0;
+        $project->cmr = $req->has('cmr') ? 1 : 0;
+
         $project->save();
-        Log::info('Processing change data:', [
-            'project' => $project
-        ]);
+
+        switch ($project->projNumSuf) {
+            case 'СИ':
+                $this->updateRegistrySinteg($project);
+                break;
+            case 'ЭОБ':
+                $this->updateRegistryEob($project);
+                break;
+            case 'НХРС':
+                $this->updateRegistryNhrs($project);
+                break;
+            case 'КСТ':
+                $this->updateRegistryOther($project);
+                break;
+        }
+
         // Обновление оборудование
         if ($req->has('equipment')) {
             $totalPrice = 0;
@@ -647,21 +784,21 @@ class ProjectController extends Controller
             }
             Contacts::insert($data_contacts);
         }
-        // риски
-        if ($req->has('risk')) {
-            foreach ($req->input('risk') as $index => $risksData) {
-                $criteria = [
-                    'project_num' => $project->projNum,
-                    'id' => $risksData['id'], // используйте идентификатор (id) записи, которую вы хотите обновить
-                ];
+        // // риски
+        // if ($req->has('risk')) {
+        //     foreach ($req->input('risk') as $index => $risksData) {
+        //         $criteria = [
+        //             'project_num' => $project->projNum,
+        //             'id' => $risksData['id'], // используйте идентификатор (id) записи, которую вы хотите обновить
+        //         ];
 
-                $updateData = [
-                    'calcRisk_name' => $risksData['riskName'],
-                ];
+        //         $updateData = [
+        //             'calcRisk_name' => $risksData['riskName'],
+        //         ];
 
-                CalcRisk::updateOrCreate($criteria, $updateData);
-            }
-        }
+        //         CalcRisk::updateOrCreate($criteria, $updateData);
+        //     }
+        // }
 
         return redirect()->route('project-data-one', ['id' => $id, 'tab' => '#calculation'])->with('success', 'Project data successfully updated');
     }
@@ -783,5 +920,194 @@ class ProjectController extends Controller
         }
 
         return view('search', compact('data'));
+    }
+
+
+
+    // --------------- ДОБАВЛЕНИЕ В РЕЕСТР -----------------------------
+    private function addToRegistryEob($project)
+    {
+        RegEob::create([
+            'vnNum' => $project->projNum,
+            'purchaseName' => $project->objectName,
+            'delivery' => $project->delivery,
+            'pir' => $project->pir,
+            'kd' => $project->kd,
+            'prod' => $project->production,
+            'shmr' => $project->smr,
+            'pnr' => $project->pnr,
+            'po' => $project->po,
+            'smr' => $project->cmr,
+            'purchaseOrg' => $project->contractor,
+            'endUser' => $project->endCustomer,
+            'object' => $project->objectName,
+            'receiptDate' => $project->date_application,
+            'submissionDate' => $project->date_offer,
+            'projectManager' => $project->projManager,
+        ]);
+    }
+    private function addToRegistrySinteg($project)
+    {
+        RegSInteg::create([
+            'vnNum' => $project->projNum,
+            'purchaseName' => $project->objectName,
+            'delivery' => $project->delivery,
+            'pir' => $project->pir,
+            'kd' => $project->kd,
+            'prod' => $project->production,
+            'shmr' => $project->smr,
+            'pnr' => $project->pnr,
+            'po' => $project->po,
+            'smr' => $project->cmr,
+            'purchaseOrg' => $project->contractor,
+            'endUser' => $project->endCustomer,
+            'object' => $project->objectName,
+            'receiptDate' => $project->date_application,
+            'submissionDate' => $project->date_offer,
+            'projectManager' => $project->projManager,
+        ]);
+    }
+    private function addToRegistryNhrs($project)
+    {
+        RegNHRS::create([
+            'vnNum' => $project->projNum,
+            'purchaseName' => $project->objectName,
+            'delivery' => $project->delivery,
+            'pir' => $project->pir,
+            'kd' => $project->kd,
+            'prod' => $project->production,
+            'shmr' => $project->smr,
+            'pnr' => $project->pnr,
+            'po' => $project->po,
+            'smr' => $project->cmr,
+            'purchaseOrg' => $project->contractor,
+            'endUser' => $project->endCustomer,
+            'object' => $project->objectName,
+            'receiptDate' => $project->date_application,
+            'submissionDate' => $project->date_offer,
+            'projectManager' => $project->projManager,
+        ]);
+    }
+    private function addToRegistryOther($project)
+    {
+        RegOther::create([
+            'vnNum' => $project->projNum,
+            'purchaseName' => $project->objectName,
+            'delivery' => $project->supply,
+            'pir' => $project->pir,
+            'kd' => $project->kd,
+            'prod' => $project->production,
+            'shmr' => $project->smr,
+            'pnr' => $project->pnr,
+            'po' => $project->po,
+            'smr' => $project->cmr,
+            'purchaseOrg' => $project->contractor,
+            'endUser' => $project->endCustomer,
+            'object' => $project->objectName,
+            'receiptDate' => $project->date_application,
+            'submissionDate' => $project->date_offer,
+            'projectManager' => $project->projManager,
+        ]);
+    }
+
+    // --------------- ИЗМЕНЕНИЯ В РЕЕСТРЕ ИЗ КАРТЫ ПРОЕКТА ----------------------------
+    private function updateRegistryEob($project)
+    {
+        $registry = RegEob::where('vnNum', $project->projNum)->first();
+
+        if ($registry) {
+            $registry->update([
+                'purchaseName' => $project->objectName,
+                'delivery' => $project->delivery,
+                'pir' => $project->pir,
+                'kd' => $project->kd,
+                'prod' => $project->production,
+                'shmr' => $project->smr,
+                'pnr' => $project->pnr,
+                'po' => $project->po,
+                'smr' => $project->cmr,
+                'purchaseOrg' => $project->contractor,
+                'endUser' => $project->endCustomer,
+                'object' => $project->objectName,
+                'receiptDate' => $project->date_application,
+                'submissionDate' => $project->date_offer,
+                'projectManager' => $project->projManager,
+            ]);
+        }
+    }
+
+    private function updateRegistrySinteg($project)
+    {
+        $registry = RegSInteg::where('vnNum', $project->projNum)->first();
+
+        if ($registry) {
+            $registry->update([
+                'purchaseName' => $project->objectName,
+                'delivery' => $project->delivery,
+                'pir' => $project->pir,
+                'kd' => $project->kd,
+                'prod' => $project->production,
+                'shmr' => $project->smr,
+                'pnr' => $project->pnr,
+                'po' => $project->po,
+                'smr' => $project->cmr,
+                'purchaseOrg' => $project->contractor,
+                'endUser' => $project->endCustomer,
+                'object' => $project->objectName,
+                'receiptDate' => $project->date_application,
+                'submissionDate' => $project->date_offer,
+                'projectManager' => $project->projManager,
+            ]);
+        }
+    }
+
+    private function updateRegistryNhrs($project)
+    {
+        $registry = RegNHRS::where('vnNum', $project->projNum)->first();
+
+        if ($registry) {
+            $registry->update([
+                'purchaseName' => $project->objectName,
+                'delivery' => $project->delivery,
+                'pir' => $project->pir,
+                'kd' => $project->kd,
+                'prod' => $project->production,
+                'shmr' => $project->smr,
+                'pnr' => $project->pnr,
+                'po' => $project->po,
+                'smr' => $project->cmr,
+                'purchaseOrg' => $project->contractor,
+                'endUser' => $project->endCustomer,
+                'object' => $project->objectName,
+                'receiptDate' => $project->date_application,
+                'submissionDate' => $project->date_offer,
+                'projectManager' => $project->projManager,
+            ]);
+        }
+    }
+
+    private function updateRegistryOther($project)
+    {
+        $registry = RegOther::where('vnNum', $project->projNum)->first();
+
+        if ($registry) {
+            $registry->update([
+                'purchaseName' => $project->objectName,
+                'delivery' => $project->delivery,
+                'pir' => $project->pir,
+                'kd' => $project->kd,
+                'prod' => $project->production,
+                'shmr' => $project->smr,
+                'pnr' => $project->pnr,
+                'po' => $project->po,
+                'smr' => $project->cmr,
+                'purchaseOrg' => $project->contractor,
+                'endUser' => $project->endCustomer,
+                'object' => $project->objectName,
+                'receiptDate' => $project->date_application,
+                'submissionDate' => $project->date_offer,
+                'projectManager' => $project->projManager,
+            ]);
+        }
     }
 }

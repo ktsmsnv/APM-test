@@ -52,7 +52,7 @@
                                             <th rowspan="2">Наим. орг.закупки</th>
                                             <th rowspan="2">Головная компания</th>
                                             <th rowspan="2">Объект</th>
-                                            <th rowspan="2">Площадка</th>
+                                            {{-- <th rowspan="2">Площадка</th> --}}
                                             <th rowspan="2">Дата поступления заявки</th>
                                             <th rowspan="2">Дата подачи предложения</th>
                                             <th rowspan="2">Руководитель проекта</th>
@@ -90,7 +90,7 @@
                                                 <td>{{ $item->purchaseOrg }}</td>
                                                 <td>{{ $item->endUser }}</td>
                                                 <td>{{ $item->object }}</td>
-                                                <td>{{ $item->area }}</td>
+                                                {{-- <td>{{ $item->area }}</td> --}}
                                                 <td>{{ date('d.m.Y', strtotime($item->receiptDate)) }}</td>
                                                 <td>{{ date('d.m.Y', strtotime($item->submissionDate)) }}</td>
                                                 <td>{{ $item->projectManager }}</td>
@@ -118,7 +118,7 @@
                                             <th rowspan="2">Наим. орг.закупки</th>
                                             <th rowspan="2">Головная компания</th>
                                             <th rowspan="2">Объект</th>
-                                            <th rowspan="2">Площадка</th>
+                                            {{-- <th rowspan="2">Площадка</th> --}}
                                             <th rowspan="2">Дата поступления заявки</th>
                                             <th rowspan="2">Дата подачи предложения</th>
                                             <th rowspan="2">Руководитель проекта</th>
@@ -156,7 +156,7 @@
                                                 <td>{{ $item->purchaseOrg }}</td>
                                                 <td>{{ $item->endUser }}</td>
                                                 <td>{{ $item->object }}</td>
-                                                <td>{{ $item->area }}</td>
+                                                {{-- <td>{{ $item->area }}</td> --}}
                                                 <td>{{ date('d.m.Y', strtotime($item->receiptDate)) }}</td>
                                                 <td>{{ date('d.m.Y', strtotime($item->submissionDate)) }}</td>
                                                 <td>{{ $item->projectManager }}</td>
@@ -185,7 +185,7 @@
                                             <th rowspan="2">Наим. орг.закупки</th>
                                             <th rowspan="2">Головная компания</th>
                                             <th rowspan="2">Объект</th>
-                                            <th rowspan="2">Площадка</th>
+                                            {{-- <th rowspan="2">Площадка</th> --}}
                                             <th rowspan="2">Дата поступления заявки</th>
                                             <th rowspan="2">Дата подачи предложения</th>
                                             <th rowspan="2">Руководитель проекта</th>
@@ -223,7 +223,7 @@
                                                 <td>{{ $el->purchaseOrg }}</td>
                                                 <td>{{ $el->endUser }}</td>
                                                 <td>{{ $el->object }}</td>
-                                                <td>{{ $el->area }}</td>
+                                                {{-- <td>{{ $el->area }}</td> --}}
                                                 <td>{{ date('d.m.Y', strtotime($el->receiptDate)) }}</td>
                                                 <td>{{ date('d.m.Y', strtotime($el->submissionDate)) }}</td>
                                                 <td>{{ $el->projectManager }}</td>
@@ -253,7 +253,7 @@
                                             <th rowspan="2">Наим. орг.закупки</th>
                                             <th rowspan="2">Головная компания</th>
                                             <th rowspan="2">Объект</th>
-                                            <th rowspan="2">Площадка</th>
+                                            {{-- <th rowspan="2">Площадка</th> --}}
                                             <th rowspan="2">Дата поступления заявки</th>
                                             <th rowspan="2">Дата подачи предложения</th>
                                             <th rowspan="2">Руководитель проекта</th>
@@ -291,7 +291,7 @@
                                                 <td>{{ $el->purchaseOrg }}</td>
                                                 <td>{{ $el->endUser }}</td>
                                                 <td>{{ $el->object }}</td>
-                                                <td>{{ $el->area }}</td>
+                                                {{-- <td>{{ $el->area }}</td> --}}
                                                 <td>{{ date('d.m.Y', strtotime($el->receiptDate)) }}</td>
                                                 <td>{{ date('d.m.Y', strtotime($el->submissionDate)) }}</td>
                                                 <td>{{ $el->projectManager }}</td>

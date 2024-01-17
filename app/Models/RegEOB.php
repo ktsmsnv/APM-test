@@ -9,4 +9,25 @@ class RegEOB extends Model
 {
     use HasFactory;
     protected $table = 'registry_eob';
+
+    protected $fillable = [
+        'vnNum',
+        'purchaseName',
+        'delivery',
+        'pir',
+        'kd',
+        'prod',
+        'shmr',
+        'pnr',
+        'po',
+        'smr',
+        'purchaseOrg',
+        'endUser',
+        'object',
+        'receiptDate',
+        'submissionDate',
+        'projectManager',
+        // 
+    ];
+
 }

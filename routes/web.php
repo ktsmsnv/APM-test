@@ -112,7 +112,7 @@ Route::middleware(['auth'])->group(function () {
 
 
 
-    
+
 
     Route::get('/project-maps/all/{id}/{tab}/update-smk', 'App\Http\Controllers\ProjectController@updateSMK')->name('update-smk');
     Route::get('/project-maps/create/smk-{id}', 'App\Http\Controllers\SmkController@showDataSMK')->name('smk-create');
@@ -127,7 +127,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/project-maps/all/{id}/{projNum}/export-word', 'App\Http\Controllers\reportController@exportWord')->name('report-word');
     // обновление (редактирование) карты проекта ОТЧЕТ 
     Route::post('/project-maps/all/{id}/{tab}/update-report', 'App\Http\Controllers\reportController@updateMessageSubmit')->name('report-update-submit');
-    //удаление карты проекта ОТЧЕТ 
+    //удаление карты проекта ОТЧЕТ пуе
     Route::post('/project-maps/all/{id}/report-delete', 'App\Http\Controllers\reportController@deleteMessage')->name('report-delete');
 
 
@@ -135,7 +135,10 @@ Route::middleware(['auth'])->group(function () {
 
     //создание новой записи в карта проекта -> РИСКИ -> сохранение в БД
     Route::post('/project-maps/all/{id}/store-risks', 'App\Http\Controllers\risksController@store')->name('risks-store');
-    Route::get('/getRiskData', 'App\Http\Controllers\risksController@getRiskData');
+    // Route::get('/getRiskData', 'App\Http\Controllers\risksController@getRiskData');
+
+
+    Route::get('/getRiskData', 'App\Http\Controllers\ProjectController@getRiskData')->name('getRiskData');
 
     // Route::post('/project-maps/risk-update/{id}', 'App\Http\Controllers\risksController@update')->name('risks-update');
     Route::put('/project-maps/risk-update/{id}', 'App\Http\Controllers\RisksController@update')->name('risks-update');

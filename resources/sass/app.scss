@@ -503,9 +503,13 @@ table.dataTable {
   color: rgb(0 90 165) !important;
 }
 
-form#addMap > div {
+
+.addMap__grid {
+grid-template-columns: repeat(2, 1fr);
+column-gap: 8rem;
+& > div {
   background: #ffffffa8;
   padding: 2rem;
   box-shadow: -6px 1px 15px 7px rgba(34, 60, 80, 0.2);
-  max-width: 60%;
+}
 }
