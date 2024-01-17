@@ -87,4 +87,5 @@ class Projects extends Model
     {
         return $this->hasMany(ReportNotes::class, 'project_num', 'projNum');
     }
+    
 }

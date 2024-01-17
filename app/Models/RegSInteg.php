@@ -9,4 +9,23 @@ class RegSInteg extends Model
 {
     use HasFactory;
     protected $table = 'registry_sinteg';
+    protected $fillable = [
+        'vnNum',
+        'purchaseName',
+        'delivery',
+        'pir',
+        'kd',
+        'prod',
+        'shmr',
+        'pnr',
+        'po',
+        'smr',
+        'purchaseOrg',
+        'endUser',
+        'object',
+        'receiptDate',
+        'submissionDate',
+        'projectManager',
+        // 
+    ];
 }

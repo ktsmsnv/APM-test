@@ -13,6 +13,7 @@ class TabController extends Controller
 {
     public function show($tab, $id)
     {
+
         $project = Projects::find($id);
     
         if (!$project) {
@@ -25,6 +26,7 @@ class TabController extends Controller
             switch ($tab) {
                 case 'risks':
                     $additionalData['baseRisks'] = baseRisks::all();
+                    dd($additionalData['baseRisks']);
                     break;
     
                 case 'notes':

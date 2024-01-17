@@ -2,6 +2,7 @@
 
 @section('content')
     <div class="container">
+        <h1 class="mb-5">Реестр КП</h1>
         <div class="card">
             <div class="card-body">
                 <table id="equipment-datatable" class="display nowrap table" style="width:100%">

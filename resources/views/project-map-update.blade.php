@@ -62,8 +62,61 @@
                                         <div class="input-field d-flex gap-3 mb-2">
                                             <p>Контрагент:</p>
                                             <div class="col-3" style="width: 20%;">
-                                                <input type="text" name="contractor"
-                                                    value="{{ $project->contractor }}" class="input_editable">
+                                                <input type="text" name="contractor" value="{{ $project->contractor }}"
+                                                    class="input_editable">
+                                            </div>
+                                        </div>
+                                        <div class="input-field d-flex gap-3 mb-2">
+                                            <p>Дата поступления заявки:</p>
+                                            <div class="col-3" style="width: 20%;">
+                                                <input type="date" name="date_application" value="{{ $project->date_application }}"
+                                                    class="input_editable">
+                                            </div>
+                                        </div>
+                                        <div class="input-field d-flex gap-3 mb-2">
+                                            <p>Дата подачи предложения:</p>
+                                            <div class="col-3" style="width: 20%;">
+                                                <input type="date" name="date_offer" value="{{ $project->date_offer }}"
+                                                    class="input_editable">
+                                            </div>
+                                        </div>
+                                        <h4 class="mt-4 mb-3">Виды работ</h4>
+                                        <div class="d-flex gap-5">
+                                            <div class="d-flex flex-column">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="delivery" id="delivery" {{ $project->delivery ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="delivery">Поставка</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="pir" id="pir" {{ $project->pir ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="pir">ПИР</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="kd" id="kd" {{ $project->kd ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="kd">КД</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="production" id="production" {{ $project->production ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="production">Производство</label>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex flex-column">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="smr" id="smr" {{ $project->smr ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="smr">ШМР</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="pnr" id="pnr" {{ $project->pnr ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="pnr">ПНР</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="po" id="po" {{ $project->po ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="po">ПО</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="cmr" id="cmr" {{ $project->cmr ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="cmr">СМР</label>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -92,9 +145,10 @@
                                                 <th>Кол-во</th>
                                                 <th>Цена за ед. (руб. без НДС)</th>
                                                 {{-- <th>Стоимость (руб. без НДС)</th> --}}
+                                                <th></th>
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody id="equipment-inputs">
                                             @foreach ($project->equipment as $index => $item)
                                                 <tr class="input-field">
                                                     <td style="max-width: 50px;">
@@ -142,12 +196,16 @@
                                                                 value="{{ $item->priceUnit }}" class="input_editable">
                                                         </div>
                                                     </td>
+                                                    <td></td>
                                                     {{-- <td class="total-equipment"> <input type="text" name="equipment[{{ $index }}][price]"
                                                         id="price{{ $index }}" value="{{ $item->price }}"></td> --}}
+                                                
                                                 </tr>
                                             @endforeach
                                         </tbody>
                                     </table>
+                                    <button type="button" class="addMore-button btn btn-success mt-4" data-target="equipment">Добавить
+                                        строку</button>
                                 </div>
                             </div>
                         </div>
@@ -353,9 +411,10 @@
                                                 <th>% наценки</th>
                                                 <th>Сумма подачи ТКП в руб. без НДС</th>
                                                 <th>С кем согласовано (Фамилия И.О.)</th>
+                                                <th></th>
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody id="markups-inputs">
                                             @if ($project->markups->count() > 0)
                                                 @foreach ($project->markups as $index => $markup)
                                                     <tr>
@@ -363,7 +422,8 @@
                                                             <div class="col-3">
                                                                 <input type="text"
                                                                     name="markup[{{ $index }}][id]"
-                                                                    value="{{ $markup->id }}" class="input_editable" readonly>
+                                                                    value="{{ $markup->id }}" class="input_editable"
+                                                                    readonly>
                                                             </div>
                                                         </td>
                                                         <td>
@@ -397,12 +457,15 @@
                                                                     class="input_editable">
                                                             </div>
                                                         </td>
+                                                        <td></td>
                                                     </tr>
                                                 @endforeach
                                             @else
                                             @endif
                                         </tbody>
                                     </table>
+                                    <button type="button" class="addMore-button btn btn-success mt-4" data-target="markups">Добавить
+                                        строку</button>
                                     <div class="mt-5">
                                         <h4 class="text-center mb-3">Контакт-лист</h4>
                                         <table id="markups-contacts-datatable" class="display nowrap projMap"
@@ -414,9 +477,10 @@
                                                     <th>Должность/организация</th>
                                                     <th>Зона ответственности</th>
                                                     <th>Телефон/эл.почта</th>
+                                                    <th></th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
+                                            <tbody id="contacts-inputs">
                                                 @if ($project->contacts->count() > 0)
                                                     @foreach ($project->contacts as $index => $contact)
                                                         <tr>
@@ -460,14 +524,17 @@
                                                                         class="input_editable">
                                                                 </div>
                                                             </td>
+                                                            <td></td>
                                                         </tr>
                                                     @endforeach
                                                 @else
                                                 @endif
                                             </tbody>
                                         </table>
+                                        <button type="button" class="addMore-button btn btn-success mt-4" data-target="contacts">Добавить
+                                            строку</button>
                                     </div>
-                                    <div class="mt-5">
+                                    {{-- <div class="mt-5">
                                         <h4 class="text-center mb-3">Риски</h4>
                                         <table id="markups-contacts-datatable" class="display nowrap projMap"
                                             style="width:100%">
@@ -502,9 +569,8 @@
                                                 @else
                                                 @endif
                                             </tbody>
-                                        </table>
-                                    </div>
-                                </div>
+                                        </table> 
+                                </div> --}}
                             </div>
                         </div>
                     </div>
@@ -529,6 +595,135 @@
                         emptyTable: "Нет данных",
                     }
                 });
+
+
+                var equipmentCount = {{ count($project->equipment) }};
+                var markupstCount = {{ count($project->markups) }};
+                var contactsCount = {{ count($project->contacts) }};
+                let indices = {
+                    equipment: equipmentCount,
+                    markups: markupstCount,
+                    contacts: contactsCount
+                };
+                $(".addMore-button").click(function(event) {
+                    event.preventDefault();
+                    const target = $(this).data("target");
+
+                    $(`#${target}-inputs`).append(getHtml(target, indices[target]));
+                    indices[target]++;
+                });
+                // функция возвращающая html в секцию
+                function getHtml(target, index) {
+                    let removeButton = `<a class="remove-btn btn btn-xs btn-danger" href="#" data-index="${index}" data-target="${target}"><i class="fa-solid fa-trash-can"></i></a>`;
+                    switch (target) {
+                        case 'equipment':
+                            return `
+                                <tr data-target="${target}" data-index="${index}">        
+                                            <td>
+                                                <input type="text" class="form-control" value="${index}" readonly>
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control" name="equipment[${index}][nameTMC]" id="nameTMC"
+                                                placeholder="Введите наименование ТМЦ">
+                                            </td>
+                                                    <td> <input type="text" class="form-control" name="equipment[${index}][manufacture]" id="manufacture"
+                                                        placeholder="Введите производителя"></td>
+                                                    <td><input type="text" class="form-control" name="equipment[${index}][unit]" id="unit"
+                                                        placeholder="Введите ед.изм."></td>
+                                                    <td> <input type="text" class="form-control" name="equipment[${index}][count]" id="count"
+                                                        placeholder="Введите количество"></td>
+                                                    <td><input type="text" class="form-control" name="equipment[${index}][priceUnit]" id="priceUnit"
+                                                        placeholder="Введите цену за ед."></td>
+                                                        <td style="border:none;">${removeButton} </td>
+                                </tr>`
+                        case 'markups':
+                        return `
+                                <tr data-target="${target}" data-index="${index}">        
+                                    <td>
+                                                            <div class="col-3">
+                                                                <input type="text"
+                                                                    name="markup[${index}][id]" class="input_editable"
+                                                                    readonly>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="col-3">
+                                                                <input type="date"
+                                                                    name="markup[${index}][date]" class="input_editable">
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="col-3">
+                                                                <input type="text"
+                                                                    name="markup[${index}][percentage]"
+                                                                    class="input_editable">
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="col-3">
+                                                                <input type="text"
+                                                                    name="markup[${index}][priceSubTkp]"
+                                                                    class="input_editable">
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="col-3">
+                                                                <input type="text"
+                                                                    name="markup[${index}][agreedFio]"
+                                                                    class="input_editable">
+                                                            </div>
+                                                        </td>
+                                                        <td style="border:none;">${removeButton} </td>
+                                </tr>`
+                        case 'contacts':
+                        return `
+                                <tr data-target="${target}" data-index="${index}">
+                                    <td>
+                                                                <div class="col-3">
+                                                                    <input type="text"
+                                                                        name="contact[${index}][id]"
+                                                                        class="input_editable" readonly>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="col-3">
+                                                                    <input type="text"
+                                                                        name="contact[${index}][fio]"
+                                                                        class="input_editable">
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="col-3">
+                                                                    <input type="text"
+                                                                        name="contact[${index}][post]"
+                                                                        class="input_editable">
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="col-3">
+                                                                    <input type="text"
+                                                                        name="contact[${index}][responsibility]"
+                                                                        class="input_editable">
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="col-3">
+                                                                    <input type="text"
+                                                                        name="contact[${index}][contact]"
+                                                                        class="input_editable">
+                                                                </div>
+                                                            </td>
+                                <td style="border:none;">${removeButton} </td>
+                                </tr>`
+                    }
+                }
+                $(document).on('click', '.remove-btn', function(e) {
+                    e.preventDefault();
+                    let target = $(this).data('target');
+                    let index = $(this).data('index');
+                    $(`[data-target=${target}][data-index=${index}]`).remove();
+                });
+
 
             });
         </script>

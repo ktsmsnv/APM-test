@@ -2,8 +2,8 @@
 
 @section('content')
     <div class="container">
-        <div class="d-flex gap-4 align-items-center mb-4">
-            <h1>Все карты проекта</h1>
+        <div class="d-flex gap-4 align-items-center mb-5">
+            <h1>Карты проекта</h1>
             <form method="get" action="{{ route('search-projects') }}">
                 <div class="search">
                     <label>

@@ -27,6 +27,12 @@ body {
   position: fixed;
   box-shadow: 0px 1px 20px 0px #00000057;
 }
+.btn-primary {
+  background-color: rgb(75, 114, 173)!important;
+  &:hover {
+    background-color: var(--bs-btn-hover-bg)!important;
+  }
+}
 .h1,
 .h2,
 .h3,
@@ -60,14 +66,15 @@ h3 {
     color: #eee;
   }
 }
-.realization, #risks, #myTabContent, .changes-add {
+.realization, #risks, #myTabContent, .changes-add, .tab-content, .smk__create {
   background: #fff;
   padding: 1.5rem;
   border-radius: 6px;
 }
-.report, .notes{
+.report, .notes, #report, #addMap{
   h1,h2,h3,h4 {
     color: #000;
+    text-shadow: none;
   }
 }
 .card__main {
@@ -472,7 +479,8 @@ table.dataTable {
 .nav-mytabs a:hover {
   top: 0;
   color: white;
-  background: rgb(0 36 89);
+  // background: rgb(0 36 89);
+  background: rgb(75 114 173);
 }
 .bg-white {
   --bs-bg-opacity: 1;
@@ -486,6 +494,7 @@ table.dataTable {
 .logo__pages {
   img {
     height: 40px;
+    filter: brightness(0.5);
   }
 }
 .navbar-brand {
@@ -494,9 +503,13 @@ table.dataTable {
   color: rgb(0 90 165) !important;
 }
 
-form#addMap > div {
+
+.addMap__grid {
+grid-template-columns: repeat(2, 1fr);
+column-gap: 8rem;
+& > div {
   background: #ffffffa8;
   padding: 2rem;
   box-shadow: -6px 1px 15px 7px rgba(34, 60, 80, 0.2);
-  max-width: 60%;
+}
 }

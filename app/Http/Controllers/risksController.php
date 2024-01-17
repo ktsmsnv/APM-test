@@ -66,7 +66,7 @@ class risksController extends Controller
         // Сохранение риска и связь с проектом
         $project->risks()->save($risk);
 
-        return redirect()->route('project-data-one', ['id' => $projectId, 'tab' => '#risks'])->with('success', 'Project data successfully updated');
+        return redirect()->route('project-data-one', ['id' => $projectId, 'tab' => '#calculation'])->with('success', 'Project data successfully updated');
     }
 
     public function delete($id)
@@ -96,6 +96,6 @@ class risksController extends Controller
         $risk->save();
         $projectId = $request->input('projectId');
     
-        return redirect()->route('project-data-one', ['id' => $projectId, 'tab' => '#risks'])->with('success', 'Project data successfully updated');
+        return redirect()->route('project-data-one', ['id' => $projectId, 'tab' => '#calculation'])->with('success', 'Project data successfully updated');
     }
 }
