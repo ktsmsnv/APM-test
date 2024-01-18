@@ -15,10 +15,10 @@
                         <a class="nav-link" id="realization-tab" data-toggle="tab" href="#realization" role="tab"
                             aria-controls="realization" aria-selected="false">Реализация</a>
                     </li>
-                    {{-- <li class="nav-item">
+                    <li class="nav-item">
                         <a class="nav-link" id="risks-tab" data-toggle="tab" href="#risks" role="tab"
                             aria-controls="risks" aria-selected="false">Риски</a>
-                    </li> --}}
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" id="changes-tab" data-toggle="tab" href="#changes" role="tab"
                             aria-controls="changes" aria-selected="false">Изменения</a>
@@ -46,9 +46,9 @@
                     <div class="tab-pane fade" id="realization" role="tabpanel" aria-labelledby="realization-tab">
                         {{-- @include('tables.realization-projectMap') --}}
                     </div>
-                    {{-- <div class="tab-pane fade" id="risks" role="tabpanel" aria-labelledby="risks-tab"> --}}
+                    <div class="tab-pane fade" id="risks" role="tabpanel" aria-labelledby="risks-tab">
                         {{-- @include('tables.risks-projectMap') --}}
-                    {{-- </div> --}}
+                    </div>
                     <div class="tab-pane fade" id="changes" role="tabpanel" aria-labelledby="changes-tab">
                         {{-- @include('tables.changes-projectMap') --}}
                     </div>

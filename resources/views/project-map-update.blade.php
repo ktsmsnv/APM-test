@@ -69,8 +69,8 @@
                                         <div class="input-field d-flex gap-3 mb-2">
                                             <p>Дата поступления заявки:</p>
                                             <div class="col-3" style="width: 20%;">
-                                                <input type="date" name="date_application" value="{{ $project->date_application }}"
-                                                    class="input_editable">
+                                                <input type="date" name="date_application"
+                                                    value="{{ $project->date_application }}" class="input_editable">
                                             </div>
                                         </div>
                                         <div class="input-field d-flex gap-3 mb-2">
@@ -84,37 +84,45 @@
                                         <div class="d-flex gap-5">
                                             <div class="d-flex flex-column">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="delivery" id="delivery" {{ $project->delivery ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="checkbox" name="delivery"
+                                                        id="delivery" {{ $project->delivery ? 'checked' : '' }}>
                                                     <label class="form-check-label" for="delivery">Поставка</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="pir" id="pir" {{ $project->pir ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="checkbox" name="pir"
+                                                        id="pir" {{ $project->pir ? 'checked' : '' }}>
                                                     <label class="form-check-label" for="pir">ПИР</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="kd" id="kd" {{ $project->kd ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="checkbox" name="kd"
+                                                        id="kd" {{ $project->kd ? 'checked' : '' }}>
                                                     <label class="form-check-label" for="kd">КД</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="production" id="production" {{ $project->production ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="checkbox" name="production"
+                                                        id="production" {{ $project->production ? 'checked' : '' }}>
                                                     <label class="form-check-label" for="production">Производство</label>
                                                 </div>
                                             </div>
                                             <div class="d-flex flex-column">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="smr" id="smr" {{ $project->smr ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="checkbox" name="smr"
+                                                        id="smr" {{ $project->smr ? 'checked' : '' }}>
                                                     <label class="form-check-label" for="smr">ШМР</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="pnr" id="pnr" {{ $project->pnr ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="checkbox" name="pnr"
+                                                        id="pnr" {{ $project->pnr ? 'checked' : '' }}>
                                                     <label class="form-check-label" for="pnr">ПНР</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="po" id="po" {{ $project->po ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="checkbox" name="po"
+                                                        id="po" {{ $project->po ? 'checked' : '' }}>
                                                     <label class="form-check-label" for="po">ПО</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="cmr" id="cmr" {{ $project->cmr ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="checkbox" name="cmr"
+                                                        id="cmr" {{ $project->cmr ? 'checked' : '' }}>
                                                     <label class="form-check-label" for="cmr">СМР</label>
                                                 </div>
                                             </div>
@@ -150,7 +158,8 @@
                                         </thead>
                                         <tbody id="equipment-inputs">
                                             @foreach ($project->equipment as $index => $item)
-                                                <tr class="input-field">
+                                                <tr class="input-field" data-id="{{ $item->id }}"
+                                                    data-index="{{ $index }}" data-target="equipment">
                                                     <td style="max-width: 50px;">
                                                         <input style="max-width: 50px;"type="text"
                                                             name="equipment[{{ $index }}][id]"
@@ -196,15 +205,19 @@
                                                                 value="{{ $item->priceUnit }}" class="input_editable">
                                                         </div>
                                                     </td>
-                                                    <td></td>
-                                                    {{-- <td class="total-equipment"> <input type="text" name="equipment[{{ $index }}][price]"
-                                                        id="price{{ $index }}" value="{{ $item->price }}"></td> --}}
-                                                
+                                                    <td>
+                                                        <a class="remove-btn btn btn-xs btn-danger"
+                                                            data-target="equipment" data-index="{{ $index }}"
+                                                            data-id="{{ $item->id }}">
+                                                            <i class="fa-solid fa-trash-can"></i>
+                                                        </a>
+                                                    </td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
                                     </table>
-                                    <button type="button" class="addMore-button btn btn-success mt-4" data-target="equipment">Добавить
+                                    <button type="button" class="addMore-button btn btn-success mt-4"
+                                        data-target="equipment">Добавить
                                         строку</button>
                                 </div>
                             </div>
@@ -417,7 +430,8 @@
                                         <tbody id="markups-inputs">
                                             @if ($project->markups->count() > 0)
                                                 @foreach ($project->markups as $index => $markup)
-                                                    <tr>
+                                                    <tr data-id="{{ $markup->id }}" data-index="{{ $index }}"
+                                                        data-target="markups">
                                                         <td>
                                                             <div class="col-3">
                                                                 <input type="text"
@@ -457,14 +471,21 @@
                                                                     class="input_editable">
                                                             </div>
                                                         </td>
-                                                        <td></td>
+                                                        <td>
+                                                            <a class="remove-btn btn btn-xs btn-danger"
+                                                                data-index="{{ $index }}"
+                                                                data-id="{{ $markup->id }}" data-target="markups">
+                                                                <i class="fa-solid fa-trash-can"></i>
+                                                            </a>
+                                                        </td>
                                                     </tr>
                                                 @endforeach
                                             @else
                                             @endif
                                         </tbody>
                                     </table>
-                                    <button type="button" class="addMore-button btn btn-success mt-4" data-target="markups">Добавить
+                                    <button type="button" class="addMore-button btn btn-success mt-4"
+                                        data-target="markups">Добавить
                                         строку</button>
                                     <div class="mt-5">
                                         <h4 class="text-center mb-3">Контакт-лист</h4>
@@ -483,7 +504,9 @@
                                             <tbody id="contacts-inputs">
                                                 @if ($project->contacts->count() > 0)
                                                     @foreach ($project->contacts as $index => $contact)
-                                                        <tr>
+                                                        <tr data-id="{{ $contact->id }}"
+                                                            data-index="{{ $index }}"
+                                                            data-target="markups-contacts">
                                                             <td>
                                                                 <div class="col-3">
                                                                     <input type="text"
@@ -524,30 +547,38 @@
                                                                         class="input_editable">
                                                                 </div>
                                                             </td>
-                                                            <td></td>
+                                                            <td>
+                                                                <a class="remove-btn btn btn-xs btn-danger"
+                                                                    data-index="{{ $index }}"
+                                                                    data-id="{{ $contact->id }}"
+                                                                    data-target="markups-contacts">
+                                                                    <i class="fa-solid fa-trash-can"></i>
+                                                                </a>
+                                                            </td>
                                                         </tr>
                                                     @endforeach
                                                 @else
                                                 @endif
                                             </tbody>
                                         </table>
-                                        <button type="button" class="addMore-button btn btn-success mt-4" data-target="contacts">Добавить
+                                        <button type="button" class="addMore-button btn btn-success mt-4"
+                                            data-target="contacts">Добавить
                                             строку</button>
                                     </div>
-                                    {{-- <div class="mt-5">
+                                    <div class="mt-5">
                                         <h4 class="text-center mb-3">Риски</h4>
-                                        <table id="markups-contacts-datatable" class="display nowrap projMap"
-                                            style="width:100%">
+                                        <table id="risks-datatable" class="display nowrap projMap" style="width:100%">
                                             <thead>
                                                 <tr>
                                                     <th>№</th>
                                                     <th>Наименование риска</th>
+                                                    <th></th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
+                                            <tbody id="risks-inputs">
                                                 @if ($project->calc_risks->count() > 0)
                                                     @foreach ($project->calc_risks as $index => $risk)
-                                                        <tr>
+                                                        <tr data-id="{{ $risk->id }}" data-index="{{ $index }}" data-target="risks">
                                                             <td>
                                                                 <div class="col-3">
                                                                     <input type="text"
@@ -564,19 +595,35 @@
                                                                         class="input_editable">
                                                                 </div>
                                                             </td>
+                                                            <td>
+                                                                <a class="remove-btn btn btn-xs btn-danger"
+                                                                    data-index="{{ $index }}"
+                                                                    data-id="{{ $risk->id }}" data-target="risks">
+                                                                    <i class="fa-solid fa-trash-can"></i>
+                                                                </a>
+                                                            </td>
                                                         </tr>
                                                     @endforeach
                                                 @else
                                                 @endif
                                             </tbody>
-                                        </table> 
-                                </div> --}}
+                                        </table>
+                                        <button type="button" class="addMore-button btn btn-success mt-4"
+                                            data-target="risks">Добавить
+                                            строку</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <input type="submit" class="btn btn-primary mt-4" value="Сохранить изменения">
+                    <input type="hidden" name="equipment_ids[]" value="">
+                    <input type="hidden" name="markup_ids[]" value="">
+                    <input type="hidden" name="contact_ids[]" value="">
+                    <input type="hidden" name="risk_ids[]" value="">
+
+                    <input type="submit" class="btn btn-primary mt-4" value="Сохранить изменения"
+                        id="save-changes-btn">
             </form>
         </div>
 
@@ -600,10 +647,12 @@
                 var equipmentCount = {{ count($project->equipment) }};
                 var markupstCount = {{ count($project->markups) }};
                 var contactsCount = {{ count($project->contacts) }};
+                var risksCount = {{ count($project->risks) }};
                 let indices = {
                     equipment: equipmentCount,
                     markups: markupstCount,
-                    contacts: contactsCount
+                    contacts: contactsCount,
+                    risks: risksCount
                 };
                 $(".addMore-button").click(function(event) {
                     event.preventDefault();
@@ -614,13 +663,16 @@
                 });
                 // функция возвращающая html в секцию
                 function getHtml(target, index) {
-                    let removeButton = `<a class="remove-btn btn btn-xs btn-danger" href="#" data-index="${index}" data-target="${target}"><i class="fa-solid fa-trash-can"></i></a>`;
+                    let removeButton =
+                        `<a class="remove-btn btn btn-xs btn-danger" href="#" data-index="${index}" data-target="${target}"><i class="fa-solid fa-trash-can"></i></a>`;
                     switch (target) {
                         case 'equipment':
                             return `
                                 <tr data-target="${target}" data-index="${index}">        
                                             <td>
-                                                <input type="text" class="form-control" value="${index}" readonly>
+                                                <input type="text"
+                                                                    name="equipment[${index}][id]" class="input_editable"
+                                                                    readonly>
                                             </td>
                                             <td>
                                                 <input type="text" class="form-control" name="equipment[${index}][nameTMC]" id="nameTMC"
@@ -637,7 +689,7 @@
                                                         <td style="border:none;">${removeButton} </td>
                                 </tr>`
                         case 'markups':
-                        return `
+                            return `
                                 <tr data-target="${target}" data-index="${index}">        
                                     <td>
                                                             <div class="col-3">
@@ -676,7 +728,7 @@
                                                         <td style="border:none;">${removeButton} </td>
                                 </tr>`
                         case 'contacts':
-                        return `
+                            return `
                                 <tr data-target="${target}" data-index="${index}">
                                     <td>
                                                                 <div class="col-3">
@@ -715,15 +767,46 @@
                                                             </td>
                                 <td style="border:none;">${removeButton} </td>
                                 </tr>`
+                        case 'risks':
+                            return `
+                                <tr data-target="${target}" data-index="${index}">        
+                                    <td>
+                                        <div class="col-3">
+                                            <input type="text" name="risk[${index}][id]" class="input_editable" readonly>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="col-3"> 
+                                            <input type="text" name="risk[${index}][riskName]" class="input_editable">
+                                        </div>
+                                    </td>
+                                    <td style="border:none;">${removeButton} </td>
+                                </tr>`
                     }
                 }
                 $(document).on('click', '.remove-btn', function(e) {
                     e.preventDefault();
                     let target = $(this).data('target');
                     let index = $(this).data('index');
+                    let id = $(this).data('id');
+
+                    hideRow(target, index, id);
                     $(`[data-target=${target}][data-index=${index}]`).remove();
                 });
 
+                function hideRow(target, index, id) {
+                    $(`[data-target=${target}][data-index=${index}][data-id=${id}]`).addClass('to-delete');
+                }
+
+
+                $('#save-changes-btn').click(function() {
+                    $('.to-delete').each(function() {
+                        let target = $(this).data('target');
+                        let id = $(this).data('id');
+                        $(`#delete-marked-rows-form input[name=${target}_ids[]]`).val(id);
+                    });
+                    $('#delete-marked-rows-form').submit();
+                });
 
             });
         </script>
