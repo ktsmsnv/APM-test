@@ -17,6 +17,7 @@ use App\Models\BasicInfo;
 use App\Models\BasicReference;
 use App\Models\workGroup;
 use App\Models\Change;
+use App\Models\CalcRisk;
 use App\Models\baseRisks;
 use App\Models\ProjectManager;
 
@@ -275,63 +276,53 @@ class ProjectController extends Controller
         }
 
         // риски
+        // if ($request->has('risks')) {
+        //     $data_risks = array();
+        //     foreach ($request->input('risks') as $index => $risksData) {
+        //         $risk_probability = intval($risksData['risk_probability']);
+        //         $risk_influence = intval($risksData['risk_influence']);
+        //         $risk_estimate = $risk_probability * $risk_influence;
+        //         $risk_strategy = ($risk_probability * $risk_influence) > 32
+        //             ? 'снижение'
+        //             : (($risk_probability * $risk_influence) == 0
+        //                 ? null
+        //                 : 'принятие');
+
+        //         $item = array(
+        //             'risk_name' => $risksData['risk_name'],
+        //             'risk_reason' => json_encode($risksData['risk_reason']),
+        //             'risk_consequences' => json_encode($risksData['risk_consequences']),
+        //             'risk_probability' => intval($risksData['risk_probability']),
+        //             'risk_influence' => intval($risksData['risk_influence']),
+
+        //             'risk_estimate' =>  $risk_estimate,
+
+        //             'risk_strategy' => $risk_strategy,
+
+        //             'risk_counteraction' => json_encode($risksData['risk_counteraction']),
+        //             'risk_term' => $risksData['risk_term'],
+        //             'risk_mark' => $risksData['risk_mark'],
+        //             'risk_measures' => json_encode($risksData['risk_measures']),
+        //             'risk_responsible' => $risksData['risk_resp'],
+        //             'risk_endTerm' => $risksData['risk_endTerm']
+        //         );
+        //         array_push($data_risks, $item);
+        //     }
+        //     Risks::insert($data_risks);
+        // }
+
         if ($request->has('risks')) {
             $data_risks = array();
             foreach ($request->input('risks') as $index => $risksData) {
-                $risk_probability = intval($risksData['risk_probability']);
-                $risk_influence = intval($risksData['risk_influence']);
-                $risk_estimate = $risk_probability * $risk_influence; 
-                $risk_strategy = ($risk_probability * $risk_influence) > 32
-                ? 'снижение'
-                : (($risk_probability * $risk_influence) == 0
-                    ? null
-                    : 'принятие');
-
                 $item = array(
-                    'risk_name' => $risksData['risk_name'],
-                    'risk_reason' => json_encode($risksData['risk_reason']),
-                    'risk_consequences' => json_encode($risksData['risk_consequences']),
-                    'risk_probability' => intval($risksData['risk_probability']),
-                    'risk_influence' => intval($risksData['risk_influence']),
-
-                    'risk_estimate' =>  $risk_estimate,
-
-                    'risk_strategy' => $risk_strategy,
-
-                    'risk_counteraction' => json_encode($risksData['risk_counteraction']),
-                    'risk_term' => $risksData['risk_term'],
-                    'risk_mark' => $risksData['risk_mark'],
-                    'risk_measures' => json_encode($risksData['risk_measures']),
-                    'risk_responsible' => $risksData['risk_resp'],
-                    'risk_endTerm' => $risksData['risk_endTerm']
+                    'project_num' => $project->projNum,
+                    'calcRisk_name' => $risksData['riskName']
                 );
                 array_push($data_risks, $item);
             }
-            Risks::insert($data_risks);
+            CalcRisk::insert($data_risks);
         }
 
-        // if ($request->has('risks')) {
-        //     foreach ($request->input('risks') as $index => $risksData) {
-        //         $risk = new Risks();
-
-        //         $risk->risk_reason = json_encode($risksData['risk_reason']);
-        //         $risk->risk_consequences = json_encode($risksData['risk_consequences']);
-        //         $risk->risk_counteraction = json_encode($risksData['risk_counteraction']);
-        //         $risk->risk_measures = json_encode($risksData['risk_measures']);
-
-        //         $risk->risk_name = $risksData['risk_name'];
-
-        //         $risk->risk_probability = intval($risksData['risk_probability']);
-        //         $risk->risk_influence = intval($risksData['risk_influence']);
-        //         $risk->risk_estimate = $risk->risk_probability * $risk->risk_influence;
-        //         $risk->risk_strategy = $risk->risk_estimate > 32 ? 'снижение' : ($risk->risk_estimate == 0 ? null : 'принятие');
-        //         $risk->risk_term = $risksData['risk_term'];
-        //         $risk->risk_mark = $risksData['risk_mark'];
-        //         $risk->risk_responsible = $risksData['risk_resp'];
-        //         $risk->risk_endTerm = $risksData['risk_endTerm'];
-        //         $project->risks()->save($risk);
-        //     }
-        // }
 
 
         return redirect()->route('project-maps');
@@ -643,6 +634,10 @@ class ProjectController extends Controller
     // РЕДАКТИРОВАНИЕ данных для карты проекта -> РАСЧЕТ
     public function updateCalculationSubmit($id, Request $req)
     {
+        Equipment::whereIn('id', request('equipment_ids'))->delete();
+        Markup::whereIn('id', request('markup_ids'))->delete();
+        Contacts::whereIn('id', request('contact_ids'))->delete();
+        CalcRisk::whereIn('id', request('risk_ids'))->delete();
         // --------------РАСЧЕТ----------------//
         // Обновление общая информация по проекту
         $project = Projects::find($id);
@@ -651,8 +646,8 @@ class ProjectController extends Controller
         $project->objectName = $req->input('objectName');
         $project->endCustomer = $req->input('endCustomer');
         $project->contractor = $req->input('contractor');
-        $project->contractor = $req->input('date_application');
-        $project->contractor = $req->input('date_offer');
+        $project->date_application = $req->input('date_application');
+        $project->date_offer = $req->input('date_offer');
 
         $project->delivery = $req->has('delivery') ? 1 : 0;
         $project->pir = $req->has('pir') ? 1 : 0;
@@ -784,25 +779,56 @@ class ProjectController extends Controller
             }
             Contacts::insert($data_contacts);
         }
-        // // риски
-        // if ($req->has('risk')) {
-        //     foreach ($req->input('risk') as $index => $risksData) {
-        //         $criteria = [
-        //             'project_num' => $project->projNum,
-        //             'id' => $risksData['id'], // используйте идентификатор (id) записи, которую вы хотите обновить
-        //         ];
+        // риски
+        if ($req->has('risk')) {
+            foreach ($req->input('risk') as $index => $risksData) {
+                $criteria = [
+                    'project_num' => $project->projNum,
+                    'id' => $risksData['id'], 
+                ];
 
-        //         $updateData = [
-        //             'calcRisk_name' => $risksData['riskName'],
-        //         ];
+                $updateData = [
+                    'calcRisk_name' => $risksData['riskName'],
+                ];
 
-        //         CalcRisk::updateOrCreate($criteria, $updateData);
-        //     }
-        // }
+                CalcRisk::updateOrCreate($criteria, $updateData);
+            }
+        }
 
         return redirect()->route('project-data-one', ['id' => $id, 'tab' => '#calculation'])->with('success', 'Project data successfully updated');
     }
 
+    // ------------------- УДАЛЕНИЕ СТРОК ИЗ ТАБЛИЦЫ РАСЧЕТ ВО ВРЕМЯ РЕДАКТИРОВАНИЯ -----------------------------------
+    public function deleteRow($table, $id)
+    {
+        $model = null;
+
+        switch ($table) {
+            case 'equipment':
+                $model = Equipment::find($id);
+                break;
+            case 'markups':
+                $model = Markup::find($id);
+                break;
+            case 'markups-contacts':
+                $model = Contacts::find($id);
+                break;
+            case 'risks':
+                $model = CalcRisk::find($id);
+                break;
+            default:
+                return response()->json(['success' => false, 'message' => 'Неизвестная таблица.']);
+        }
+
+        if ($model) {
+            if (request()->input('index') === null) {
+                $model->delete();
+            }
+            return response()->json(['success' => true]);
+        } else {
+            return response()->json(['success' => false, 'message' => 'Запись не найдена.']);
+        }
+    }
 
     // редактирование карты проекта -> РЕАЛИЗАЦИЯ (открыывает страницу редактирования по id записи)
     public function updateRealization($id)
