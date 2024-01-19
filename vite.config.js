@@ -3,9 +3,15 @@ import laravel from 'laravel-vite-plugin';
 import vue from '@vitejs/plugin-vue';
 
 export default defineConfig({
+    base: process.env.APP_URL, 
     server: {
-        host: '192.168.60.35', // Замените на фактический IP-адрес вашего сервера
-        port: 5173,
+        proxy: {
+          '/api': {
+            target: 'http://192.168.60.35:5173',
+            changeOrigin: true,
+            secure: false,
+          },
+        },
       },
     plugins: [
         laravel({
