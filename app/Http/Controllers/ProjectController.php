@@ -631,6 +631,7 @@ class ProjectController extends Controller
 
         return view('project-map-update', ['project' => $project]);
     }
+    
     // РЕДАКТИРОВАНИЕ данных для карты проекта -> РАСЧЕТ
     public function updateCalculationSubmit($id, Request $req)
     {
