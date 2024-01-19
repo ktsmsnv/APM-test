@@ -7,7 +7,6 @@ export default defineConfig({
         host: '192.168.60.35', // Замените на фактический IP-адрес вашего сервера
         port: 5173,
       },
-    
     plugins: [
         laravel({
             input: [
