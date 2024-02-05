@@ -14,25 +14,25 @@
                         <li class="nav-item flex-sm-fill">
                             <a class="nav-link border-0 text-uppercase font-weight-bold active" id="SInteg-tab"
                                 data-bs-toggle="tab" href="#SInteg" role="tab" data-toggle="tab" aria-controls="SInteg"
-                                aria-selected="true">СИнтег</a>
+                                aria-selected="true">Группа 1</a>
                         </li>
                         <!-- Вторая вкладка -->
                         <li class="nav-item flex-sm-fill">
                             <a class="nav-link border-0 text-uppercase font-weight-bold" id="EOB-tab" data-bs-toggle="tab"
                                 href="#EOB" role="tab" data-toggle="tab" aria-controls="EOB"
-                                aria-selected="false">ЭОБ</a>
+                                aria-selected="false">Группа 2</a>
                         </li>
                         <!-- Третья вкладка -->
                         <li class="nav-item flex-sm-fill">
                             <a class="nav-link border-0 text-uppercase font-weight-bold" id="NHRS-tab" data-bs-toggle="tab"
                                 href="#NHRS" role="tab" data-toggle="tab" aria-controls="NHRS"
-                                aria-selected="false">НХРС</a>
+                                aria-selected="false">Группа 3</a>
                         </li>
                         <!-- Четвёртая вкладка -->
                         <li class="nav-item flex-sm-fill">
                             <a class="nav-link border-0 text-uppercase font-weight-bold" id="Other-tab" data-bs-toggle="tab"
                                 href="#Other" role="tab" data-toggle="tab" aria-controls="Other"
-                                aria-selected="false">Прочее</a>
+                                aria-selected="false">Группа 4</a>
                         </li>
                     </ul>
 

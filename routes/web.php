@@ -152,4 +152,6 @@ Route::middleware(['auth'])->group(function () {
 
     // обработка запросов поиска на странице все карты проекта
     Route::get('/search-projects', 'App\Http\Controllers\ProjectController@search')->name('search-projects');
+
+    Route::get('/get-managers/{group}', 'App\Http\Controllers\ProjectController@getManagers')->name('getManagers');
 });

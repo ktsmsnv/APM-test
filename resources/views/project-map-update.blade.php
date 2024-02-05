@@ -495,9 +495,11 @@
                                                 <tr>
                                                     <th>№</th>
                                                     <th>ФИО</th>
-                                                    <th>Должность/организация</th>
+                                                    <th>Должность</th>
+                                                    <th>Организация</th>
                                                     <th>Зона ответственности</th>
-                                                    <th>Телефон/эл.почта</th>
+                                                    <th>Телефон</th>
+                                                    <th>эл.почта</th>
                                                     <th></th>
                                                 </tr>
                                             </thead>
@@ -534,6 +536,14 @@
                                                             <td>
                                                                 <div class="col-3">
                                                                     <input type="text"
+                                                                        name="contact[{{ $index }}][organization]"
+                                                                        value="{{ $contact->organization }}"
+                                                                        class="input_editable">
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="col-3">
+                                                                    <input type="text"
                                                                         name="contact[{{ $index }}][responsibility]"
                                                                         value="{{ $contact->responsibility }}"
                                                                         class="input_editable">
@@ -542,8 +552,16 @@
                                                             <td>
                                                                 <div class="col-3">
                                                                     <input type="text"
-                                                                        name="contact[{{ $index }}][contact]"
-                                                                        value="{{ $contact->contact }}"
+                                                                        name="contact[{{ $index }}][phone]"
+                                                                        value="{{ $contact->phone }}"
+                                                                        class="input_editable">
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="col-3">
+                                                                    <input type="text"
+                                                                        name="contact[{{ $index }}][email]"
+                                                                        value="{{ $contact->email }}"
                                                                         class="input_editable">
                                                                 </div>
                                                             </td>
