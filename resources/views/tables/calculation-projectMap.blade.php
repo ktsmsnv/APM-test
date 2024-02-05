@@ -23,7 +23,7 @@
                         <span>{{ $project->objectName }}</span>
                     </div>
                     <div class="d-flex gap-3">
-                        <p>Наим.организатора закупки:</p>
+                        <p>Конечный заказчик:</p>
                         <span>{{ $project->endCustomer }}</span>
                     </div>
                     <div class="d-flex gap-3">
@@ -34,10 +34,10 @@
                         <p>Дата поступления заявки:</p>
                         <span>{{ $project->date_application }}</span>
                     </div>
-                    <div class="d-flex gap-3">
+                    {{-- <div class="d-flex gap-3">
                         <p>Дата подачи предложения:</p>
                         <span>{{ $project->date_offer }}</span>
-                    </div>
+                    </div> --}}
                     <h6 class="mt-4 mb-3">Виды работ:</h6>
                     <div class="d-flex gap-5">
                         @if ($project->delivery)
@@ -298,9 +298,11 @@
                             <tr>
                                 <th>№</th>
                                 <th>ФИО</th>
-                                <th>Должность/организация</th>
+                                <th>Должность</th>
+                                <th>Организация</th>
                                 <th>Зона ответственности</th>
-                                <th>Телефон/эл.почта</th>
+                                <th>Телефон</th>
+                                <th>Эл.почта</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -310,8 +312,10 @@
                                         <td>{{ $contact->id }}</td>
                                         <td>{{ $contact->fio }}</td>
                                         <td>{{ $contact->post }}</td>
+                                        <td>{{ $contact->organization }}</td>
                                         <td>{{ $contact->responsibility }}</td>
-                                        <td>{{ $contact->contact }}</td>
+                                        <td>{{ $contact->phone }}</td>
+                                        <td>{{ $contact->email }}</td>
                                     </tr>
                                 @endforeach
                             @else

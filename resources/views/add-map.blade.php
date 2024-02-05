@@ -18,10 +18,10 @@
                                 <input list="projNumbs" name="projNumSuf" required placeholder="Выберите тип"
                                     id="projNumSuf" />
                                 <datalist id="projNumbs">
-                                    <option value="СИ">
-                                    <option value="ЭОБ">
-                                    <option value="НХРС">
-                                    <option value="КСТ">
+                                    <option value="Группа 1" data-group="1">
+                                    <option value="Группа 2" data-group="2">
+                                    <option value="Группа 3" data-group="3">
+                                    <option value="Группа 4" data-group="4">
                                 </datalist>
                             </div>
                         </div>
@@ -31,7 +31,8 @@
                         <label for="projManager">Руководитель проекта:</label>
                         <select class="form-control" name="projManager" id="projManager" required>
                             @foreach ($projectManagers as $manager)
-                                <option value="{{ $manager->fio }}">{{ $manager->fio }}</option>
+                                <option value="{{ $manager->fio }}" data-group="{{ $manager->groupNum }}">
+                                    {{ $manager->fio }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -41,25 +42,25 @@
                             placeholder="Введите название объекта" required>
                     </div>
                     <div class="form-group mb-3">
-                        <label for="endCustomer">Головная компания :</label>
+                        <label for="endCustomer">Конечный заказчик:</label>
                         <input type="text" class="form-control" name="endCustomer" id="endCustomer"
                             placeholder="Введите головную компанию">
                     </div>
                     <div class="form-group mb-3">
-                        <label for="contractor">Наим.организатора закупки:</label>
+                        <label for="contractor">Контрагент:</label>
                         <input type="text" class="form-control" name="contractor" id="contractor"
-                            placeholder="Введите наим.организатора закупки">
+                            placeholder="Контрагент">
                     </div>
                     <div class="form-group mb-3">
                         <label for="date_application">Дата поступления заявки:</label>
                         <input type="date" class="form-control" name="date_application" id="date_application"
                             placeholder="Выберите дату поступления заявки">
                     </div>
-                    <div class="form-group mb-3">
+                    {{-- <div class="form-group mb-3">
                         <label for="date_offer">Дата подачи предложения:</label>
                         <input type="date" class="form-control" name="date_offer" id="date_offer"
                             placeholder="Выберите дату подачи предложения">
-                    </div>
+                    </div> --}}
                     <h3 class="mt-4 mb-3">Виды работ</h3>
                     <div class="d-flex gap-5">
                         <div class="d-flex flex-column">
@@ -108,22 +109,32 @@
                             <div class="form-group mb-3">
                                 <label for="fio">ФИО:</label>
                                 <input type="fio" class="form-control" name="contacts[0][fio]" id="fio"
-                                    placeholder="Введите ФИО">
+                                    placeholder="Введите ФИО" required>
                             </div>
                             <div class="form-group mb-3">
-                                <label for="post">Должность/ Организация:</label>
+                                <label for="post">Должность:</label>
                                 <input type="text" class="form-control" name="contacts[0][post]" id="post"
-                                    placeholder="Введите должность/организацию">
+                                    placeholder="Введите должность">
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="organization">Организация:</label>
+                                <input type="text" class="form-control" name="contacts[0][organization]" id="organization"
+                                    placeholder="Введите организацию" required>
                             </div>
                             <div class="form-group mb-3">
                                 <label for="responsibility">Зона ответственности:</label>
                                 <input type="text" class="form-control" name="contacts[0][responsibility]"
-                                    id="responsibility" placeholder="Введите зону ответственности">
+                                    id="responsibility" placeholder="Введите зону ответственности" required>
                             </div>
                             <div class="form-group mb-3">
-                                <label for="contact">Телефон / эл. почта:</label>
-                                <input type="text" class="form-control" name="contacts[0][contact]" id="contact"
-                                    placeholder="Введите телефон/эл.почту">
+                                <label for="phone">Телефон:</label>
+                                <input type="text" class="form-control" name="contacts[0][phone]" id="phone"
+                                    placeholder="Введите телефон">
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="email">эл. почта:</label>
+                                <input type="text" class="form-control" name="contacts[0][email]" id="email"
+                                    placeholder="Введите эл.почту">
                             </div>
                         </div>
                     </div>
@@ -299,7 +310,7 @@
 
                 <div class="risks-add alert pt-3">
                     <h4 class="text-center">Риски</h4>
-                    {{-- <div id="risks-inputs">
+                    <div id="risks-inputs">
                         <div class="form-group mb-3">
                             <label for="riskName">Наименование риска:</label>
                             <input type="riskName" class="form-control" name="risks[0][riskName]" id="riskName"
@@ -307,8 +318,8 @@
                         </div>
                     </div>
                     <button id="addMore-risks" data-target="risks" class="btn btn-secondary addMore-button">Добавить еще
-                        риск</button> --}}
-                    <div id="dependentFields" class="input-field">
+                        риск</button>
+                    {{-- <div id="dependentFields" class="input-field">
 
                         <div class="form-group mb-3">
                             <label for="risk_name">Наименование риска</label>
@@ -383,7 +394,7 @@
                                 placeholder="Введите срок" required>
                         </div>
                         
-                    </div>
+                    </div> --}}
                 </div>
 
             </div>
@@ -464,9 +475,14 @@
                                 placeholder="Введите ФИО">
                         </div>
                         <div class="form-group mb-3">
-                            <label for="post">Должность/ Организация:</label>
+                            <label for="post">Должность:</label>
                             <input type="text" class="form-control" name="contacts[${index}][post]" id="post"
-                                placeholder="Введите должность/организацию">
+                                placeholder="Введите должность">
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="organization">Организация:</label>
+                            <input type="text" class="form-control" name="contacts[${index}][organization]" id="organization"
+                                placeholder="Введите организацию">
                         </div>
                         <div class="form-group mb-3">
                             <label for="responsibility">Зона ответственности:</label>
@@ -474,9 +490,14 @@
                                 placeholder="Введите зону ответственности">
                         </div>
                         <div class="form-group mb-3">
-                            <label for="contact">Телефон / эл. почта:</label>
-                            <input type="text" class="form-control" name="contacts[${index}][contact]" id="contact"
-                                placeholder="Введите телефон/эл.почту">
+                            <label for="phone">Телефон:</label>
+                            <input type="text" class="form-control" name="contacts[${index}][phone]" id="phone"
+                                placeholder="Введите телефон">
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="email">Эл. почта:</label>
+                            <input type="text" class="form-control" name="contacts[${index}][email]" id="email"
+                                placeholder="Введите эл.почту">
                         </div>
                         ${removeButton}
                     </div>`
@@ -499,40 +520,71 @@
         //соединение номера проекта (1-23) с названием (ЭОБ)
         $(document).ready(function() {
             $('#projNumSuf').change(function() {
+                var selectedGroup = $('datalist#projNumbs option[value="' + $(this).val() + '"]').data(
+                    'group');
+                console.log(selectedGroup);
+
+                // Очищаем текущий список руководителей
+                $('#projManager').empty();
+
+                // Если выбрана группа, делаем AJAX-запрос для получения руководителей
+                if (selectedGroup !== undefined) {
+                    $.ajax({
+                        url: '/get-managers/' + selectedGroup,
+                        method: 'GET',
+                        success: function(data) {
+                            // Добавляем новых руководителей в список
+                            data.forEach(function(manager) {
+                                $('#projManager').append($('<option>', {
+                                    value: manager.fio,
+                                    text: manager.fio
+                                }));
+                            });
+                        },
+                        error: function() {
+                            console.error('Ошибка при получении данных с сервера');
+                        }
+                    });
+                } else {
+                    // Если выбранной группы нет, загружаем всех руководителей
+                    @foreach ($projectManagers as $manager)
+                        $('#projManager').append($('<option>', {
+                            value: "{{ $manager->fio }}",
+                            text: "{{ $manager->fio }}"
+                        }));
+                    @endforeach
+                }
+
                 var projNumPre = $('#projNumPre').val();
                 var projNumSuf = $(this).val();
                 var combinedValue = projNumPre + " " + projNumSuf;
                 $('#projNumCombined').val(combinedValue);
             });
-
-
-            // автосохранение данных
-            // function autoSaveProjectData() {
-            //     var formData = new FormData(document.getElementById('addMap'));
-
-            //     $.ajax({
-            //         url: '{{ route('autosave-project-data') }}',
-            //         type: 'POST',
-            //         data: formData,
-            //         contentType: false,
-            //         processData: false,
-            //         success: function(response) {
-            //             console.log(response);
-            //         },
-            //         error: function(error) {
-            //             console.error(error);
-            //         }
-            //     });
-            // }
-
-            // setInterval(autoSaveProjectData, 5000); // Автосохранение каждые 2 секунды
-
-            // $('#cancelButton').click(function() {
-            //     alert('Сохранение отменено');
-            // });
         });
+        // автосохранение данных
+        // function autoSaveProjectData() {
+        //     var formData = new FormData(document.getElementById('addMap'));
 
+        //     $.ajax({
+        //         url: '{{ route('autosave-project-data') }}',
+        //         type: 'POST',
+        //         data: formData,
+        //         contentType: false,
+        //         processData: false,
+        //         success: function(response) {
+        //             console.log(response);
+        //         },
+        //         error: function(error) {
+        //             console.error(error);
+        //         }
+        //     });
+        // }
 
+        // setInterval(autoSaveProjectData, 5000); // Автосохранение каждые 2 секунды
+
+        // $('#cancelButton').click(function() {
+        //     alert('Сохранение отменено');
+        // });
 
 
         $(document).ready(function() {

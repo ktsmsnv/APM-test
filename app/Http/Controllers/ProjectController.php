@@ -26,6 +26,8 @@ use App\Models\RegNHRS;
 use App\Models\RegOther;
 use App\Models\RegSInteg;
 
+use Illuminate\Support\Facades\DB;
+
 class ProjectController extends Controller
 {
     // Отображение списка всех проектов на странице карты проекта
@@ -137,7 +139,7 @@ class ProjectController extends Controller
         $project->endCustomer = $request->endCustomer;
         $project->contractor = $request->contractor;
 
-        $project->date_application = $request->date_application;
+        // $project->date_application = $request->date_application;
         $project->date_offer = $request->date_offer;
 
         $project->delivery = $request->has('delivery') ? 1 : 0;
@@ -152,16 +154,16 @@ class ProjectController extends Controller
         $project->save();
 
         switch ($request->projNumSuf) {
-            case 'СИ':
+            case 'Группа 1':
                 $this->addToRegistrySinteg($project);
                 break;
-            case 'ЭОБ':
+            case 'Группа 2':
                 $this->addToRegistryEob($project);
                 break;
-            case 'НХРС':
+            case 'Группа 3':
                 $this->addToRegistryNhrs($project);
                 break;
-            case 'КСТ':
+            case 'Группа 4':
                 $this->addToRegistryOther($project);
                 break;
             default:
@@ -267,8 +269,10 @@ class ProjectController extends Controller
                     'project_num' => $project->projNum,
                     'fio' => $contactsData['fio'],
                     'post' => $contactsData['post'],
+                    'organization' => $contactsData['organization'],
                     'responsibility' => $contactsData['responsibility'],
-                    'contact' => $contactsData['contact']
+                    'phone' => $contactsData['phone'],
+                    'email' => $contactsData['email']
                 );
                 array_push($data_contacts, $item);
             }
@@ -631,7 +635,7 @@ class ProjectController extends Controller
 
         return view('project-map-update', ['project' => $project]);
     }
-    
+
     // РЕДАКТИРОВАНИЕ данных для карты проекта -> РАСЧЕТ
     public function updateCalculationSubmit($id, Request $req)
     {
@@ -647,7 +651,7 @@ class ProjectController extends Controller
         $project->objectName = $req->input('objectName');
         $project->endCustomer = $req->input('endCustomer');
         $project->contractor = $req->input('contractor');
-        $project->date_application = $req->input('date_application');
+        // $project->date_application = $req->input('date_application');
         $project->date_offer = $req->input('date_offer');
 
         $project->delivery = $req->has('delivery') ? 1 : 0;
@@ -662,16 +666,16 @@ class ProjectController extends Controller
         $project->save();
 
         switch ($project->projNumSuf) {
-            case 'СИ':
+            case 'Группа 1':
                 $this->updateRegistrySinteg($project);
                 break;
-            case 'ЭОБ':
+            case 'Группа 2':
                 $this->updateRegistryEob($project);
                 break;
-            case 'НХРС':
+            case 'Группа 3':
                 $this->updateRegistryNhrs($project);
                 break;
-            case 'КСТ':
+            case 'Группа 4':
                 $this->updateRegistryOther($project);
                 break;
         }
@@ -773,8 +777,10 @@ class ProjectController extends Controller
                     'project_num' => $project->projNum,
                     'fio' => $contactsData['fio'],
                     'post' => $contactsData['post'],
+                    'organization' => $contactsData['organization'],
                     'responsibility' => $contactsData['responsibility'],
-                    'contact' => $contactsData['contact'],
+                    'phone' => $contactsData['phone'],
+                    'email' => $contactsData['email'],
                 ];
                 array_push($data_contacts, $item);
             }
@@ -785,7 +791,7 @@ class ProjectController extends Controller
             foreach ($req->input('risk') as $index => $risksData) {
                 $criteria = [
                     'project_num' => $project->projNum,
-                    'id' => $risksData['id'], 
+                    'id' => $risksData['id'],
                 ];
 
                 $updateData = [
@@ -952,6 +958,7 @@ class ProjectController extends Controller
 
 
     // --------------- ДОБАВЛЕНИЕ В РЕЕСТР -----------------------------
+    // группа 1
     private function addToRegistryEob($project)
     {
         RegEob::create([
@@ -973,6 +980,7 @@ class ProjectController extends Controller
             'projectManager' => $project->projManager,
         ]);
     }
+    // группа 2
     private function addToRegistrySinteg($project)
     {
         RegSInteg::create([
@@ -994,6 +1002,7 @@ class ProjectController extends Controller
             'projectManager' => $project->projManager,
         ]);
     }
+    // группа 3
     private function addToRegistryNhrs($project)
     {
         RegNHRS::create([
@@ -1015,6 +1024,7 @@ class ProjectController extends Controller
             'projectManager' => $project->projManager,
         ]);
     }
+    // группа 4
     private function addToRegistryOther($project)
     {
         RegOther::create([
@@ -1038,6 +1048,7 @@ class ProjectController extends Controller
     }
 
     // --------------- ИЗМЕНЕНИЯ В РЕЕСТРЕ ИЗ КАРТЫ ПРОЕКТА ----------------------------
+    // группа 1
     private function updateRegistryEob($project)
     {
         $registry = RegEob::where('vnNum', $project->projNum)->first();
@@ -1062,7 +1073,7 @@ class ProjectController extends Controller
             ]);
         }
     }
-
+    // группа 2
     private function updateRegistrySinteg($project)
     {
         $registry = RegSInteg::where('vnNum', $project->projNum)->first();
@@ -1087,7 +1098,7 @@ class ProjectController extends Controller
             ]);
         }
     }
-
+    // группа 3
     private function updateRegistryNhrs($project)
     {
         $registry = RegNHRS::where('vnNum', $project->projNum)->first();
@@ -1112,7 +1123,7 @@ class ProjectController extends Controller
             ]);
         }
     }
-
+    // группа 4
     private function updateRegistryOther($project)
     {
         $registry = RegOther::where('vnNum', $project->projNum)->first();
@@ -1135,6 +1146,17 @@ class ProjectController extends Controller
                 'submissionDate' => $project->date_offer,
                 'projectManager' => $project->projManager,
             ]);
+        }
+    }
+
+
+    public function getManagers($group)
+    {
+        try {
+            $managers = DB::table('project_managers')->where('groupNum', $group)->get();
+            return response()->json($managers);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 }
