@@ -149,8 +149,12 @@
     <a href="{{ route('update-realization', ['id' => $project->id, 'tab' => 'realization']) }}"><button class="btn btn-primary">Редактировать</button></a>
 </div>
 
-
+@elseif($project && $project->totals && $project->totals->isNotEmpty()) 
+<a href="{{ route('realization-create', $project->id) }}" class="btn btn-primary" target="_blank">Добавить реализацию</a>
 @else
-    <a href="{{ route('realization-create', $project->id) }}" class="btn btn-primary" target="_blank">Добавить реализацию</a>
+    <p>Для добавления реализации необходимо заполнить "Расчет" полностью.</p>
+    <a href="#" data-bs-toggle="modal" data-bs-target="#addContinueModal" class="btn btn-danger mb-4">
+        Продолжить заполнение расчета
+    </a>
 @endif
 

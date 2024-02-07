@@ -25,7 +25,7 @@
                 </div>
             @endforeach
         @else
-            <p>Нет карт проекта.</p>
+            <h4 style="color: white;">Нет карт проекта</p>
         @endif
         </div>
         <a href="{{ route('project-create') }}" class="btn btn-primary  btn-lg">Добавить карту</a>

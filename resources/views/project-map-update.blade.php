@@ -136,7 +136,7 @@
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                     data-bs-target="#equipment-collapseTwo" aria-expanded="false"
                                     aria-controls="equipment-collapseTwo">
-                                    II Оборудование
+                                    II Себестоимость оборудования
                                 </button>
                             </h2>
                             <div id="equipment-collapseTwo" class="accordion-collapse collapse"
@@ -237,122 +237,121 @@
                                     <table id="expenses-datatable" class="display nowrap projMap" style="width:100%">
                                         <thead>
                                             <tr>
-                                                <th>№</th>
                                                 <th>Наименование</th>
                                                 <th>Стоимость (руб. без НДС)</th>
                                             </tr>
                                         </thead>
-                                        <tbody class="input-field">
+                                        <tbody id="expenses-inputs">
                                             @if ($project->expenses->count() > 0)
                                                 @foreach ($project->expenses as $index => $expense)
                                                     <tr>
-                                                        <td>1</td>
                                                         <td>Командировочные</td>
                                                         <td>
                                                             <div class="col-3">
-                                                                <input type="text" name="commandir"
-                                                                    value="{{ $expense->commandir }}"
-                                                                    class="input_editable">
+                                                                <input type="text" name="expense[{{ $index }}][commandir]"
+                                                                    value="{{ $expense->commandir }}" class="input_editable">
                                                             </div>
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td>2</td>
                                                         <td>РД</td>
                                                         <td>
                                                             <div class="col-3">
-                                                                <input type="text" name="rd" id="rd"
+                                                                <input type="text" id="rd" name="expense[{{ $index }}][rd]"
                                                                     value="{{ $expense->rd }}" class="input_editable">
                                                             </div>
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td>3</td>
                                                         <td>ШМР</td>
                                                         <td>
                                                             <div class="col-3">
-                                                                <input type="text" name="shmr" id="shmr"
+                                                                <input type="text" id="shmr" name="expense[{{ $index }}][shmr]"
                                                                     value="{{ $expense->shmr }}" class="input_editable">
                                                             </div>
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td>4</td>
                                                         <td>ПНР</td>
                                                         <td>
                                                             <div class="col-3">
-                                                                <input type="text" name="pnr" id="pnr"
+                                                                <input type="text" id="pnr" name="expense[{{ $index }}][pnr]"
                                                                     value="{{ $expense->pnr }}" class="input_editable">
                                                             </div>
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td>5</td>
                                                         <td>Сертификаты</td>
                                                         <td>
                                                             <div class="col-3">
-                                                                <input type="text" name="cert" id="cert"
+                                                                <input type="text" id="cert" name="expense[{{ $index }}][cert]"
                                                                     value="{{ $expense->cert }}" class="input_editable">
                                                             </div>
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td>6</td>
                                                         <td>Доставка/Логистика</td>
                                                         <td>
                                                             <div class="col-3">
-                                                                <input type="text" name="delivery" id="delivery"
-                                                                    value="{{ $expense->delivery }}"
-                                                                    class="input_editable">
+                                                                <input type="text" id="delivery" name="expense[{{ $index }}][delivery]"
+                                                                    value="{{ $expense->delivery }}" class="input_editable">
                                                             </div>
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td>7</td>
                                                         <td>Растаможка</td>
                                                         <td>
                                                             <div class="col-3">
-                                                                <input type="text" name="rastam" id="rastam"
-                                                                    value="{{ $expense->rastam }}"
-                                                                    class="input_editable">
+                                                                <input type="text" id="rastam" name="expense[{{ $index }}][rastam]"
+                                                                    value="{{ $expense->rastam }}" class="input_editable">
                                                             </div>
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td>8</td>
                                                         <td>Разработка ППО</td>
                                                         <td>
                                                             <div class="col-3">
-                                                                <input type="text" name="ppo" id="ppo"
+                                                                <input type="text" id="ppo" name="expense[{{ $index }}][ppo]"
                                                                     value="{{ $expense->ppo }}" class="input_editable">
                                                             </div>
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td>9</td>
                                                         <td>Банковская гарантия</td>
                                                         <td>
                                                             <div class="col-3">
-                                                                <input type="text" name="guarantee" id="guarantee"
-                                                                    value="{{ $expense->guarantee }}"
-                                                                    class="input_editable">
+                                                                <input type="text" id="guarantee" name="expense[{{ $index }}][guarantee]"
+                                                                    value="{{ $expense->guarantee }}" class="input_editable">
                                                             </div>
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td>10</td>
                                                         <td>Поверка</td>
                                                         <td>
                                                             <div class="col-3">
-                                                                <input type="text" name="check" id="check"
+                                                                <input type="text" id="check" name="expense[{{ $index }}][check]"
                                                                     value="{{ $expense->check }}" class="input_editable">
                                                             </div>
                                                         </td>
                                                     </tr>
+                                                    @foreach (json_decode($expense->additional_expenses) as $additionalExpense)
+                                                        <tr>
+                                                            <td>Доп. расходы</td>
+                                                            <td>
+                                                                <div class="col-3">
+                                                                    <input type="text"
+                                                                        name="expense[{{ $index }}][additional_expenses][]"
+                                                                        value="{{ $additionalExpense }}"
+                                                                        class="input_editable">
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
                                                 @endforeach
                                             @endif
                                         </tbody>
                                     </table>
+                                    <button type="button" class="addMore-button btn btn-success mt-4" data-target="expenses">Добавить еще</button>
                                 </div>
                             </div>
                         </div>
@@ -361,7 +360,7 @@
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                     data-bs-target="#calculation-collapseFour" aria-expanded="false"
                                     aria-controls="calculation-collapseFour">
-                                    IV ИТОГО
+                                    IV КСГ
                                 </button>
                             </h2>
                             <div id="calculation-collapseFour" class="accordion-collapse collapse"
@@ -394,7 +393,7 @@
                                             </div>
                                         </div>
                                         <div class="d-flex gap-3">
-                                            <p>Отгрузка (дн.):</p>
+                                            <p>Доставка (дн.):</p>
                                             <div class="col-3" style="width: 20%;">
                                                 <input type="text" name="shipmentDays"
                                                     value="{{ $project->totals->first()->shipmentDays }}"
@@ -596,7 +595,8 @@
                                             <tbody id="risks-inputs">
                                                 @if ($project->calc_risks->count() > 0)
                                                     @foreach ($project->calc_risks as $index => $risk)
-                                                        <tr data-id="{{ $risk->id }}" data-index="{{ $index }}" data-target="risks">
+                                                        <tr data-id="{{ $risk->id }}"
+                                                            data-index="{{ $index }}" data-target="risks">
                                                             <td>
                                                                 <div class="col-3">
                                                                     <input type="text"
@@ -635,10 +635,11 @@
                         </div>
                     </div>
 
-                    <input type="hidden" name="equipment_ids[]" value="">
+                    {{-- <input type="hidden" name="equipment_ids[]" value="">
                     <input type="hidden" name="markup_ids[]" value="">
+                    <input type="hidden" name="expense_ids[]" value="">
                     <input type="hidden" name="contact_ids[]" value="">
-                    <input type="hidden" name="risk_ids[]" value="">
+                    <input type="hidden" name="risk_ids[]" value=""> --}}
 
                     <input type="submit" class="btn btn-primary mt-4" value="Сохранить изменения"
                         id="save-changes-btn">
@@ -662,20 +663,17 @@
                 });
 
 
-                var equipmentCount = {{ count($project->equipment) }};
-                var markupstCount = {{ count($project->markups) }};
-                var contactsCount = {{ count($project->contacts) }};
-                var risksCount = {{ count($project->risks) }};
-                let indices = {
-                    equipment: equipmentCount,
-                    markups: markupstCount,
-                    contacts: contactsCount,
-                    risks: risksCount
+                const indices = {
+                    equipment: {{ count($project->equipment) }},
+                    markups: {{ count($project->markups) }},
+                    expenses: {{ count($project->expenses) }},
+                    contacts: {{ count($project->contacts) }},
+                    risks: {{ count($project->risks) }},
                 };
+
                 $(".addMore-button").click(function(event) {
                     event.preventDefault();
                     const target = $(this).data("target");
-
                     $(`#${target}-inputs`).append(getHtml(target, indices[target]));
                     indices[target]++;
                 });
@@ -686,12 +684,7 @@
                     switch (target) {
                         case 'equipment':
                             return `
-                                <tr data-target="${target}" data-index="${index}">        
-                                            <td>
-                                                <input type="text"
-                                                                    name="equipment[${index}][id]" class="input_editable"
-                                                                    readonly>
-                                            </td>
+                                <tr data-target="${target}" data-index="${index}">    
                                             <td>
                                                 <input type="text" class="form-control" name="equipment[${index}][nameTMC]" id="nameTMC"
                                                 placeholder="Введите наименование ТМЦ">
@@ -709,13 +702,6 @@
                         case 'markups':
                             return `
                                 <tr data-target="${target}" data-index="${index}">        
-                                    <td>
-                                                            <div class="col-3">
-                                                                <input type="text"
-                                                                    name="markup[${index}][id]" class="input_editable"
-                                                                    readonly>
-                                                            </div>
-                                                        </td>
                                                         <td>
                                                             <div class="col-3">
                                                                 <input type="date"
@@ -745,16 +731,22 @@
                                                         </td>
                                                         <td style="border:none;">${removeButton} </td>
                                 </tr>`
+                        case 'expenses':
+                            return `
+                                    <tr data-target="${target}" data-index="${index}"> 
+                                        <td>Доп. расходы</td>
+                                        <td>
+                                            <div class="col-3">
+                                                <input type="text"
+                                                    name="expense[${index}][additional_expenses][]"
+                                                    class="input_editable">
+                                            </div>
+                                        </td>  
+                                        <td style="border:none;">${removeButton} </td>
+                                    </tr>`;
                         case 'contacts':
                             return `
                                 <tr data-target="${target}" data-index="${index}">
-                                    <td>
-                                                                <div class="col-3">
-                                                                    <input type="text"
-                                                                        name="contact[${index}][id]"
-                                                                        class="input_editable" readonly>
-                                                                </div>
-                                                            </td>
                                                             <td>
                                                                 <div class="col-3">
                                                                     <input type="text"
@@ -787,12 +779,7 @@
                                 </tr>`
                         case 'risks':
                             return `
-                                <tr data-target="${target}" data-index="${index}">        
-                                    <td>
-                                        <div class="col-3">
-                                            <input type="text" name="risk[${index}][id]" class="input_editable" readonly>
-                                        </div>
-                                    </td>
+                                <tr data-target="${target}" data-index="${index}">
                                     <td>
                                         <div class="col-3"> 
                                             <input type="text" name="risk[${index}][riskName]" class="input_editable">

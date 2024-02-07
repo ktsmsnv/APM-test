@@ -870,6 +870,11 @@
                 .on('input', calculateAndUpdateFields);
         });
     </script>
+@elseif($project && $project->totals && $project->totals->isEmpty())    
+    <p>Для добавления отчета необходимо заполнить "Расчет" полностью.</p>
+    <a href="#" data-bs-toggle="modal" data-bs-target="#addContinueModal" class="btn btn-danger mb-4">
+        Продолжить заполнение расчета
+    </a>
 @elseif (!$project->reports()->exists() && !$project->basicReference()->exists())
     {{-- если отчета и реализации нет --}}
     <h4 class="mb-3">Заполните сначала реализацию</h4>
