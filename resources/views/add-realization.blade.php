@@ -3,7 +3,7 @@
 @section('content')
     <div class="container">
         <h1 class="mb-5">Добавление реализации для {{ $project->projNum }}</h1>
-        <form action="{{ route('realization-store', $project->id) }}" method="post">
+        <form action="{{ route('realization-store', $project->id) }}" method="post" style="background-color: white; padding: 15px; border-radius: 10px;">
             @csrf
             {{-- Базовая справка --}}
             <div class="mb-5">

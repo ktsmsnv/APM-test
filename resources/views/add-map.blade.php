@@ -39,17 +39,17 @@
                     <div class="form-group mb-3">
                         <label for="objectName">Наименование объекта:</label>
                         <input type="text" class="form-control" name="objectName" id="objectName"
-                            placeholder="Введите название объекта" required>
+                            placeholder="Введите наименование объекта" required>
                     </div>
                     <div class="form-group mb-3">
                         <label for="endCustomer">Конечный заказчик:</label>
                         <input type="text" class="form-control" name="endCustomer" id="endCustomer"
-                            placeholder="Введите головную компанию">
+                            placeholder="Введите конечного заказчика">
                     </div>
                     <div class="form-group mb-3">
                         <label for="contractor">Контрагент:</label>
                         <input type="text" class="form-control" name="contractor" id="contractor"
-                            placeholder="Контрагент">
+                            placeholder="Введите контрагента">
                     </div>
                     <div class="form-group mb-3">
                         <label for="date_application">Дата поступления заявки:</label>
@@ -118,8 +118,8 @@
                             </div>
                             <div class="form-group mb-3">
                                 <label for="organization">Организация:</label>
-                                <input type="text" class="form-control" name="contacts[0][organization]" id="organization"
-                                    placeholder="Введите организацию" required>
+                                <input type="text" class="form-control" name="contacts[0][organization]"
+                                    id="organization" placeholder="Введите организацию" required>
                             </div>
                             <div class="form-group mb-3">
                                 <label for="responsibility">Зона ответственности:</label>
@@ -142,261 +142,6 @@
                         class="btn btn-secondary addMore-button">Добавить
                         еще контакт</button>
                 </div>
-                {{-- Оборудование --}}
-                <div class="equipment-add alert pt-5">
-                    <h2>II Оборудование</h2>
-                    <div>
-                        <div class="mb-3">
-                            <table id="equipment-datatable" class="display nowrap projMap" style="width:100%">
-                                <thead>
-                                    <tr>
-                                        <th>Наименование ТМЦ</th>
-                                        <th>Производитель</th>
-                                        <th>Ед. изм.</th>
-                                        <th>Кол-во</th>
-                                        <th>Цена за ед. (руб. без НДС)</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="equipment-inputs">
-                                    <tr>
-                                        <td><input type="text" class="form-control" name="equipment[0][nameTMC]"
-                                                id="nameTMC" placeholder="Введите наименование ТМЦ"></td>
-                                        <td> <input type="text" class="form-control" name="equipment[0][manufacture]"
-                                                id="manufacture" placeholder="Введите производителя"></td>
-                                        <td><input type="text" class="form-control" name="equipment[0][unit]"
-                                                id="unit" placeholder="Введите ед.изм."></td>
-                                        <td> <input type="text" class="form-control" name="equipment[0][count]"
-                                                id="count" placeholder="Введите количество"></td>
-                                        <td><input type="text" class="form-control" name="equipment[0][priceUnit]"
-                                                id="priceUnit" placeholder="Введите цену за ед."></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            {{-- Стоимость расчитывается автоматически в ProjectController --}}
-                            {{-- <div class="form-group mb-3">
-                                <input type="text" class="form-control" name="equipment[0][price]" id="price"
-                                    placeholder="Стоимость (руб. без НДС)" value="250">
-                            </div> --}}
-                        </div>
-                    </div>
-                    <button id="addMore-equipment" data-target="equipment"
-                        class="btn btn-secondary addMore-button">Добавить
-                        еще
-                        оборудование</button>
-                </div>
-                {{-- Прочие расходы --}}
-                <div class="expenses-add alert pt-5">
-                    <h2>III Прочие расходы (руб. без НДС)</h2>
-                    <div class="form-group mb-3">
-                        <label for="commandir">Командировочные:</label>
-                        <input type="text" class="form-control" name="commandir" id="commandir"
-                            placeholder="Введите командировочные">
-                    </div>
-                    <div class="form-group mb-3">
-                        <label for="rd">РД:</label>
-                        <input type="text" class="form-control" name="rd" id="rd"
-                            placeholder="Введите РД">
-                    </div>
-                    <div class="form-group mb-3">
-                        <label for="shmr">ШМР:</label>
-                        <input type="text" class="form-control" name="shmr" id="shmr"
-                            placeholder="Введите ШМР">
-                    </div>
-                    <div class="form-group mb-3">
-                        <label for="pnr">ПНР:</label>
-                        <input type="text" class="form-control" name="pnr" id="pnr"
-                            placeholder="Введите ПНР">
-                    </div>
-                    <div class="form-group mb-3">
-                        <label for="cert">Сертификаты:</label>
-                        <input type="text" class="form-control" name="cert" id="cert"
-                            placeholder="Введите сертификаты">
-                    </div>
-                    <div class="form-group mb-3">
-                        <label for="delivery">Доставка/ Логистика:</label>
-                        <input type="text" class="form-control" name="delivery" id="delivery"
-                            placeholder="Введите доставку/логистику">
-                    </div>
-                    <div class="form-group mb-3">
-                        <label for="rastam">Растаможка:</label>
-                        <input type="text" class="form-control" name="rastam" id="rastam"
-                            placeholder="Введите растаможку">
-                    </div>
-                    <div class="form-group mb-3">
-                        <label for="ppo">Разработка ППО:</label>
-                        <input type="text" class="form-control" name="ppo" id="ppo"
-                            placeholder="Введите разработку ППО">
-                    </div>
-                    <div class="form-group mb-3">
-                        <label for="guarantee">Банковская гарантия:</label>
-                        <input type="text" class="form-control" name="guarantee" id="guarantee"
-                            placeholder="Введите банковскую гарантию">
-                    </div>
-                    <div class="form-group mb-3">
-                        <label for="check">Поверка:</label>
-                        <input type="text" class="form-control" name="check" id="check"
-                            placeholder="Введите поверку">
-                    </div>
-                    {{-- всего расчитывается автоматически в ProjectController --}}
-                    {{-- <div class="form-group mb-3">
-                        <input type="text" class="form-control" name="total" id="total" placeholder="Всего"
-                            value="250">
-                    </div> --}}
-                </div>
-                {{-- Итого --}}
-                <div class="total-add alert pt-5">
-                    <h2>IV ИТОГО</h2>
-                    <div class="form-group mb-3">
-                        <label for="kdDays">Разработка РКД (дн.):</label>
-                        <input type="text" class="form-control" name="kdDays" id="kdDays"
-                            placeholder="Введите кол-во дней">
-                    </div>
-                    <div class="form-group mb-3">
-                        <label for="equipmentDays">Комплектация (дн.):</label>
-                        <input type="text" class="form-control" name="equipmentDays" id="equipmentDays"
-                            placeholder="Введите кол-во дней">
-                    </div>
-                    <div class="form-group mb-3">
-                        <label for="productionDays">Производство (дн.):</label>
-                        <input type="text" class="form-control" name="productionDays" id="productionDays"
-                            placeholder="Введите кол-во дней">
-                    </div>
-                    <div class="form-group mb-3">
-                        <label for="shipmentDays">Отгрузка (дн.):</label>
-                        <input type="text" class="form-control" name="shipmentDays" id="shipmentDays"
-                            placeholder="Введите кол-во дней">
-                    </div>
-                    {{-- Себестоимость и итого расчитывается автоматически в ProjectController --}}
-                    {{-- <div class="form-group mb-3">
-                        <input type="text" class="form-control" name="periodDays" id="periodDays"
-                            placeholder="Итого срок  реализации (дн.)" value="250">
-                    </div>
-                    <div class="form-group mb-3">
-                        <input type="text" class="form-control" name="price" id="price"
-                            placeholder="Себестоимость  (руб. без НДС)" value="250">
-                    </div> --}}
-                </div>
-                {{-- Уровень наценки --}}
-                <div class="markups-add alert pt-5">
-                    <h2>V Уровень наценки</h2>
-                    <div id="markups-inputs">
-                        <div class="mb-3">
-                            <div class="form-group mb-3">
-                                <label for="date">Дата:</label>
-                                <input type="date" class="form-control" name="markups[0][date]" id="date"
-                                    placeholder="Выберите дату">
-                            </div>
-                            <div class="form-group mb-3">
-                                <label for="percentage">% наценки:</label>
-                                <input type="text" class="form-control" name="markups[0][percentage]" id="percentage"
-                                    placeholder="Введитепроцент наценки">
-                            </div>
-                            <div class="form-group mb-3">
-                                <label for="priceSubTkp">Сумма подачи ТКП в руб. без НДС:</label>
-                                <input type="text" class="form-control" name="markups[0][priceSubTkp]"
-                                    id="priceSubTkp" placeholder="Введите сумму">
-                            </div>
-                            <div class="form-group mb-3">
-                                <label for="agreedFio">С кем согласовано (Фамилия И.О.):</label>
-                                <input type="text" class="form-control" name="markups[0][agreedFio]" id="agreedFio"
-                                    placeholder="Введите ФИО">
-                            </div>
-                        </div>
-                    </div>
-                    {{-- <button id="addMore-markups" data-target="markups" class="btn btn-secondary addMore-button">Добавить еще
-                        уровень наценки</button> --}}
-                </div>
-                {{-- Риски --}}
-
-                <div class="risks-add alert pt-3">
-                    <h4 class="text-center">Риски</h4>
-                    <div id="risks-inputs">
-                        <div class="form-group mb-3">
-                            <label for="riskName">Наименование риска:</label>
-                            <input type="riskName" class="form-control" name="risks[0][riskName]" id="riskName"
-                                placeholder="Введите наименование риска">
-                        </div>
-                    </div>
-                    <button id="addMore-risks" data-target="risks" class="btn btn-secondary addMore-button">Добавить еще
-                        риск</button>
-                    {{-- <div id="dependentFields" class="input-field">
-
-                        <div class="form-group mb-3">
-                            <label for="risk_name">Наименование риска</label>
-                            <select class="form-select" name="risk_name" id="risk_name" required>
-                                <option value="" disabled selected>Выберите наименование</option>
-                                @foreach ($baseRisks as $baseRisk)
-                                    <option value="{{ $baseRisk->nameRisk }}">
-                                        {{ $baseRisk->nameRisk }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="risk_reason">Причина риска</label>
-                            <ul class="json_field" id="reasonList"></ul>
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="risk_consequences">Последствия наступления риска</label>
-                            <ul class="json_field" id="consequenceList"></ul>
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="risk_counteraction">Противодействие риску</label>
-                            <ul class="json_field" id="counteringRiskList"></ul>
-                        </div>
-                        <div class="form-group mb-3 d-flex flex-column">
-                            <label for="risk_term">Срок</label>
-                            <input id="termList" type="text" class="input_editable" name="risk_term" value=""
-                                readonly>
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="risk_measures">Мероприятия при осуществлении риска</label>
-                            <ul class="json_field" id="riskManagMeasuresList"></ul>
-                        </div>
-                        <div class="form-group mb-3 d-flex flex-column">
-                            <label for="risk_probability">Вероятность: </label>
-                            <select name="risk_probability" id="risk_probability-select" required>
-                                <option value="">Выберите вероятность</option>
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="4">4</option>
-                                <option value="8">8</option>
-                                <option value="16">16</option>
-                            </select>
-                        </div>
-                        <div class="form-group mb-3 d-flex flex-column">
-                            <label for="risk_influence">Влияние: </label>
-                            <select name="risk_influence" id="risk_influence-select" required>
-                                <option value="">Выберите влияние</option>
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="4">4</option>
-                                <option value="8">8</option>
-                                <option value="16">16</option>
-                            </select>
-                        </div>
-                        <div class="form-group mb-3 d-flex flex-column">
-                            <label for="risk_mark">Отметка о реализации мероприятий в отношении рисков: </label>
-                            <select name="risk_mark" id="risk_mark-select" required>
-                                <option value="">Выберите отметку</option>
-                                <option value="Выполнено">Выполнено</option>
-                                <option value="Не выполнено">Не выполнено</option>
-                            </select>
-                        </div>
-                        <div class="form-group mb-3 d-flex flex-column">
-                            <label for="risk_resp">Отвественный за выполнение мероприятий</label>
-                            <input class="input_editable" id="risk_resp" type="text" name="risk_resp"
-                                placeholder="Введите ФИО и должность" required>
-                        </div>
-                        <div class="form-group mb-3 d-flex flex-column">
-                            <label for="risk_endTerm">Срок</label>
-                            <input class="input_editable" id="risk_endTerm" type="text" name="risk_endTerm"
-                                placeholder="Введите срок" required>
-                        </div>
-                        
-                    </div> --}}
-                </div>
-
             </div>
             <button type="submit" class="btn btn-primary mt-4">Создать</button>
             <a href="/project-maps/all" type="button" class="btn btn-secondary mt-4" id="cancelButton">Отмена</a>
@@ -408,10 +153,7 @@
         $(document).ready(function() {
             // индесы для каждого из разделов
             let indices = {
-                equipment: 1,
-                markups: 1,
                 contacts: 1,
-                risks: 1
             };
             /* при нажатии на кнопки определяем какой у нас target и взависимости от него добавляет HTML, 
                возвращенный функцией getHtml, в соответствующую секцию */
@@ -428,45 +170,6 @@
             let removeButton =
                 `<button class="btn btn-danger remove-btn" data-index="${index}" data-target="${target}">Удалить</button>`;
             switch (target) {
-                case 'equipment':
-                    return `
-                    <tr data-target="${target}" data-index="${index}">        
-                        <td><input type="text" class="form-control" name="equipment[${index}][nameTMC]" id="nameTMC"
-                                placeholder="Введите наименование ТМЦ"></td>
-                                        <td> <input type="text" class="form-control" name="equipment[${index}][manufacture]" id="manufacture"
-                                            placeholder="Введите производителя"></td>
-                                        <td><input type="text" class="form-control" name="equipment[${index}][unit]" id="unit"
-                                            placeholder="Введите ед.изм."></td>
-                                        <td> <input type="text" class="form-control" name="equipment[${index}][count]" id="count"
-                                            placeholder="Введите количество"></td>
-                                        <td><input type="text" class="form-control" name="equipment[${index}][priceUnit]" id="priceUnit"
-                                            placeholder="Введите цену за ед."></td>
-                                            <td style="border:none;">${removeButton} </td>
-                    </tr>`
-                case 'markups':
-                    return `<div class="mb-3 block" data-target="${target}" data-index="${index}">---
-                        <div class="form-group mb-3">
-                            <label for="date">Дата:</label>
-                            <input type="date" class="form-control" name="markups[${index}][date]" id="date"
-                                placeholder="Выберите дату">
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="percentage">% наценки:</label>
-                            <input type="text" class="form-control" name="markups[${index}][percentage]" id="percentage"
-                                placeholder="Введитепроцент наценки">
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="priceSubTkp">Сумма подачи ТКП в руб. без НДС:</label>
-                            <input type="text" class="form-control" name="markups[${index}][priceSubTkp]" id="priceSubTkp"
-                                placeholder="Введите сумму">
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="agreedFio">С кем согласовано (Фамилия И.О.):</label>
-                            <input type="text" class="form-control" name="markups[${index}][agreedFio]" id="agreedFio"
-                                placeholder="Введите ФИО">
-                        </div>
-                        ${removeButton}
-                    </div>`
                 case 'contacts':
                     return `<div class="mb-3 block" data-target="${target}" data-index="${index}">---
                         <div class="form-group mb-3">
@@ -500,13 +203,6 @@
                                 placeholder="Введите эл.почту">
                         </div>
                         ${removeButton}
-                    </div>`
-                case 'risks':
-                    return `<div class="form-group mb-3 block" data-target="${target}" data-index="${index}">---
-                        <label for="riskName">Наименование риска:</label>
-                        <input type="riskName" class="form-control" name="risks[${index}][riskName]" id="riskName"
-                            placeholder="Введите наименование риска">
-                            ${removeButton}
                     </div>`
             }
         }
@@ -560,109 +256,6 @@
                 var combinedValue = projNumPre + " " + projNumSuf;
                 $('#projNumCombined').val(combinedValue);
             });
-        });
-        // автосохранение данных
-        // function autoSaveProjectData() {
-        //     var formData = new FormData(document.getElementById('addMap'));
-
-        //     $.ajax({
-        //         url: '{{ route('autosave-project-data') }}',
-        //         type: 'POST',
-        //         data: formData,
-        //         contentType: false,
-        //         processData: false,
-        //         success: function(response) {
-        //             console.log(response);
-        //         },
-        //         error: function(error) {
-        //             console.error(error);
-        //         }
-        //     });
-        // }
-
-        // setInterval(autoSaveProjectData, 5000); // Автосохранение каждые 2 секунды
-
-        // $('#cancelButton').click(function() {
-        //     alert('Сохранение отменено');
-        // });
-
-
-        $(document).ready(function() {
-            // Обработчик изменений в поле выбора "Наименование риска"
-            $('#risk_name').change(function() {
-                // Очищаем списки
-                $('#reasonList').empty();
-                $('#consequenceList').empty();
-                $('#counteringRiskList').empty();
-                $('#riskManagMeasuresList').empty();
-
-                // Получаем выбранное значение
-                var selectedOption = $(this).find(':selected');
-                var selectedRisk = selectedOption.val();
-
-                // Запрос на сервер для получения данных по выбранному риску
-                $.ajax({
-                    url: '/getRiskData',
-                    method: 'GET',
-                    data: {
-                        risk: selectedRisk
-                    },
-                    success: function(response) {
-                        // Обновляем переменные и отображаем данные
-                        response.reasonData.forEach(function(reason, index) {
-                            $('#reasonList').append(
-                                '<li class="mb-3"><input type="text" class="input_editable" required readonly name="risk_reason[' +
-                                index + '][reasonRisk]" value="' + reason
-                                .reasonRisk + '"</li>');
-                        });
-
-                        response.consequenceData.forEach((consequence, index) => {
-                            $('#consequenceList').append(
-                                '<li class="mb-3"><input type="text" class="input_editable" required readonly name="risk_consequences[' +
-                                index + '][conseqRiskOnset]" value="' + consequence
-                                .conseqRiskOnset + '"</li>');
-                        });
-
-                        if (Array.isArray(response.counteringRiskData)) {
-                            response.counteringRiskData.forEach(function(counteringRisk,
-                                index) {
-                                $('#counteringRiskList').append(
-                                    '<li class="mb-3"><input type="text" class="input_editable" required readonly name="risk_counteraction[' +
-                                    index + '][counteringRisk]" value="' +
-                                    counteringRisk.counteringRisk + '"</li>');
-                            });
-                        }
-
-                        if (Array.isArray(response.riskManagMeasuresData)) {
-                            response.riskManagMeasuresData.forEach(function(measure, index) {
-                                if (typeof measure === 'object') {
-                                    // Если это объект, выведите свойства объекта
-                                    for (var prop in measure) {
-                                        if (measure.hasOwnProperty(prop)) {
-                                            $('#riskManagMeasuresList').append(
-                                                '<li class="mb-3"><input type="text" class="input_editable" required readonly name="risk_measures[' +
-                                                index +
-                                                '][riskManagMeasures]" value="' +
-                                                measure[prop] + '"</li>');
-                                        }
-                                    }
-                                } else {
-                                    // В противном случае просто выведите значение
-                                    $('#riskManagMeasuresList').append('<li>' +
-                                        measure + '</li>');
-                                }
-                            });
-                        }
-
-                        // Устанавливаем значение поля "Срок" из базы данных
-                        $('#termList').val(response.term);
-                    },
-                    error: function(error) {
-                        console.error('Error fetching risk data:', error);
-                    }
-                });
-            });
-
         });
     </script>
 @endsection

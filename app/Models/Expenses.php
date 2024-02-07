@@ -19,6 +19,7 @@ class Expenses extends Model
         'guarantee',
         'check',
         'total',
+        'additional_expenses',
     ];
 
     public function total() {

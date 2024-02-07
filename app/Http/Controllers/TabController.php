@@ -26,7 +26,7 @@ class TabController extends Controller
             switch ($tab) {
                 case 'risks':
                     $additionalData['baseRisks'] = baseRisks::all();
-                    dd($additionalData['baseRisks']);
+                    // dd($additionalData['baseRisks']);
                     break;
     
                 case 'notes':

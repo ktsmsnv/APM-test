@@ -82,10 +82,31 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/base-possibilities/basePossibilities-update/{id}', 'App\Http\Controllers\BasePossibilitiesController@update')->name('basePossibilities-update');
 
 
-    // создание карты проекта -> РАСЧЕТ
+
+
+    // создание карты проекта -> РАСЧЕТ (ОБЩАЯ ИНФА И КОНТАКТ ЛИСТ)
     Route::get('/project-maps/create', 'App\Http\Controllers\ProjectController@create')->name('project-create');
-    // создание карты проекта РАСЧЕТ -> сохранение в БД
+
+
+    // создание карты проекта РАСЧЕТ (ОБЩАЯ ИНФА И КОНТАКТ ЛИСТ) -> сохранение в БД
     Route::post('/project-maps/create/save', 'App\Http\Controllers\ProjectController@storeNew')->name('project-store');
+
+
+    // ---------------- ДОБАВЛЕНИЕ ОБОРУДОВАНИЯ -----------------
+    Route::post('/project-continue/{id}', 'App\Http\Controllers\ProjectController@projectСontinue')->name('project-continue');
+
+
+    // ---------------- ДОБАВЛЕНИЕ ОБОРУДОВАНИЯ -----------------
+    Route::post('/add-equipment/{id}', 'App\Http\Controllers\ProjectController@addEquipment')->name('addEquipment');
+    // ---------------- ДОБАВЛЕНИЕ ОБОРУДОВАНИЯ -----------------
+    Route::post('/add-expenses/{id}', 'App\Http\Controllers\ProjectController@addExpenses')->name('addExpenses');
+    // ---------------- ДОБАВЛЕНИЕ ИТОГО -----------------
+    Route::post('/add-totals/{id}', 'App\Http\Controllers\ProjectController@addTotals')->name('addTotals');
+    // ---------------- ДОБАВЛЕНИЕ УРОВЕНЯ НАЦЕНКИ -----------------
+    Route::post('/add-markups/{id}', 'App\Http\Controllers\ProjectController@addMarkups')->name('addMarkups');
+    // ---------------- ДОБАВЛЕНИЕ УРОВЕНЯ НАЦЕНКИ -----------------
+    Route::post('/add-risks/{id}', 'App\Http\Controllers\ProjectController@addRisks')->name('addRisks');
+
 
     // АВТОСОХРАНЕНИЕ КАРТЫ ПРОЕКТА
     Route::post('/autosave-project-data', 'App\Http\Controllers\ProjectController@autoSave')->name('autosave-project-data');
@@ -154,4 +175,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/search-projects', 'App\Http\Controllers\ProjectController@search')->name('search-projects');
 
     Route::get('/get-managers/{group}', 'App\Http\Controllers\ProjectController@getManagers')->name('getManagers');
+
+
+    Route::post('/reestr-kp/store', 'App\Http\Controllers\RegReestrKPController@store')->name('reestr-kp.store');
+
+    Route::get('/download-kp/{id}', 'App\Http\Controllers\RegReestrKPController@download')->name('download-kp');
+    Route::get('/download-kp-additional/{id}', 'App\Http\Controllers\RegReestrKPController@downloadkpAdditional')->name('download-kpAdditional');
 });
