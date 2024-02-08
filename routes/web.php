@@ -181,4 +181,8 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/download-kp/{id}', 'App\Http\Controllers\RegReestrKPController@download')->name('download-kp');
     Route::get('/download-kp-additional/{id}', 'App\Http\Controllers\RegReestrKPController@downloadkpAdditional')->name('download-kpAdditional');
+
+    Route::put('/reestr-kp/{id}', 'App\Http\Controllers\RegReestrKPController@update')->name('reestr-kp.update');
+    Route::get('/get-kp-details/{id}', 'App\Http\Controllers\RegReestrKPController@getKPDetails')->name('get-kp-details');
+
 });

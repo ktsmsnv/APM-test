@@ -702,14 +702,14 @@
         {{-- <a href="{{ route('project-map-delete', $project->id) }}"><button class="btn btn-danger">Удалить</button></a> --}}
     </div>
 @else
-<div class="btns d-flex gap-4 mb-4">
-    <a href="#" data-bs-toggle="modal" data-bs-target="#addContinueModal" class="btn btn-lg btn-danger">
-        Продолжить заполнение расчета
-    </a>
-    <a href="#" data-bs-toggle="modal" data-bs-target="#offerModal" class="btn btn-lg btn-primary">
-        Сформировать КП
-    </a>
-</div>
+    <div class="btns d-flex gap-4 mb-4">
+        <a href="#" data-bs-toggle="modal" data-bs-target="#addContinueModal" class="btn btn-lg btn-danger">
+            Продолжить заполнение расчета
+        </a>
+        <a href="#" data-bs-toggle="modal" data-bs-target="#offerModal" class="btn btn-lg btn-primary">
+            Сформировать КП
+        </a>
+    </div>
     <div class="accordion calculation" id="accordionCalculation">
         <div class="accordion-item">
             <h2 class="accordion-header" id="calculation-headingOne">
@@ -966,26 +966,32 @@
         });
     });
     $(document).ready(function() {
-    // индесы для каждого из разделов
-    let indices = {
-        equipment: 1,
-        markups: 1,
-        contacts: 1,
-        expenses: 1,
-        risks: 1
-    };
+        // индесы для каждого из разделов
+        let indices = {
+            equipment: 1,
+            markups: 1,
+            contacts: 1,
+            expenses: 1,
+            risks: 1
+        };
 
-    /* при нажатии на кнопки определяем какой у нас target и в зависимости от него добавляет HTML, 
-       возвращенный функцией getHtml, в соответствующую секцию */
-    $(".modal-content").on("click", ".addMore-button", function(event) {
-        event.preventDefault();
-        const target = $(this).data("target");
+        /* при нажатии на кнопки определяем какой у нас target и в зависимости от него добавляет HTML, 
+           возвращенный функцией getHtml, в соответствующую секцию */
+        $(".modal-content").on("click", ".addMore-button", function(event) {
+            event.preventDefault();
+            const target = $(this).data("target");
 
-        // Добавление новой строки
-        $(`#${target}-inputs`).append(getHtml(target, indices[target]));
-        indices[target]++;
+            // Добавление новой строки
+            // $(`#${target}-inputs`).append(getHtml(target, indices[target]));
+            // indices[target]++;
+            // Проверяем, существует ли уже элемент с этим индексом
+            if ($(`#${target}-inputs [data-index=${indices[target]}]`).length === 0) {
+                // Добавление новой строки
+                $(`#${target}-inputs`).append(getHtml(target, indices[target]));
+            }
+
+        });
     });
-});
 
     // функция возвращающая html в секцию
     function getHtml(target, index) {

@@ -56,10 +56,10 @@
                                             <th rowspan="2">Дата поступления заявки</th>
                                             <th rowspan="2">Дата подачи предложения</th>
                                             <th rowspan="2">Руководитель проекта</th>
-                                            <th rowspan="2">Тех.спец. выполнявший ТП</th>
+                                            {{-- <th rowspan="2">Тех.спец. выполнявший ТП</th>
                                             <th rowspan="2">Себестоимость</th>
                                             <th rowspan="2">Цена ТКП руб. с НДС</th>
-                                            <th rowspan="2">Примечания</th>
+                                            <th rowspan="2">Примечания</th> --}}
                                         </tr>
                                         <tr>
                                             <th>Поставка</th>
@@ -112,10 +112,10 @@
                                                 <td>{{ date('d.m.Y', strtotime($item->receiptDate)) }}</td>
                                                 <td>{{ date('d.m.Y', strtotime($item->submissionDate)) }}</td>
                                                 <td>{{ $item->projectManager }}</td>
-                                                <td>{{ $item->tech }}</td>
+                                                {{-- <td>{{ $item->tech }}</td>
                                                 <td>{{ $item->primeCost }}</td>
                                                 <td>{{ $item->tkpCost }}</td>
-                                                <td>{{ $item->notes }}</td>
+                                                <td>{{ $item->notes }}</td> --}}
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -140,10 +140,10 @@
                                             <th rowspan="2">Дата поступления заявки</th>
                                             <th rowspan="2">Дата подачи предложения</th>
                                             <th rowspan="2">Руководитель проекта</th>
-                                            <th rowspan="2">Тех.спец. выполнявший ТП</th>
+                                            {{-- <th rowspan="2">Тех.спец. выполнявший ТП</th>
                                             <th rowspan="2">Себестоимость</th>
                                             <th rowspan="2">Цена ТКП руб. с НДС</th>
-                                            <th rowspan="2">Примечания</th>
+                                            <th rowspan="2">Примечания</th> --}}
                                         </tr>
                                         <tr>
                                             <th>Поставка</th>
@@ -196,10 +196,10 @@
                                                 <td>{{ date('d.m.Y', strtotime($item->receiptDate)) }}</td>
                                                 <td>{{ date('d.m.Y', strtotime($item->submissionDate)) }}</td>
                                                 <td>{{ $item->projectManager }}</td>
-                                                <td>{{ $item->tech }}</td>
+                                                {{-- <td>{{ $item->tech }}</td>
                                                 <td>{{ $item->primeCost }}</td>
                                                 <td>{{ $item->tkpCost }}</td>
-                                                <td>{{ $item->notes }}</td>
+                                                <td>{{ $item->notes }}</td> --}}
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -225,10 +225,10 @@
                                             <th rowspan="2">Дата поступления заявки</th>
                                             <th rowspan="2">Дата подачи предложения</th>
                                             <th rowspan="2">Руководитель проекта</th>
-                                            <th rowspan="2">Тех.спец. выполнявший ТП</th>
+                                            {{-- <th rowspan="2">Тех.спец. выполнявший ТП</th>
                                             <th rowspan="2">Себестоимость</th>
                                             <th rowspan="2">Цена ТКП руб. с НДС</th>
-                                            <th rowspan="2">Примечания</th>
+                                            <th rowspan="2">Примечания</th> --}}
                                         </tr>
                                         <tr>
                                             <th>Поставка</th>
@@ -281,10 +281,10 @@
                                                 <td>{{ date('d.m.Y', strtotime($el->receiptDate)) }}</td>
                                                 <td>{{ date('d.m.Y', strtotime($el->submissionDate)) }}</td>
                                                 <td>{{ $el->projectManager }}</td>
-                                                <td>{{ $el->tech }}</td>
+                                                {{-- <td>{{ $el->tech }}</td>
                                                 <td>{{ $el->primeCost }}</td>
                                                 <td>{{ $el->tkpCost }}</td>
-                                                <td>{{ $el->notes }}</td>
+                                                <td>{{ $el->notes }}</td> --}}
 
                                             </tr>
                                         @endforeach
@@ -311,10 +311,10 @@
                                             <th rowspan="2">Дата поступления заявки</th>
                                             <th rowspan="2">Дата подачи предложения</th>
                                             <th rowspan="2">Руководитель проекта</th>
-                                            <th rowspan="2">Тех.спец. выполнявший ТП</th>
+                                            {{-- <th rowspan="2">Тех.спец. выполнявший ТП</th>
                                             <th rowspan="2">Себестоимость</th>
                                             <th rowspan="2">Цена ТКП руб. с НДС</th>
-                                            <th rowspan="2">Примечания</th>
+                                            <th rowspan="2">Примечания</th> --}}
                                         </tr>
                                         <tr>
                                             <th>Поставка</th>
@@ -349,10 +349,10 @@
                                                 <td>{{ date('d.m.Y', strtotime($el->receiptDate)) }}</td>
                                                 <td>{{ date('d.m.Y', strtotime($el->submissionDate)) }}</td>
                                                 <td>{{ $el->projectManager }}</td>
-                                                <td>{{ $el->tech }}</td>
+                                                {{-- <td>{{ $el->tech }}</td>
                                                 <td>{{ $el->primeCost }}</td>
                                                 <td>{{ $el->tkpCost }}</td>
-                                                <td>{{ $el->notes }}</td>
+                                                <td>{{ $el->notes }}</td> --}}
 
                                             </tr>
                                         @endforeach
