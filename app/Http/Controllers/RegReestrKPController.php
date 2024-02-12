@@ -101,30 +101,19 @@ class RegReestrKPController extends Controller
 
     public function getKPDetails($id)
     {
-        $reestrKP = RegReestrKP::findOrFail($id); // Находим запись по ID
-    
+        $reestrKP = RegReestrKP::findOrFail($id);
+
         // Получаем информацию о файле word_file, если он есть
         $wordFile = null;
         if ($reestrKP->word_file) {
             $wordFile = [
-                'name' => $reestrKP->original_file_name, // Имя файла
-                'url' => route('download-kp', ['id' => $reestrKP->id]), // URL для скачивания файла
+                'name' => $reestrKP->original_file_name,
+                'url' => route('download-kp', ['id' => $reestrKP->id]),
             ];
         }
-    
-        // Получаем дополнительные файлы, принадлежащие выбранной записи
-        $additionalFiles = [];
-        $additionalFilesRecords = AdditionalFile::where('kp_id', $id)->get();
-        foreach ($additionalFilesRecords as $file) {
-            $additionalFiles[] = [
-                'id' => $file->id, // Идентификатор файла
-                'name' => $file->original_file_name, // Имя файла
-                'url' => route('download-kpAdditional', ['id' => $file->id]), // URL для скачивания файла
-            ];
-        }
-    
         // Подготавливаем данные для ответа
         $data = [
+            'numIncoming' => $reestrKP->numIncoming,
             'orgName' => $reestrKP->orgName,
             'whom' => $reestrKP->whom,
             'sender' => $reestrKP->sender,
@@ -132,9 +121,8 @@ class RegReestrKPController extends Controller
             'purchNum' => $reestrKP->purchNum,
             'date' => $reestrKP->date,
             'wordFile' => $wordFile, // Информация о файле word_file
-            'additionalFiles' => $additionalFiles, // Информация о дополнительных файлах
         ];
-    
+
         // Возвращаем данные в формате JSON
         return response()->json($data);
     }
@@ -153,77 +141,19 @@ class RegReestrKPController extends Controller
         $reestrKP->purchNum = $request->purchNum;
         $reestrKP->date = $request->date;
 
-        // Замена существующего файла Word
         if ($request->hasFile('word_file')) {
-            // Получаем новый файл и сохраняем его
             $wordFile = $request->file('word_file');
             $fileName = $wordFile->getClientOriginalName();
-            $wordFile->storeAs('word_files', $fileName); // Предполагается, что файлы будут сохранены в директории storage/app/word_files
-
-            // Обновляем информацию о файле в базе данных
+            $wordFile->storeAs('word_files', $fileName);
+            
             $reestrKP->word_file = $fileName;
-            $reestrKP->original_file_name = $fileName; // Предполагаем, что имя файла сохраняется в базу данных
-        }
-
-        // Удаление существующего файла Word
-        if ($request->has('delete_word_file') && $request->delete_word_file) {
-            // Удаляем файл и обнуляем соответствующие поля в базе данных
-            Storage::delete('word_files/' . $reestrKP->word_file);
-            $reestrKP->word_file = null;
-            $reestrKP->original_file_name = null;
-        }
-
-        // Добавление новых дополнительных файлов
-        if ($request->hasFile('additional_files')) {
-            foreach ($request->file('additional_files') as $file) {
-                // Сохраняем каждый файл
-                $fileName = $file->getClientOriginalName();
-                $file->storeAs('additional_files', $fileName); // Предполагается, что файлы будут сохранены в директории storage/app/additional_files
-
-                // Создаем новую запись в таблице additional_files
-                $additionalFile = new AdditionalFile();
-                $additionalFile->reg_reestr_kp_id = $reestrKP->id;
-                $additionalFile->original_file_name = $fileName;
-                $additionalFile->file_path = $fileName; // Предполагаем, что путь к файлу сохраняется в базу данных
-                $additionalFile->save();
-            }
+            $reestrKP->original_file_name = $fileName;
+            $reestrKP->save();
+    
+            return response()->json(['name' => $fileName]);
         }
 
 
-        // Обновление каждого дополнительного файла
-        if ($request->hasFile('additional_files')) {
-            foreach ($request->file('additional_files') as $file) {
-                // Сохраняем каждый файл
-                $fileName = $file->getClientOriginalName();
-                $file->storeAs('additional_files', $fileName); // Предполагается, что файлы будут сохранены в директории storage/app/additional_files
-
-                // Обновляем информацию о файле в базе данных
-                $additionalFileId = $request->replace_additional_file_id;
-                $additionalFile = AdditionalFile::findOrFail($additionalFileId);
-                $additionalFile->original_file_name = $fileName;
-                $additionalFile->file_path = $fileName; // Предполагаем, что путь к файлу сохраняется в базу данных
-                $additionalFile->save();
-            }
-        }
-
-        // Удаление каждого дополнительного файла
-        if ($request->has('delete_additional_file_id')) {
-            $additionalFileId = $request->delete_additional_file_id;
-            $additionalFile = AdditionalFile::findOrFail($additionalFileId);
-            Storage::delete('additional_files/' . $additionalFile->file_path);
-            $additionalFile->delete();
-        }
-
-        // Удаление всего коммерческого предложения
-        if ($request->has('delete_offer') && $request->delete_offer) {
-            // Удаляем все файлы и записи связанные с данной записью коммерческого предложения
-            Storage::delete('word_files/' . $reestrKP->word_file);
-            foreach ($reestrKP->additionalFiles as $file) {
-                Storage::delete('additional_files/' . $file->file_path);
-                $file->delete();
-            }
-            $reestrKP->delete();
-        }
 
         // Сохраняем изменения
         $reestrKP->save();

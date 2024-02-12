@@ -78,19 +78,21 @@
 
     <div class="modal fade" id="editKPModal" tabindex="-1" aria-labelledby="editKPModalLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <form id="editKPFormModal" method="post" action="{{ route('reestr-kp.update', ['id' => $item->id]) }}"
-                enctype="multipart/form-data">
+            {{-- <form id="editKPFormModal" method="post" action="{{ route('reestr-kp.update', ['id' => $item->id]) }}"
+                enctype="multipart/form-data"> --}}
+            <form id="editKPFormModal" method="post" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="editKPModalLabel">Редактирование коммерческого предложения
-                            {{ $item->numIncoming }}</h5>
+                            <span id="numIncomingDisplay"></span>
+                        </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <!-- Скрытое поле для идентификатора выбранной записи -->
-                        <input type="hidden" id="selectedRecordId">
+                        <input type="hidden" name="selectedRecordId" id="selectedRecordId" value="">
                         <!-- Поля для редактирования -->
                         <div class="mb-3">
                             <div class="form-group mb-3">
@@ -101,7 +103,7 @@
                             <div class="form-group mb-3">
                                 <label for="whom">Кому:</label>
                                 <input type="text" class="form-control" name="whom" id="whom"
-                                    value="{{ $item->whom }}" placeholder="Введите отправителя" required>
+                                    value="{{ $item->whom }}" placeholder="Введите получателя"required>
                             </div>
                             <div class="form-group mb-3">
                                 <label for="sender">Отправитель:</label>
@@ -128,21 +130,17 @@
                             <div class="form-group mb-5" id="wordFileRow">
                                 <div>
                                     @if ($item->word_file)
-                                        <a href="{{ route('download-kp', ['id' => $item->id]) }}" download
-                                            class="me-3">{{ $item->original_file_name }}</a>
-                                        <button type="button" class="btn btn-sm btn-danger"
-                                            id="replaceWordFileButton">Заменить файл</button>
-                                        <button type="button" class="btn btn-sm btn-warning"
-                                            id="deleteWordFileButton">Удалить файл</button>
-                                        <input type="hidden" name="delete_word_file" id="deleteWordFile"
-                                            value="0">
-                                        <input type="file" class="form-control" name="word_file" id="wordFile"
-                                            style="display: none;">
+                                        <a href="{{ route('download-kp', ['id' => $item->id]) }}" download class="me-3"
+                                            id="wordFileName">{{ $item->original_file_name }}</a>
                                     @else
                                         Нет файла
                                     @endif
+                                    <label for="wordFile" class="btn btn-sm btn-danger ms-3">
+                                        Заменить файл
+                                        <input type="file" class="form-control" name="word_file" id="wordFile"
+                                            style="display: none;">
+                                    </label>
                                 </div>
-                                <input type="file" class="form-control" name="word_file" id="wordFile">
                             </div>
 
                             <!-- Поле для замены дополнительных файлов -->
@@ -154,24 +152,13 @@
                                             <li class="mb-2">
                                                 <a href="{{ route('download-kpAdditional', ['id' => $file->id]) }}"
                                                     download class="me-3">{{ $file->original_file_name }}</a>
-                                                <button type="button"
-                                                    class="btn btn-sm btn-danger replaceAdditionalFileButton"
-                                                    data-id="{{ $file->id }}">Заменить файл</button>
-                                                <input type="hidden" name="replace_additional_file_id"
-                                                    id="replaceAdditionalFileId" value="">
-                                                <button type="button"
-                                                    class="btn btn-sm btn-warning deleteAdditionalFileButton"
-                                                    data-id="{{ $file->id }}">Удалить файл</button>
-                                                <input type="hidden" name="delete_additional_file_id"
-                                                    id="deleteAdditionalFileId" value="">
+
                                             </li>
                                         @endforeach
                                     </ul>
                                 @else
                                     Нет дополнительных файлов
                                 @endif
-                                <input type="file" class="form-control d-none" name="additional_files[]"
-                                    id="additionalFiles" multiple>
                             </div>
 
                             <!-- Поле для добавления новых дополнительных файлов -->
@@ -227,6 +214,7 @@
             });
 
 
+
             $(document).on('click', '.editKPButton', function() {
                 var id = $(this).data('id');
                 var kpId = $(this).data('kp-id');
@@ -237,8 +225,9 @@
                     url: '/get-kp-details/' + id,
                     type: 'GET',
                     success: function(response) {
-                        console.log(response)
+                        console.log(response);
                         // Заполнение полей формы данными из ответа
+                        $('#numIncomingDisplay').text(response.numIncoming); // Устанавливаем номер проекта
                         $('#orgName').val(response.orgName);
                         $('#whom').val(response.whom);
                         $('#sender').val(response.sender);
@@ -248,35 +237,9 @@
 
                         // Вывод файла word_file
                         if (response.wordFile) {
-                            $('#wordFileRow').html('<a href="' + response.wordFile.url +
-                                '" download>' + response.wordFile.name + '</a>' +
-                                '<button type="button" class="btn btn-sm btn-danger ms-3" id="replaceWordFileButton">Заменить файл</button>' +
-                                '<button type="button" class="btn btn-sm btn-warning  ms-3" id="deleteWordFileButton">Удалить файл</button>' +
-                                '<input type="hidden" name="delete_word_file" id="deleteWordFile" value="0">' +
-                                '<input type="file" class="form-control d-none" name="word_file" id="wordFile">'
-                            );
+                            $('#wordFileName').text(response.wordFile.name);
                         } else {
-                            $('#wordFileRow').html('Нет файла');
-                        }
-
-                        // Вывод дополнительных файлов
-                        if (response.additionalFiles.length > 0) {
-                            var additionalFilesHtml = '';
-                            response.additionalFiles.forEach(function(file) {
-                                additionalFilesHtml += '<li><a href="' + file.url +
-                                    '" download>' + file.name + '</a>' +
-                                    '<button type="button" class="btn btn-sm btn-danger ms-3 mb-3 replaceAdditionalFileButton" data-file-id="' +
-                                    file.id + '">Заменить файл</button>' +
-                                    '<input type="hidden" name="replace_additional_file_id" class="replaceAdditionalFileId" value="' +
-                                    file.id + '">' +
-                                    '<button type="button" class="btn btn-sm btn-warning  ms-3 mb-3 deleteAdditionalFileButton" data-file-id="' +
-                                    file.id + '">Удалить файл</button>' +
-                                    '<input type="hidden" name="delete_additional_file_id" class="deleteAdditionalFileId" value="' +
-                                    file.id + '"></li>';
-                            });
-                            $('#additionalFiles').html(additionalFilesHtml);
-                        } else {
-                            $('#additionalFiles').html('<li>Нет дополнительных файлов</li>');
+                            $('#wordFileName').text('Нет файла');
                         }
                     },
                     error: function() {
@@ -285,167 +248,74 @@
                 });
             });
 
-            // Обработчик события для замены файла word
-            $('#editKPFormModal').on('click', '#replaceWordFileButton', function() {
-                // Получаем файл из элемента
-                var file = $('#wordFile')[0].files[0];
-                // Проверяем, был ли выбран файл
-                if (file) {
-                    var id = $('#selectedRecordId').val();
-                    var formData = new FormData();
-                    formData.append('file', file);
-                    formData.append('_method', 'PUT');
-                    $.ajax({
-                        url: '/reestr-kp/' + id,
-                        type: 'POST',
-                        data: formData,
-                        processData: false,
-                        contentType: false,
-                        // Обработка успешного обновления файла
-                        success: function(response) {
-                            // Скрываем наименование старого файла
-                            $('#wordFile').siblings('a').hide();
-                            // Показываем наименование нового файла
-                            $('#wordFile').siblings('a').text(response.name).show();
-                        },
-                        error: function() {
-                            alert('Ошибка при замене файла');
-                        }
-                    });
-                } else {
-                    alert('Файл не выбран.');
-                }
-            });
-
-
-            $(document).on('click', '#deleteWordFileButton', function() {
+            // Обработчик события изменения файла word
+            $(document).on('change', '#wordFile', function() {
+                var file = this.files[0];
                 var id = $('#selectedRecordId').val();
+                var formData = new FormData();
+                formData.append('word_file', file);
+                formData.append('_method', 'PUT'); // Добавляем вручную метод PUT
 
-                $.ajax({
-                    url: '/reestr-kp/' + id,
-                    type: 'POST',
-                    data: {
-                        _method: 'PUT',
-                        delete_word_file: true
-                    },
-                    // Обработка успешного удаления файла
-                    success: function(response) {
-                        // Скрываем поле с удаленным файлом
-                        $('#wordFileRow').find('a').hide();
-                        // Показываем текст "Нет файла"
-                        $('#wordFileRow').find('span').text('Нет файла').show();
-                    },
-                    error: function() {
-                        alert('Ошибка при удалении файла');
+                // Получаем токен CSRF из мета-тега
+                var csrfToken = $('meta[name="csrf-token"]').attr('content');
+                // Устанавливаем токен CSRF в заголовке запроса
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken
                     }
                 });
-            });
-
-            // Удаление всего коммерческого предложения
-            $(document).on('click', '#deleteKPButton', function() {
-                // Запрос подтверждения действия
-                if (confirm('Вы уверены, что хотите удалить коммерческое предложение?')) {
-                    var id = $('#selectedRecordId').val();
-                    $.ajax({
-                        url: '/reestr-kp/' + id,
-                        type: 'POST',
-                        data: {
-                            _method: 'DELETE'
-                        },
-                        success: function(response) {
-                            // Обработка успешного удаления коммерческого предложения
-                        },
-                        error: function() {
-                            alert('Ошибка при удалении коммерческого предложения');
-                        }
-                    });
-                }
-            });
-
-            // Замена существующего дополнительного файла
-            $(document).on('click', '.replaceAdditionalFileButton', function() {
-                var fileId = $(this).data('id');
-                var formData = new FormData();
-                formData.append('additional_files', $('#additionalFiles')[0].files[0]);
-                formData.append('replace_additional_file_id', fileId);
-                formData.append('_method', 'PUT');
 
                 $.ajax({
                     url: '/reestr-kp/' + id,
-                    type: 'POST',
+                    type: 'PUT',
                     data: formData,
                     processData: false,
                     contentType: false,
                     success: function(response) {
-                        // Обработка успешного обновления дополнительного файла
-                        var fileElement = $('li[data-id="' + fileId + '"]');
-                        fileElement.find('a').text(response.name);
+                        $('#wordFileName').text(file.name);
                     },
                     error: function() {
-                        alert('Ошибка при замене дополнительного файла');
+                        alert('Ошибка при замене файла');
                     }
                 });
             });
 
-            // Удаление существующего дополнительного файла
-            $(document).on('click', '.deleteAdditionalFileButton', function() {
-                var fileId = $(this).data('id');
+            // Обработчик события отправки формы
+            $('#editKPFormModal').on('submit', function(event) {
+                event.preventDefault(); // Предотвращаем отправку формы по умолчанию
 
+                // Создаем объект FormData и добавляем данные формы
+                var formData = new FormData(this);
+
+                // Добавляем токен CSRF в данные формы
+                var csrfToken = $('meta[name="csrf-token"]').attr('content');
+                formData.append('_token', csrfToken);
+
+                // Отправляем ID выбранной записи вместе с данными формы
+                var selectedRecordId = $('#selectedRecordId').val();
+                formData.append('selectedRecordId', selectedRecordId);
+
+                // Отправляем AJAX запрос
                 $.ajax({
-                    url: '/reestr-kp/' + id,
-                    type: 'POST',
-                    data: {
-                        _method: 'PUT',
-                        delete_additional_file_id: fileId
-                    },
-                    success: function(response) {
-                        // Обработка успешного удаления дополнительного файла
-                        var fileElement = $('li[data-id="' + fileId + '"]');
-                        fileElement.remove();
-                    },
-                    error: function() {
-                        alert('Ошибка при удалении дополнительного файла');
-                    }
-                });
-            });
-
-
-            // Добавление новых дополнительных файлов
-            $(document).on('change', '#additionalFilesNew', function() {
-                var id = $('#selectedRecordId').val();
-                var formData = new FormData();
-                var files = $('#additionalFilesNew')[0].files;
-
-                for (var i = 0; i < files.length; i++) {
-                    formData.append('additional_files[]', files[i]);
-                }
-
-                formData.append('_method', 'PUT');
-
-                $.ajax({
-                    url: '/reestr-kp/' + id,
-                    type: 'POST',
+                    // url: $(this).attr('action'),
+                    url: '/reestr-kp/' + selectedRecordId,
+                    type: $(this).attr('method'),
                     data: formData,
                     processData: false,
                     contentType: false,
-                    // Обработка успешной загрузки дополнительных файлов
                     success: function(response) {
-                        // Очищаем список загруженных файлов
-                        $('#additionalFiles').val('');
-                        // Удаляем существующие элементы списка
-                        $('#additionalFilesList').empty();
-                        // Перебираем список загруженных файлов и добавляем их в список
-                        response.additionalFiles.forEach(function(file) {
-                            $('#additionalFilesList').append(
-                                '<li><a href="' + file
-                                .url + '">' + file.name + '</a></li>');
-                        });
+                        // Обработка успешного ответа
+                        console.log(response);
                     },
-                    error: function() {
-                        alert('Ошибка при загрузке дополнительных файлов');
+                    error: function(xhr, status, error) {
+                        // Обработка ошибок
+                        console.error(xhr.responseText);
                     }
                 });
             });
+
+
+
         });
     </script>
 @endsection
