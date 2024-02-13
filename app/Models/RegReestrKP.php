@@ -16,6 +16,10 @@ class RegReestrKP extends Model
     {
         return $this->hasMany(AdditionalFile::class, 'kp_id');
     }
+    public function project()
+    {
+        return $this->belongsTo(Projects::class, 'project_num', 'projNum');
+    }
     // Мутатор для формирования номера КП
     // public function setNumIncomingAttribute($value)
     // {

@@ -6,17 +6,31 @@ use Illuminate\Http\Request;
 use App\Models\RegReestrKP;
 use Carbon\Carbon;
 use App\Models\AdditionalFile;
+use App\Models\Projects;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class RegReestrKPController extends Controller
 {
+    // public function index()
+    // {
+    //     $RegReestrKP = RegReestrKP::all();
+    //     $additionalFiles = AdditionalFile::all(); // Получаем все дополнительные файлы
+
+    //     return view('commercial-offers', compact('RegReestrKP', 'additionalFiles'));
+    // }
     public function index()
     {
         $RegReestrKP = RegReestrKP::all();
-        $additionalFiles = AdditionalFile::all(); // Получаем все дополнительные файлы
 
-        return view('commercial-offers', compact('RegReestrKP', 'additionalFiles'));
+        // Получаем все дополнительные файлы для каждого объекта RegReestrKP
+        $RegReestrKP->each(function ($regReestrKP) {
+            $regReestrKP->additionalFiles = $regReestrKP->additionalFiles()->get();
+        });
+
+        return view('commercial-offers', compact('RegReestrKP'));
     }
+
     public function showForm()
     {
         $year = date('y');
@@ -50,6 +64,14 @@ class RegReestrKPController extends Controller
         $data['numIncoming'] = $numIncoming;
         $data['date'] = Carbon::parse($data['date']);
         $reestrKP = RegReestrKP::create($data);
+
+        // Связываем КП с проектом
+        $projectNum = $request->input('project_num'); // Получаем номер проекта из формы
+        $project = Projects::where('projNum', $projectNum)->first(); // Находим проект по номеру
+        if ($project) {
+            $reestrKP->project_num = $projectNum; // Связываем КП с проектом
+            $reestrKP->save(); // Сохраняем изменения
+        }
 
         // Обработка загрузки файла Word, если он предусмотрен
         if ($request->hasFile('word_file')) {
@@ -111,6 +133,16 @@ class RegReestrKPController extends Controller
                 'url' => route('download-kp', ['id' => $reestrKP->id]),
             ];
         }
+
+        // Получаем все дополнительные файлы для данного КП
+        $additionalFiles = $reestrKP->additionalFiles->map(function ($file) {
+            return [
+                'id' => $file->id,
+                'name' => $file->original_file_name,
+                'url' => route('download-kpAdditional', ['id' => $file->id]),
+            ];
+        });
+
         // Подготавливаем данные для ответа
         $data = [
             'numIncoming' => $reestrKP->numIncoming,
@@ -121,10 +153,37 @@ class RegReestrKPController extends Controller
             'purchNum' => $reestrKP->purchNum,
             'date' => $reestrKP->date,
             'wordFile' => $wordFile, // Информация о файле word_file
+            'additionalFiles' => $additionalFiles,
         ];
 
         // Возвращаем данные в формате JSON
         return response()->json($data);
+    }
+
+
+
+    public function updateAdditionalFile(Request $request, $id)
+    {
+        // Находим запись дополнительного файла по ID
+        $additionalFile = AdditionalFile::findOrFail($id);
+
+        // Обновляем файл, если он был загружен
+        if ($request->hasFile('additional_file')) {
+            $file = $request->file('additional_file');
+            $fileName = $file->getClientOriginalName();
+            $file->storeAs('additional_files', $fileName); // Предполагается, что дополнительные файлы сохраняются в папку additional_files
+
+            // Обновляем имя файла и содержимое
+            $additionalFile->file_name = $fileName;
+            $additionalFile->original_file_name = $fileName;
+            $additionalFile->file_content = file_get_contents($file->getRealPath()); // Предполагается, что содержимое файла сохраняется в базе данных
+            $additionalFile->save();
+
+            return response()->json(['name' => $fileName]);
+        }
+
+        // Редирект или возврат ответа в зависимости от вашей логики
+        return response()->json(['success' => true]);
     }
 
     // --------------------- РЕДАКТИРОВАНИЕ КП -------------------------------
@@ -145,20 +204,81 @@ class RegReestrKPController extends Controller
             $wordFile = $request->file('word_file');
             $fileName = $wordFile->getClientOriginalName();
             $wordFile->storeAs('word_files', $fileName);
-            
+
             $reestrKP->word_file = $fileName;
             $reestrKP->original_file_name = $fileName;
             $reestrKP->save();
-    
+
             return response()->json(['name' => $fileName]);
         }
 
-
+        // Обработка загрузки дополнительных файлов
+        if ($request->hasFile('additional_files')) {
+            foreach ($request->file('additional_files') as $file) {
+                $originalFileName = $file->getClientOriginalName(); // Получаем исходное имя файла
+                $fileName = $reestrKP->id . '_' . time() . '.' . $file->getClientOriginalExtension();
+                $fileContent = file_get_contents($file->getRealPath()); // Получаем содержимое файла
+                // Сохранение файла в таблице для дополнительных файлов
+                AdditionalFile::create([
+                    'kp_id' => $reestrKP->id,
+                    'original_file_name' => $originalFileName, // Сохраняем оригинальное имя файла
+                    'file_name' => $fileName,
+                    'file_content' => $fileContent,
+                ]);
+                // Сохранение файла на сервере
+                $file->storeAs('additional_files', $originalFileName); // Используем оригинальное имя файла для сохранения
+            }
+        }
 
         // Сохраняем изменения
         $reestrKP->save();
 
+        // Обработка замены дополнительных файлов
+        foreach ($request->all() as $key => $value) {
+            if (strpos($key, 'additionalFile_') !== false) {
+                $fileId = substr($key, strrpos($key, '_') + 1);
+                $file = $request->file($key);
+                if ($file) {
+                    // Находим существующую запись дополнительного файла по ID
+                    $additionalFile = AdditionalFile::findOrFail($fileId);
+
+                    // Если файл был изменен, обновляем его
+                    if ($file->isValid()) {
+                        $fileName = $file->getClientOriginalName();
+                        $file->storeAs('additional_files', $fileName);
+                        $additionalFile->file_name = $fileName;
+                        $additionalFile->original_file_name = $fileName;
+                        $additionalFile->file_content = file_get_contents($file->getRealPath());
+                        $additionalFile->save();
+                    }
+                }
+            }
+        }
+
         // Редирект или возврат ответа в зависимости от вашей логики
+        return response()->json(['success' => true]);
+    }
+
+    public function deleteAdditionalFile($id) {
+        // Находим запись дополнительного файла по ID
+        $additionalFile = AdditionalFile::findOrFail($id);
+        
+        // Удаление файла из базы данных
+        $additionalFile->delete();
+    
+        return response()->json(['success' => true]);
+    }
+
+    public function deleteKP($id)
+    {
+        $reestrKP = RegReestrKP::findOrFail($id);
+
+        // Удаление связанных дополнительных файлов
+        $reestrKP->additionalFiles()->delete();
+
+        // Удаление самого КП
+        $reestrKP->delete();
+
         return response()->json(['success' => true]);
     }
 }
