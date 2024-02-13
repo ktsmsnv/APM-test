@@ -185,4 +185,8 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/reestr-kp/{id}', 'App\Http\Controllers\RegReestrKPController@update')->name('reestr-kp.update');
     Route::get('/get-kp-details/{id}', 'App\Http\Controllers\RegReestrKPController@getKPDetails')->name('get-kp-details');
 
+    Route::put('/reestr-kp/additional-files/{id}', 'App\Http\Controllers\RegReestrKPController@updateAdditionalFile')->name('reestr-kp.updateAdditionalFile');
+
+    Route::delete('/delete-kp/{id}', 'App\Http\Controllers\RegReestrKPController@deleteKP')->name('delete-kp');
+    Route::delete('/delete-kp-additionalfile/{id}', 'App\Http\Controllers\RegReestrKPController@deleteAdditionalFile');
 });

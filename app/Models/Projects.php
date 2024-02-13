@@ -87,5 +87,9 @@ class Projects extends Model
     {
         return $this->hasMany(ReportNotes::class, 'project_num', 'projNum');
     }
+    public function registry_reestrKP()
+    {
+        return $this->hasMany(RegReestrKP::class, 'project_num', 'projNum');
+    }
     
 }

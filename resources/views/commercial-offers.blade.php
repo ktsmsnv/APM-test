@@ -24,7 +24,10 @@
                     <tbody>
                         @foreach ($RegReestrKP as $item)
                             <tr data-id="{{ $item->id }}">
-                                <td>{{ $item->numIncoming }}</td>
+                                {{-- <td>{{ $item->numIncoming }}</td> --}}
+                                <td><a
+                                        href="{{ route('project-data-one', ['id' => $item->project->id, 'tab' => 'calculation']) }}">{{ $item->numIncoming }}</a>
+                                </td>
                                 <td>{{ date('d.m.Y', strtotime($item->date)) }}</td>
                                 <td>{{ $item->orgName }}</td>
                                 <td>{{ $item->whom }}</td>
@@ -64,7 +67,7 @@
                                         <i class="fa-solid fa-edit"></i>
                                     </a>
 
-                                    <a class="btn btn-xs btn-danger" href="#" data-bs-toggle="modal"
+                                    <a class="btn btn-xs btn-danger deleteKPButton" href="#" data-bs-toggle="modal"
                                         data-bs-target="#confirmDeleteKP" data-id="{{ $item->id }}"><i
                                             class="fa-solid fa-trash-can"></i></a>
                                 </td>
@@ -76,112 +79,141 @@
         </div>
     </div>
 
-    <div class="modal fade" id="editKPModal" tabindex="-1" aria-labelledby="editKPModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            {{-- <form id="editKPFormModal" method="post" action="{{ route('reestr-kp.update', ['id' => $item->id]) }}"
+    @if ($RegReestrKP->isNotEmpty())
+        <div class="modal fade" id="editKPModal" tabindex="-1" aria-labelledby="editKPModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                {{-- <form id="editKPFormModal" method="post" action="{{ route('reestr-kp.update', ['id' => $item->id]) }}"
                 enctype="multipart/form-data"> --}}
-            <form id="editKPFormModal" method="post" enctype="multipart/form-data">
-                @csrf
-                @method('PUT')
+                <form id="editKPFormModal" method="post" enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editKPModalLabel">Редактирование коммерческого предложения
+                                <span id="numIncomingDisplay"></span>
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- Скрытое поле для идентификатора выбранной записи -->
+                            <input type="hidden" name="selectedRecordId" id="selectedRecordId" value="">
+                            <!-- Поля для редактирования -->
+                            <div class="mb-3">
+                                <div class="form-group mb-3">
+                                    <label for="orgName">Наименование организации:</label>
+                                    <input type="text" class="form-control" name="orgName" id="orgName"
+                                        value="{{ $item->orgName }}" placeholder="Введите наименование организации"
+                                        required>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="whom">Кому:</label>
+                                    <input type="text" class="form-control" name="whom" id="whom"
+                                        value="{{ $item->whom }}" placeholder="Введите получателя"required>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="sender">Отправитель:</label>
+                                    <input type="text" class="form-control" name="sender" id="sender"
+                                        value="{{ $item->sender }}" placeholder="Введите отправителя" required>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="amountNDS">Сумма в НДС:</label>
+                                    <input type="text" class="form-control" name="amountNDS" id="amountNDS"
+                                        value="{{ $item->amountNDS }}" placeholder="Введите сумму в НДС" required>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="purchNum">№ закупки:</label>
+                                    <input type="text" class="form-control" name="purchNum" id="purchNum"
+                                        value="{{ $item->purchNum }}" placeholder="Введите номер закупки" required>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="purchNum">Дата:</label>
+                                    <input type="date" class="form-control" name="date" id="date"
+                                        value="{{ $item->date }}" placeholder="Выберите дату" required>
+                                </div>
+                                <!-- Поле для замены файла Word -->
+                                <span>Документ КП:</span>
+                                <div class="form-group mb-5" id="wordFileRow">
+                                    <div>
+                                        @if ($item->word_file)
+                                            <a href="{{ route('download-kp', ['id' => $item->id]) }}" download
+                                                class="me-3" id="wordFileName">{{ $item->original_file_name }}</a>
+                                        @else
+                                            Нет файла
+                                        @endif
+                                        <label for="wordFile" class="btn btn-sm btn-danger ms-3">
+                                            Заменить файл
+                                            <input type="file" class="form-control" name="word_file" id="wordFile"
+                                                style="display: none;">
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Поле для замены дополнительных файлов -->
+                                <span>Дополнительные файлы:</span>
+                                <div class="form-group mb-4" id="additionalFiles">
+                                    @if ($additionalFiles->count() > 0)
+                                        <ul>
+                                            @foreach ($additionalFiles as $file)
+                                                {{-- <li class="mb-2">
+                                                <a href="{{ route('download-kpAdditional', ['id' => $file->id]) }}"
+                                                    download class="me-3"
+                                                    id="additionalFileName_{{ $file->id }}">{{ $file->original_file_name }}</a>
+                                                <label for="additionalFile_{{ $file->id }}"
+                                                    class="btn btn-sm btn-danger ms-3">
+                                                    Заменить файл
+                                                    <input type="file" class="form-control additionalFile"
+                                                        name="additionalFile_{{ $file->id }}"
+                                                        id="additionalFile_{{ $file->id }}"
+                                                        data-file-id="{{ $file->id }}" style="display: none;">
+                                                </label>
+                                            </li> --}}
+                                            @endforeach
+                                        </ul>
+                                    @endif
+                                </div>
+
+                                <!-- Поле для добавления новых дополнительных файлов -->
+                                <div class="form-group mb-3">
+                                    <label for="additionalFilesNew">Добавить новые дополнительные файлы:</label>
+                                    <input type="file" class="form-control" name="additional_files[]"
+                                        id="additionalFilesNew" multiple>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Кнопки -->
+                        <div class="modal-footer d-flex justify-content-between">
+                            <div class="d-flex gap-3">
+                                <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                            </div>
+                            <button type="button" class="btn btn-danger" id="deleteKPButton">Удалить КП</button>
+                            <input type="hidden" name="delete_offer" id="deleteOffer" value="0">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+        <div class="modal fade" id="confirmDeleteKP" tabindex="-1" aria-labelledby="confirmDeleteKPLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="editKPModalLabel">Редактирование коммерческого предложения
-                            <span id="numIncomingDisplay"></span>
-                        </h5>
+                        <h5 class="modal-title" id="confirmDeleteKPLabel">Подтверждение удаления КП</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <!-- Скрытое поле для идентификатора выбранной записи -->
-                        <input type="hidden" name="selectedRecordId" id="selectedRecordId" value="">
-                        <!-- Поля для редактирования -->
-                        <div class="mb-3">
-                            <div class="form-group mb-3">
-                                <label for="orgName">Наименование организации:</label>
-                                <input type="text" class="form-control" name="orgName" id="orgName"
-                                    value="{{ $item->orgName }}" placeholder="Введите наименование организации" required>
-                            </div>
-                            <div class="form-group mb-3">
-                                <label for="whom">Кому:</label>
-                                <input type="text" class="form-control" name="whom" id="whom"
-                                    value="{{ $item->whom }}" placeholder="Введите получателя"required>
-                            </div>
-                            <div class="form-group mb-3">
-                                <label for="sender">Отправитель:</label>
-                                <input type="text" class="form-control" name="sender" id="sender"
-                                    value="{{ $item->sender }}" placeholder="Введите отправителя" required>
-                            </div>
-                            <div class="form-group mb-3">
-                                <label for="amountNDS">Сумма в НДС:</label>
-                                <input type="text" class="form-control" name="amountNDS" id="amountNDS"
-                                    value="{{ $item->amountNDS }}" placeholder="Введите сумму в НДС" required>
-                            </div>
-                            <div class="form-group mb-3">
-                                <label for="purchNum">№ закупки:</label>
-                                <input type="text" class="form-control" name="purchNum" id="purchNum"
-                                    value="{{ $item->purchNum }}" placeholder="Введите номер закупки" required>
-                            </div>
-                            <div class="form-group mb-3">
-                                <label for="purchNum">Дата:</label>
-                                <input type="date" class="form-control" name="date" id="date"
-                                    value="{{ $item->date }}" placeholder="Выберите дату" required>
-                            </div>
-                            <!-- Поле для замены файла Word -->
-                            <span>Документ КП:</span>
-                            <div class="form-group mb-5" id="wordFileRow">
-                                <div>
-                                    @if ($item->word_file)
-                                        <a href="{{ route('download-kp', ['id' => $item->id]) }}" download class="me-3"
-                                            id="wordFileName">{{ $item->original_file_name }}</a>
-                                    @else
-                                        Нет файла
-                                    @endif
-                                    <label for="wordFile" class="btn btn-sm btn-danger ms-3">
-                                        Заменить файл
-                                        <input type="file" class="form-control" name="word_file" id="wordFile"
-                                            style="display: none;">
-                                    </label>
-                                </div>
-                            </div>
-
-                            <!-- Поле для замены дополнительных файлов -->
-                            <span>Дополнительные файлы:</span>
-                            <div class="form-group mb-4" id="additionalFiles">
-                                @if ($additionalFiles->count() > 0)
-                                    <ul>
-                                        @foreach ($additionalFiles as $file)
-                                            <li class="mb-2">
-                                                <a href="{{ route('download-kpAdditional', ['id' => $file->id]) }}"
-                                                    download class="me-3">{{ $file->original_file_name }}</a>
-
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                @else
-                                    Нет дополнительных файлов
-                                @endif
-                            </div>
-
-                            <!-- Поле для добавления новых дополнительных файлов -->
-                            <div class="form-group mb-3">
-                                <label for="additionalFilesNew">Добавить новые дополнительные файлы:</label>
-                                <input type="file" class="form-control" name="additional_files[]"
-                                    id="additionalFilesNew" multiple>
-                            </div>
-                        </div>
+                        Вы уверены, что хотите удалить это коммерческое предложение?
                     </div>
-                    <!-- Кнопки -->
-                    <div class="modal-footer d-flex justify-content-between">
-                        <div class="d-flex gap-3">
-                            <button type="submit" class="btn btn-primary">Сохранить изменения</button>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
-                        </div>
-                        <button type="button" class="btn btn-danger" id="deleteKPButton">Удалить КП</button>
-                        <input type="hidden" name="delete_offer" id="deleteOffer" value="0">
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                        <button type="button" class="btn btn-danger" id="confirmDelete">Удалить</button>
                     </div>
                 </div>
-            </form>
+            </div>
         </div>
-    </div>
+    @endif
 
     <script>
         $(document).ready(function() {
@@ -227,7 +259,8 @@
                     success: function(response) {
                         console.log(response);
                         // Заполнение полей формы данными из ответа
-                        $('#numIncomingDisplay').text(response.numIncoming); // Устанавливаем номер проекта
+                        $('#numIncomingDisplay').text(response
+                            .numIncoming); // Устанавливаем номер проекта
                         $('#orgName').val(response.orgName);
                         $('#whom').val(response.whom);
                         $('#sender').val(response.sender);
@@ -241,6 +274,33 @@
                         } else {
                             $('#wordFileName').text('Нет файла');
                         }
+                        // Вывод дополнительных файлов
+                        var additionalFilesHtml = '';
+                        if (response.additionalFiles.length > 0) {
+                            $.each(response.additionalFiles, function(index, file) {
+                                additionalFilesHtml += '<li class="mb-2">';
+                                additionalFilesHtml += '<a href="' + file.url +
+                                    '" download id="additionalFileName_' + file.id +
+                                    '">' + file.name + '</a>';
+                                additionalFilesHtml += '<label for="additionalFile_' +
+                                    file.id + '" class="btn btn-sm btn-danger ms-3">';
+                                additionalFilesHtml += 'Заменить файл';
+                                additionalFilesHtml +=
+                                    '<input type="file" class="form-control additionalFile" name="additionalFile_' +
+                                    file.id + '" id="additionalFile_' + file.id +
+                                    '" data-file-id="' + file.id +
+                                    '" style="display: none;">';
+                                additionalFilesHtml += '</label>';
+                                // Добавляем кнопку удаления файла
+                                additionalFilesHtml +=
+                                    '<button class="btn btn-sm btn-secondary ms-3 deleteFileButton" data-file-id="' +
+                                    file.id + '">Удалить файл</button>';
+                                additionalFilesHtml += '</li>';
+                            });
+                        } else {
+                            additionalFilesHtml = 'Нет дополнительных файлов';
+                        }
+                        $('#additionalFiles').html(additionalFilesHtml);
                     },
                     error: function() {
                         alert('Ошибка при загрузке данных');
@@ -280,6 +340,64 @@
                 });
             });
 
+            // Обработчик события изменения дополнительного файла
+            $(document).on('change', '.additionalFile', function() {
+                var file = this.files[0];
+                var fileId = $(this).data('file-id'); // Получаем ID файла
+                var formData = new FormData();
+                formData.append('additional_file', file);
+                formData.append('_method', 'PUT'); // Добавляем вручную метод PUT
+
+                // Получаем токен CSRF из мета-тега
+                var csrfToken = $('meta[name="csrf-token"]').attr('content');
+                // Устанавливаем токен CSRF в заголовке запроса
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken
+                    }
+                });
+
+                $.ajax({
+                    url: '/reestr-kp/additional-files/' +
+                        fileId, // Используем ID файла для замены соответствующего файла
+                    type: 'POST', // Используем POST для замены файла
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        // В случае успешной замены файла обновляем его имя на странице
+                        $('#additionalFileName_' + fileId).text(file.name);
+                    },
+                    error: function() {
+                        alert('Ошибка при замене дополнительного файла');
+                    }
+                });
+            });
+
+
+            // Обработчик события для кнопки удаления дополнительного файла
+            $(document).on('click', '.deleteFileButton', function() {
+                var fileId = $(this).data('file-id'); // Получаем ID файла
+                // Отправляем запрос на сервер для удаления файла
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+
+                $.ajax({
+                    url: '/delete-kp-additionalfile/' + fileId,
+                    type: 'DELETE',
+                    success: function(response) {
+                        // Скрываем файл на клиентской стороне
+                        $('#additionalFileName_' + fileId).hide();
+                    },
+                    error: function() {
+                        alert('Ошибка при удалении файла');
+                    }
+                });
+            });
+
             // Обработчик события отправки формы
             $('#editKPFormModal').on('submit', function(event) {
                 event.preventDefault(); // Предотвращаем отправку формы по умолчанию
@@ -290,6 +408,14 @@
                 // Добавляем токен CSRF в данные формы
                 var csrfToken = $('meta[name="csrf-token"]').attr('content');
                 formData.append('_token', csrfToken);
+
+                // Получаем все выбранные дополнительные файлы и добавляем их в FormData
+                $('.additionalFile').each(function() {
+                    var files = $(this)[0].files;
+                    for (var i = 0; i < files.length; i++) {
+                        formData.append('additional_files[]', files[i]);
+                    }
+                });
 
                 // Отправляем ID выбранной записи вместе с данными формы
                 var selectedRecordId = $('#selectedRecordId').val();
@@ -315,6 +441,31 @@
             });
 
 
+            let deleteItemId;
+            // Получаем id КП при открытии модального окна
+            $('#confirmDeleteKP').on('show.bs.modal', function(event) {
+                deleteItemId = $(event.relatedTarget).data('id');
+            });
+            var csrfToken = $('meta[name="csrf-token"]').attr('content');
+            // Обработчик кнопки удаления
+            $('#confirmDelete').click(function() {
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    method: 'DELETE',
+                    url: '/delete-kp/' + deleteItemId,
+                    success: function(response) {
+                        // Обновление страницы или другие действия по желанию
+                        location.reload();
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
+                        // Вывод сообщения об ошибке или другие действия по желанию
+                    }
+                });
+                $('#confirmDeleteKP').modal('hide');
+            });
 
         });
     </script>

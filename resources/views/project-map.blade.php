@@ -364,11 +364,12 @@
                 @csrf
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="offerModalLabel">Формирование коммерческого предложения
+                        <h5 class="modal-title" id="offerModalLabel">Формирование коммерческого предложения для {{ $project->projNum }}
                         </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
+                        <input type="hidden" class="form-control" name="project_num" id="projectNum" value="{{ $project->projNum }}">
                         <div class="mb-3">
                             <!-- Другие поля формы -->
                             {{-- <div class="form-group mb-3">
@@ -404,7 +405,7 @@
                             <div class="form-group mb-3">
                                 <label for="date">Дата:</label>
                                 <input type="text" class="form-control" name="offer[0][date]" id="date"
-                                    value="{{ date('Y-m-d') }}" readonly>
+                                    value="{{ date('Y-m-d') }}">
                             </div>
                             <div class="form-group mb-3">
                                 <label for="wordFile">Файл Word:</label>
