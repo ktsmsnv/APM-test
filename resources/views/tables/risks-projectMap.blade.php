@@ -89,7 +89,7 @@
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <form id="editRisksForm" action="{{ route('risks-update', ['id' => $item->id]) }}" method="post">
                 @csrf
-                @method('put')
+                {{-- @method('put') --}}
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="editRisksLabel">Редактирование риска "{{ $item->risk_name }}"</h5>

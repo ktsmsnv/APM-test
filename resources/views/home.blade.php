@@ -243,11 +243,11 @@
                                     </thead>
                                     <tbody>
                                         <!-- Контент таблицы -->
-                                        @foreach ($RegNHRS as $el)
+                                        @foreach ($RegNHRS as $item)
                                             <tr>
-                                                <td>{{ $el->id }}</td>
-                                                <td>{{ $el->vnNum }}</td>
-                                                <td>{{ $el->purchaseName }}</td>
+                                                <td>{{ $item->id }}</td>
+                                                <td>{{ $item->vnNum }}</td>
+                                                <td>{{ $item->purchaseName }}</td>
 
                                                 <td class="{{ $item->delivery == 1 ? 'red-cell' : '' }}">
                                                     {{-- {{ $item->delivery }} --}}
@@ -274,17 +274,17 @@
                                                     {{-- {{ $item->smr }} --}}
                                                 </td>
 
-                                                <td>{{ $el->purchaseOrg }}</td>
-                                                <td>{{ $el->endUser }}</td>
-                                                <td>{{ $el->object }}</td>
-                                                {{-- <td>{{ $el->area }}</td> --}}
-                                                <td>{{ date('d.m.Y', strtotime($el->receiptDate)) }}</td>
-                                                <td>{{ date('d.m.Y', strtotime($el->submissionDate)) }}</td>
-                                                <td>{{ $el->projectManager }}</td>
-                                                {{-- <td>{{ $el->tech }}</td>
-                                                <td>{{ $el->primeCost }}</td>
-                                                <td>{{ $el->tkpCost }}</td>
-                                                <td>{{ $el->notes }}</td> --}}
+                                                <td>{{ $item->purchaseOrg }}</td>
+                                                <td>{{ $item->endUser }}</td>
+                                                <td>{{ $item->object }}</td>
+                                                {{-- <td>{{ $item->area }}</td> --}}
+                                                <td>{{ date('d.m.Y', strtotime($item->receiptDate)) }}</td>
+                                                <td>{{ date('d.m.Y', strtotime($item->submissionDate)) }}</td>
+                                                <td>{{ $item->projectManager }}</td>
+                                                {{-- <td>{{ $item->tech }}</td>
+                                                <td>{{ $item->primeCost }}</td>
+                                                <td>{{ $item->tkpCost }}</td>
+                                                <td>{{ $item->notes }}</td> --}}
 
                                             </tr>
                                         @endforeach
@@ -329,26 +329,44 @@
                                     </thead>
                                     <tbody>
                                         <!-- Контент таблицы -->
-                                        @foreach ($RegOther as $el)
+                                        @foreach ($RegOther as $item)
                                             <tr>
-                                                <td>{{ $el->id }}</td>
-                                                <td>{{ $el->vnNum }}</td>
-                                                <td>{{ $el->purchaseName }}</td>
-                                                <td>{{ $el->delivery }}</td>
-                                                <td>{{ $el->pir }}</td>
-                                                <td>{{ $el->kd }}</td>
-                                                <td>{{ $el->prod }}</td>
-                                                <td>{{ $el->shmr }}</td>
-                                                <td>{{ $el->pnr }}</td>
-                                                <td>{{ $el->po }}</td>
-                                                <td>{{ $el->smr }}</td>
-                                                <td>{{ $el->purchaseOrg }}</td>
-                                                <td>{{ $el->endUser }}</td>
-                                                <td>{{ $el->object }}</td>
+                                                <td>{{ $item->id }}</td>
+                                                <td>{{ $item->vnNum }}</td>
+                                                <td>{{ $item->purchaseName }}</td>
+
+                                                <td class="{{ $item->delivery == 1 ? 'red-cell' : '' }}">
+                                                    {{-- {{ $item->delivery }} --}}
+                                                </td>
+                                                <td class="{{ $item->pir == 1 ? 'red-cell' : '' }}">
+                                                    {{-- {{ $item->pir }} --}}
+                                                </td>
+                                                <td class="{{ $item->kd == 1 ? 'red-cell' : '' }}">
+                                                    {{-- {{ $item->kd }} --}}
+                                                </td>
+                                                <td class="{{ $item->prod == 1 ? 'red-cell' : '' }}">
+                                                    {{-- {{ $item->prod }} --}}
+                                                </td>
+                                                <td class="{{ $item->shmr == 1 ? 'red-cell' : '' }}">
+                                                    {{-- {{ $item->shmr }} --}}
+                                                </td>
+                                                <td class="{{ $item->pnr == 1 ? 'red-cell' : '' }}">
+                                                    {{-- {{ $item->pnr }} --}}
+                                                </td>
+                                                <td class="{{ $item->po == 1 ? 'red-cell' : '' }}">
+                                                    {{-- {{ $item->po }} --}}
+                                                </td>
+                                                <td class="{{ $item->smr == 1 ? 'red-cell' : '' }}">
+                                                    {{-- {{ $item->smr }} --}}
+                                                </td>
+
+                                                <td>{{ $item->purchaseOrg }}</td>
+                                                <td>{{ $item->endUser }}</td>
+                                                <td>{{ $item->object }}</td>
                                                 {{-- <td>{{ $el->area }}</td> --}}
-                                                <td>{{ date('d.m.Y', strtotime($el->receiptDate)) }}</td>
-                                                <td>{{ date('d.m.Y', strtotime($el->submissionDate)) }}</td>
-                                                <td>{{ $el->projectManager }}</td>
+                                                <td>{{ date('d.m.Y', strtotime($item->receiptDate)) }}</td>
+                                                <td>{{ date('d.m.Y', strtotime($item->submissionDate)) }}</td>
+                                                <td>{{ $item->projectManager }}</td>
                                                 {{-- <td>{{ $el->tech }}</td>
                                                 <td>{{ $el->primeCost }}</td>
                                                 <td>{{ $el->tkpCost }}</td>
@@ -387,6 +405,7 @@
                     infoEmpty: 'Записи не найдены',
                     infoFiltered: '(отфильтровано из _MAX_ записей)',
                     lengthMenu: 'Показать _MENU_ записей',
+                    sEmptyTable: "НЕТ ЗАПИСЕЙ В ТАБЛИЦЕ",
                     paginate: {
                         next: 'Следующая',
                         previous: 'Предыдущая',
@@ -424,6 +443,7 @@
                             infoEmpty: 'Записи не найдены',
                             infoFiltered: '(отфильтровано из _MAX_ записей)',
                             lengthMenu: 'Показать _MENU_ записей',
+                            sEmptyTable: "НЕТ ЗАПИСЕЙ В ТАБЛИЦЕ",
                             paginate: {
                                 next: 'Следующая',
                                 previous: 'Предыдущая',

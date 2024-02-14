@@ -303,30 +303,30 @@ class ProjectController extends Controller
 
         // прочие расходы
         $expenses = Expenses::where('project_num', $project->projNum)->first();
-        $commandir = floatval($req->commandir);
-        $rd = floatval($req->rd);
-        $shmr = floatval($req->shmr);
-        $pnr = floatval($req->pnr);
-        $cert = floatval($req->cert);
-        $delivery = floatval($req->delivery);
-        $rastam = floatval($req->rastam);
-        $ppo = floatval($req->ppo);
-        $guarantee = floatval($req->guarantee);
-        $check = floatval($req->check);
-        $total =  $commandir + $rd + $shmr + $pnr + $cert + $delivery + $rastam + $ppo + $guarantee + $check; // Расчёт всего
-        $expenses->project_num = $project->projNum;
-        $expenses->commandir = $req->commandir;
-        $expenses->rd = $req->rd;
-        $expenses->shmr = $req->shmr;
-        $expenses->pnr = $req->pnr;
-        $expenses->cert = $req->cert;
-        $expenses->delivery = $req->delivery;
-        $expenses->rastam = $req->rastam;
-        $expenses->ppo = $req->ppo;
-        $expenses->guarantee = $req->guarantee;
-        $expenses->check = $req->check;
-        $expenses->total =  $total;
-        $expenses->save();
+            $commandir = floatval($req->commandir);
+            $rd = floatval($req->rd);
+            $shmr = floatval($req->shmr);
+            $pnr = floatval($req->pnr);
+            $cert = floatval($req->cert);
+            $delivery = floatval($req->delivery);
+            $rastam = floatval($req->rastam);
+            $ppo = floatval($req->ppo);
+            $guarantee = floatval($req->guarantee);
+            $check = floatval($req->check);
+            $total =  $commandir + $rd + $shmr + $pnr + $cert + $delivery + $rastam + $ppo + $guarantee + $check; // Расчёт всего
+            $expenses->project_num = $project->projNum;
+            $expenses->commandir = $req->commandir;
+            $expenses->rd = $req->rd;
+            $expenses->shmr = $req->shmr;
+            $expenses->pnr = $req->pnr;
+            $expenses->cert = $req->cert;
+            $expenses->delivery = $req->delivery;
+            $expenses->rastam = $req->rastam;
+            $expenses->ppo = $req->ppo;
+            $expenses->guarantee = $req->guarantee;
+            $expenses->check = $req->check;
+            $expenses->total =  $total;
+            $expenses->save();
 
 
 
@@ -978,7 +978,7 @@ class ProjectController extends Controller
         $expenses->additional_expenses = json_encode($additionalExpenses);
 
         $expenses->save();
-        
+
         // итого
         $totals = new Total;
         // нахождения поля periodDays(итого срок) путем сложения значений всех полей

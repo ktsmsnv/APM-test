@@ -11,12 +11,12 @@
                     <h2>I Общая информация по проекту</h2>
                     <div class="form-group mb-3">
                         <label for="projNum">Номер проекта по реестру:</label>
-                        <div class="d-flex">
+                        <div class="d-flex gap-3">
                             <input type="text" class="form-control" name="projNumPre" id="projNumPre"
                                 value="{{ $projectNum }}-{{ $currentYear }}" readonly>
-                            <div class="form-group mb-3">
+                            <div>
                                 <input list="projNumbs" name="projNumSuf" required placeholder="Выберите тип"
-                                    id="projNumSuf" />
+                                    id="projNumSuf" class="form-control" />
                                 <datalist id="projNumbs">
                                     <option value="Группа 1" data-group="1">
                                     <option value="Группа 2" data-group="2">
