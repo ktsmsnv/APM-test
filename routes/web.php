@@ -35,6 +35,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/project-maps/all/{id}/{tab}/update-calculation', 'App\Http\Controllers\ProjectController@updateCalculation')->name('project-map-update');
     Route::post('/project-maps/all/{id}/calculation-update', 'App\Http\Controllers\ProjectController@updateCalculationSubmit')->name('project-map-update-submit');
 
+
+    Route::post('/delete-row/{table}/{id}', 'App\Http\Controllers\ProjectController@deleteRow')->name('delete.row');
+
+
     // обновление (редактирование) карты проекта -> РЕАЛИЗАЦИЯ
     Route::get('/project-maps/all/{id}/{tab}/update-realization', 'App\Http\Controllers\ProjectController@updateRealization')->name('update-realization');
     Route::post('/project-maps/all/{id}/realization-update', 'App\Http\Controllers\ProjectController@updateRealizationSubmit')->name('realization-update-submit');
