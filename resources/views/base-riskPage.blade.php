@@ -271,14 +271,15 @@
                     targets: 0
                 }
             ],
-            pageLength: 5,
-            lengthMenu: [5, 15, 25, 35, 100, -1],
+            pageLength: 15,
+            lengthMenu: [15, 25, 35, 45, 100, -1],
             language: {
                 search: 'Поиск:',
                 info: 'Показано с _START_ по _END_ из _TOTAL_ записей',
                 infoEmpty: 'Показано с 0 по 0 из 0 записей',
                 infoFiltered: '(отфильтровано из _MAX_ записей)',
                 lengthMenu: 'Показать _MENU_ записей',
+                sEmptyTable: "НЕТ ЗАПИСЕЙ В ТАБЛИЦЕ",
                 paginate: {
                     next: 'Следующая',
                     previous: 'Предыдущая',

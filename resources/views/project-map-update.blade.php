@@ -146,7 +146,7 @@
                                     <table id="equipment-datatable" class="display nowrap projMap" style="width:100%">
                                         <thead>
                                             <tr>
-                                                <th style="max-width: 50px;">ID</th>
+                                                {{-- <th style="max-width: 50px;">ID</th> --}}
                                                 <th>Наименование ТМЦ</th>
                                                 <th>Производитель</th>
                                                 <th>Ед. изм.</th>
@@ -160,11 +160,10 @@
                                             @foreach ($project->equipment as $index => $item)
                                                 <tr class="input-field" data-id="{{ $item->id }}"
                                                     data-index="{{ $index }}" data-target="equipment">
-                                                    <td style="max-width: 50px;">
-                                                        <input style="max-width: 50px;"type="text"
-                                                            name="equipment[{{ $index }}][id]"
-                                                            value="{{ $item->id }}" class="input_editable" readonly>
-                                                    </td>
+                                                    
+                                                        <input type="hidden" name="equipment[{{ $index }}][id]"
+                                                            value="{{ $item->id }}" class="input_editable">
+                                                   
                                                     <td>
                                                         <div class="col-3">
                                                             <input type="text"
