@@ -302,31 +302,55 @@ class ProjectController extends Controller
 
 
         // прочие расходы
+        $total = 0; // Определение переменной $total
         $expenses = Expenses::where('project_num', $project->projNum)->first();
-            $commandir = floatval($req->commandir);
-            $rd = floatval($req->rd);
-            $shmr = floatval($req->shmr);
-            $pnr = floatval($req->pnr);
-            $cert = floatval($req->cert);
-            $delivery = floatval($req->delivery);
-            $rastam = floatval($req->rastam);
-            $ppo = floatval($req->ppo);
-            $guarantee = floatval($req->guarantee);
-            $check = floatval($req->check);
-            $total =  $commandir + $rd + $shmr + $pnr + $cert + $delivery + $rastam + $ppo + $guarantee + $check; // Расчёт всего
-            $expenses->project_num = $project->projNum;
-            $expenses->commandir = $req->commandir;
-            $expenses->rd = $req->rd;
-            $expenses->shmr = $req->shmr;
-            $expenses->pnr = $req->pnr;
-            $expenses->cert = $req->cert;
-            $expenses->delivery = $req->delivery;
-            $expenses->rastam = $req->rastam;
-            $expenses->ppo = $req->ppo;
-            $expenses->guarantee = $req->guarantee;
-            $expenses->check = $req->check;
-            $expenses->total =  $total;
-            $expenses->save();
+        $expenses->fill($req->input('expense'));
+        $total = array_sum($req->input('expense.*.commandir', 0))
+            + array_sum($req->input('expense.*.rd', 0))
+            + array_sum($req->input('expense.*.shmr', 0))
+            + array_sum($req->input('expense.*.pnr', 0))
+            + array_sum($req->input('expense.*.cert', 0))
+            + array_sum($req->input('expense.*.delivery', 0))
+            + array_sum($req->input('expense.*.rastam', 0))
+            + array_sum($req->input('expense.*.ppo', 0))
+            + array_sum($req->input('expense.*.guarantee', 0))
+            + array_sum($req->input('expense.*.check', 0));
+
+        $additionalExpenses = [];
+        foreach ($req->input('expense.*.additional_expenses', []) as $additionalExpense) {
+            if (!empty($additionalExpense)) {
+                $additionalExpenses[] = $additionalExpense;
+            }
+        }
+        $expenses->additional_expenses = json_encode($additionalExpenses);
+        $expenses->save();
+
+        $priceTotals = ($totalPrice + $total);
+        // $expenses = Expenses::where('project_num', $project->projNum)->first();
+        // $commandir = floatval($req->commandir);
+        // $rd = floatval($req->rd);
+        // $shmr = floatval($req->shmr);
+        // $pnr = floatval($req->pnr);
+        // $cert = floatval($req->cert);
+        // $delivery = floatval($req->delivery);
+        // $rastam = floatval($req->rastam);
+        // $ppo = floatval($req->ppo);
+        // $guarantee = floatval($req->guarantee);
+        // $check = floatval($req->check);
+        // $total =  $commandir + $rd + $shmr + $pnr + $cert + $delivery + $rastam + $ppo + $guarantee + $check; // Расчёт всего
+        // $expenses->project_num = $project->projNum;
+        // $expenses->commandir = $req->commandir;
+        // $expenses->rd = $req->rd;
+        // $expenses->shmr = $req->shmr;
+        // $expenses->pnr = $req->pnr;
+        // $expenses->cert = $req->cert;
+        // $expenses->delivery = $req->delivery;
+        // $expenses->rastam = $req->rastam;
+        // $expenses->ppo = $req->ppo;
+        // $expenses->guarantee = $req->guarantee;
+        // $expenses->check = $req->check;
+        // $expenses->total =  $total;
+        // $expenses->save();
 
 
 
@@ -416,7 +440,7 @@ class ProjectController extends Controller
             case 'markups':
                 $model = Markup::find($id);
                 break;
-            case 'markups-contacts':
+            case 'contacts':
                 $model = Contacts::find($id);
                 break;
             case 'risks':
@@ -427,15 +451,12 @@ class ProjectController extends Controller
         }
 
         if ($model) {
-            if (request()->input('index') === null) {
-                $model->delete();
-            }
+            $model->delete();
             return response()->json(['success' => true]);
         } else {
             return response()->json(['success' => false, 'message' => 'Запись не найдена.']);
         }
     }
-
     // редактирование карты проекта -> РЕАЛИЗАЦИЯ (открыывает страницу редактирования по id записи)
     public function updateRealization($id)
     {
