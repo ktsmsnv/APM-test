@@ -299,19 +299,8 @@ class ProjectController extends Controller
         }
 
 
-        // прочие расходы
+        // Прочие расходы
         $expenses = Expenses::where('project_num', $project->projNum)->firstOrFail();
-        // Обновление дополнительных расходов, если они существуют
-        if ($req->has('additional_expenses')) {
-            foreach ($req->input('additional_expenses') as $id => $additionalExpenseData) {
-                $additionalExpense = AdditionalExpense::find($id);
-                if ($additionalExpense) {
-                    $additionalExpense->cost = $additionalExpenseData['cost'];
-                    $additionalExpense->save();
-                }
-            }
-        }
-        // Подсчет общих расходов с учетом измененных и оставленных дополнительных расходов
         $total = 0;
 
         // Обработка основных расходов
@@ -319,20 +308,38 @@ class ProjectController extends Controller
             foreach ($expenseData as $key => $value) {
                 if ($key !== '_token') { // Пропускаем токен CSRF
                     $total += floatval($value);
+                    // Обновляем значение в модели Expenses
+                    $expenses->{$key} = $value;
                 }
             }
         }
 
-        // Добавление стоимости измененных дополнительных расходов к общей стоимости
+        // Обновление или создание записей о дополнительных расходах
         if ($req->has('additional_expenses')) {
-            foreach ($req->input('additional_expenses') as $additionalExpenseData) {
-                $total += floatval($additionalExpenseData['cost']);
+            foreach ($req->input('additional_expenses') as $id => $additionalExpenseData) {
+                $additionalExpense = AdditionalExpense::find($id);
+                if ($additionalExpense) {
+                    // Редактирование существующей записи
+                    $additionalExpense->cost = $additionalExpenseData['cost'];
+                    $additionalExpense->save();
+                    $total += floatval($additionalExpenseData['cost']); // Добавляем стоимость к общей сумме
+                } else {
+                    // Добавление новой записи
+                    $newAdditionalExpense = new AdditionalExpense;
+                    $newAdditionalExpense->expense_id = $expenses->id; // Устанавливаем связь с основным расходом
+                    $newAdditionalExpense->cost = $additionalExpenseData['cost'];
+                    $newAdditionalExpense->save();
+                    $total += floatval($additionalExpenseData['cost']); // Добавляем стоимость к общей сумме
+                }
             }
         }
 
         // Сохранение общей стоимости расходов
         $expenses->total = $total;
+
+
         $expenses->save();
+
 
         //итого
         $totals = Total::where('project_num', $project->projNum)->first();

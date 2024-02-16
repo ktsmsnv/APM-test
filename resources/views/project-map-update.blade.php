@@ -238,7 +238,7 @@
                                                 <th>Стоимость (руб. без НДС)</th>
                                             </tr>
                                         </thead>
-                                        <tbody id="expenses-inputs">
+                                        <tbody id="additional_expenses-inputs">
                                             @if ($project->expenses->count() > 0)
                                                 @foreach ($project->expenses as $index => $expense)
                                                     <tr>
@@ -348,7 +348,7 @@
                                                     <!-- Для каждого дополнительного расхода -->
                                                     @foreach ($expense->additionalExpenses as $additionalExpense)
                                                         <tr>
-                                                            <td>Дополнительные расходы</td>
+                                                            <td>Доп. расход</td>
                                                             <td>
                                                                 <input type="text"
                                                                     name="additional_expenses[{{ $additionalExpense->id }}][cost]"
@@ -362,7 +362,10 @@
                                                     @endforeach
                                                 @endforeach
                                             @endif
+                                            <button type="button" class="addMore-button btn btn-success mt-4"
+                                                data-target="additional_expenses">Добавить расходы</button>
                                         </tbody>
+
                                     </table>
                                 </div>
                             </div>
@@ -677,7 +680,6 @@
                 const indices = {
                     equipment: {{ count($project->equipment) }},
                     markups: {{ count($project->markups) }},
-                    expenses: {{ count($project->expenses) }},
                     contacts: {{ count($project->contacts) }},
                     risks: {{ count($project->risks) }},
                 };
@@ -691,7 +693,7 @@
                 // функция возвращающая html в секцию
                 function getHtml(target, index) {
                     let removeButton =
-                        `<a class="remove-btn btn btn-xs btn-danger" href="#" data-index="${index}" data-target="${target}"><i class="fa-solid fa-trash-can"></i></a>`;
+                        `<button class="remove-btn btn btn-xs btn-danger" href="#" data-index="${index}" data-target="${target}"><i class="fa-solid fa-trash-can"></i></button>`;
                     switch (target) {
                         case 'equipment':
                             return `
@@ -786,9 +788,22 @@
                                     </td>
                                     <td style="border:none;">${removeButton} </td>
                                 </tr>`
+                        case 'additional_expenses':
+                            return `
+                                <tr data-target="${target}" data-index="${index}">
+                                    <td>
+                                        Доп. расход
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" name="additional_expenses[${index}][cost]" placeholder="Введите стоимость">
+                                      ${removeButton}
+                                    </td>
+                                    
+                                </tr>`;
                     }
                 }
-                
+
+
                 $(document).on('click', '.delete_additionalExpense', function(e) {
                     e.preventDefault();
                     $(this).closest('tr').remove(); // Удаляем ближайший родительский элемент <tr>
