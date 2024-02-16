@@ -303,7 +303,7 @@
                                     <!-- Добавляем отдельные строки для каждого дополнительного расхода -->
                                     @foreach ($expense->additionalExpenses as $additionalExpense)
                                         <tr>
-                                            <td>Дополнительные расходы (№: {{ $additionalExpense->id }})</td>
+                                            <td>Дополнительный расход</td>
                                             <td>{{ $additionalExpense->cost }}</td>
                                         </tr>
                                     @endforeach
