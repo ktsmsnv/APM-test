@@ -22,7 +22,13 @@ class Expenses extends Model
         'additional_expenses',
     ];
 
-    public function total() {
+    public function total()
+    {
         return $this->belongsTo(Total::class);
+    }
+
+    public function additionalExpenses()
+    {
+        return $this->hasMany(AdditionalExpense::class, 'expense_id');
     }
 }

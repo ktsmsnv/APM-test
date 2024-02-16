@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Log;
 use App\Models\Projects;
 use App\Models\Equipment;
 use App\Models\Expenses;
+use App\Models\AdditionalExpense;
 use App\Models\Note;
 use App\Models\Total;
 use App\Models\Markup;
@@ -232,12 +233,9 @@ class ProjectController extends Controller
     }
 
     // РЕДАКТИРОВАНИЕ данных для карты проекта -> РАСЧЕТ
+
     public function updateCalculationSubmit($id, Request $req)
     {
-        // Equipment::whereIn('id', request('equipment_ids'))->delete();
-        // Markup::whereIn('id', request('markup_ids'))->delete();
-        // Contacts::whereIn('id', request('contact_ids'))->delete();
-        // CalcRisk::whereIn('id', request('risk_ids'))->delete();
         // --------------РАСЧЕТ----------------//
         // Обновление общая информация по проекту
         $project = Projects::find($id);
@@ -302,57 +300,39 @@ class ProjectController extends Controller
 
 
         // прочие расходы
-        $total = 0; // Определение переменной $total
-        $expenses = Expenses::where('project_num', $project->projNum)->first();
-        $expenses->fill($req->input('expense'));
-        $total = array_sum($req->input('expense.*.commandir', 0))
-            + array_sum($req->input('expense.*.rd', 0))
-            + array_sum($req->input('expense.*.shmr', 0))
-            + array_sum($req->input('expense.*.pnr', 0))
-            + array_sum($req->input('expense.*.cert', 0))
-            + array_sum($req->input('expense.*.delivery', 0))
-            + array_sum($req->input('expense.*.rastam', 0))
-            + array_sum($req->input('expense.*.ppo', 0))
-            + array_sum($req->input('expense.*.guarantee', 0))
-            + array_sum($req->input('expense.*.check', 0));
-
-        $additionalExpenses = [];
-        foreach ($req->input('expense.*.additional_expenses', []) as $additionalExpense) {
-            if (!empty($additionalExpense)) {
-                $additionalExpenses[] = $additionalExpense;
+        $expenses = Expenses::where('project_num', $project->projNum)->firstOrFail();
+        // Обновление дополнительных расходов, если они существуют
+        if ($req->has('additional_expenses')) {
+            foreach ($req->input('additional_expenses') as $id => $additionalExpenseData) {
+                $additionalExpense = AdditionalExpense::find($id);
+                if ($additionalExpense) {
+                    $additionalExpense->cost = $additionalExpenseData['cost'];
+                    $additionalExpense->save();
+                }
             }
         }
-        $expenses->additional_expenses = json_encode($additionalExpenses);
+        // Подсчет общих расходов с учетом измененных и оставленных дополнительных расходов
+        $total = 0;
+
+        // Обработка основных расходов
+        foreach ($req->input('expense') as $index => $expenseData) {
+            foreach ($expenseData as $key => $value) {
+                if ($key !== '_token') { // Пропускаем токен CSRF
+                    $total += floatval($value);
+                }
+            }
+        }
+
+        // Добавление стоимости измененных дополнительных расходов к общей стоимости
+        if ($req->has('additional_expenses')) {
+            foreach ($req->input('additional_expenses') as $additionalExpenseData) {
+                $total += floatval($additionalExpenseData['cost']);
+            }
+        }
+
+        // Сохранение общей стоимости расходов
+        $expenses->total = $total;
         $expenses->save();
-
-        $priceTotals = ($totalPrice + $total);
-        // $expenses = Expenses::where('project_num', $project->projNum)->first();
-        // $commandir = floatval($req->commandir);
-        // $rd = floatval($req->rd);
-        // $shmr = floatval($req->shmr);
-        // $pnr = floatval($req->pnr);
-        // $cert = floatval($req->cert);
-        // $delivery = floatval($req->delivery);
-        // $rastam = floatval($req->rastam);
-        // $ppo = floatval($req->ppo);
-        // $guarantee = floatval($req->guarantee);
-        // $check = floatval($req->check);
-        // $total =  $commandir + $rd + $shmr + $pnr + $cert + $delivery + $rastam + $ppo + $guarantee + $check; // Расчёт всего
-        // $expenses->project_num = $project->projNum;
-        // $expenses->commandir = $req->commandir;
-        // $expenses->rd = $req->rd;
-        // $expenses->shmr = $req->shmr;
-        // $expenses->pnr = $req->pnr;
-        // $expenses->cert = $req->cert;
-        // $expenses->delivery = $req->delivery;
-        // $expenses->rastam = $req->rastam;
-        // $expenses->ppo = $req->ppo;
-        // $expenses->guarantee = $req->guarantee;
-        // $expenses->check = $req->check;
-        // $expenses->total =  $total;
-        // $expenses->save();
-
-
 
         //итого
         $totals = Total::where('project_num', $project->projNum)->first();
@@ -425,12 +405,13 @@ class ProjectController extends Controller
             }
         }
 
-        return redirect()->route('project-data-one', ['id' => $id, 'tab' => '#calculation'])->with('success', 'Project data successfully updated');
+        return redirect()->route('project-data-one', ['id' => $project->id, 'tab' => '#calculation'])->with('success', 'Project data successfully updated');
     }
 
     // ------------------- УДАЛЕНИЕ СТРОК ИЗ ТАБЛИЦЫ РАСЧЕТ ВО ВРЕМЯ РЕДАКТИРОВАНИЯ -----------------------------------
     public function deleteRow($table, $id)
     {
+        $project = Projects::find($id);
         $model = null;
 
         switch ($table) {
@@ -446,6 +427,24 @@ class ProjectController extends Controller
             case 'risks':
                 $model = CalcRisk::find($id);
                 break;
+            case 'additional_expenses':
+                $expense = AdditionalExpense::find($id);
+                if ($expense) {
+                    $expenseCost = $expense->cost;
+                    $expense->delete();
+
+                    // Пересчитываем параметр $total
+                    $total = 0;
+                    $expenses = Expenses::where('project_num', $project->projNum)->firstOrFail();
+                    foreach ($expenses->additionalExpenses as $additionalExpense) {
+                        $total += $additionalExpense->cost;
+                    }
+                    $expenses->total = $total;
+                    $expenses->save();
+
+                    return response()->json(['success' => true, 'expenseCost' => $expenseCost]);
+                }
+                break;
             default:
                 return response()->json(['success' => false, 'message' => 'Неизвестная таблица.']);
         }
@@ -457,6 +456,8 @@ class ProjectController extends Controller
             return response()->json(['success' => false, 'message' => 'Запись не найдена.']);
         }
     }
+
+
     // редактирование карты проекта -> РЕАЛИЗАЦИЯ (открыывает страницу редактирования по id записи)
     public function updateRealization($id)
     {
@@ -967,6 +968,8 @@ class ProjectController extends Controller
             }
             Equipment::insert($data_equipment);
         }
+
+
         // прочие расходы
         $expenses = new Expenses;
         // нахождения поля total(всего) путем сложения значений всех полей
@@ -980,7 +983,8 @@ class ProjectController extends Controller
         $ppo = floatval($request->ppo);
         $guarantee = floatval($request->guarantee);
         $check = floatval($request->check);
-        $total =  $commandir + $rd + $shmr + $pnr + $cert + $delivery + $rastam + $ppo + $guarantee + $check; // Расчёт всего
+
+        // $total =  $commandir + $rd + $shmr + $pnr + $cert + $delivery + $rastam + $ppo + $guarantee + $check; // Расчёт всего
         $expenses->project_num = $project->projNum;
         $expenses->commandir = $request->commandir;
         $expenses->rd = $request->rd;
@@ -993,12 +997,30 @@ class ProjectController extends Controller
         $expenses->guarantee = $request->guarantee;
         $expenses->check = $request->check;
 
-        $expenses->total =  $total;
-        // Сохранение дополнительных расходов в виде JSON массива
-        $additionalExpenses = $request->input('additional_expenses', []);
-        $expenses->additional_expenses = json_encode($additionalExpenses);
-
+        // Получаем все дополнительные расходы из запроса и просуммируем их
+        $additionalExpensesTotal = 0;
+        if ($request->has('additional_expenses')) {
+            foreach ($request->additional_expenses as $additionalExpense) {
+                $additionalExpensesTotal += floatval($additionalExpense);
+            }
+        }
+        // Подсчитываем общую сумму расходов, включая дополнительные расходы
+        $total = $commandir + $rd + $shmr + $pnr + $cert + $delivery + $rastam + $ppo + $guarantee + $check + $additionalExpensesTotal;
+        // Присваиваем общую сумму полю total в модели Expenses
+        $expenses->total = $total;
+        // Сохраняем основные расходы
         $expenses->save();
+
+        // Теперь обрабатываем дополнительные расходы
+        if ($request->has('additional_expenses')) {
+            foreach ($request->additional_expenses as $additionalExpense) {
+                $additional = new AdditionalExpense;
+                $additional->expense_id = $expenses->id; // Привязываем к основному расходу
+                $additional->cost = $additionalExpense;
+                $additional->save();
+            }
+        }
+
 
         // итого
         $totals = new Total;

@@ -48,11 +48,10 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/project-maps/all/{id}/changes-update', 'App\Http\Controllers\ProjectController@updateChangesSubmit')->name('changes-update-submit');
 
 
-
+   
     //удаление карты проекта (НЕАКТУАЛЬНО)
     Route::get('/project-maps/all/{id}/delete', 'App\Http\Controllers\ProjectController@deleteMessage')->name('project-map-delete');
-
-
+    
     //Добавление дневника проекта
     Route::post('/tables/notes-add/{project}', 'App\Http\Controllers\ProjectController@store')->name('tables.notes-add');
     //Удаление записи из дневника проекта
@@ -117,8 +116,7 @@ Route::middleware(['auth'])->group(function () {
 
 
 
-    Route::delete('/delete/{table}/{id}', 'App\Http\Controllers\ProjectController@deleteRow')->name('delete-row');
-
+    Route::delete('/delete_additional_expense/{id}', 'App\Http\Controllers\ProjectController@deleteRow')->name('delete.additional.expense');
 
     // создание карты проекта -> РЕАЛИЗАЦИЯ
     Route::get('/project-maps/create/realization-{id}/create', 'App\Http\Controllers\realizationController@create')->name('realization-create');
