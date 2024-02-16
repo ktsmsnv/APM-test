@@ -231,7 +231,6 @@
                             <div id="calculation-collapseThree" class="accordion-collapse collapse"
                                 aria-labelledby="calculation-headingThree">
                                 <div class="accordion-body">
-                                    @csrf
                                     <table id="expenses-datatable" class="display nowrap projMap" style="width:100%">
                                         <thead>
                                             <tr>
@@ -346,16 +345,18 @@
                                                             </div>
                                                         </td>
                                                     </tr>
-                                                    @foreach (json_decode($expense->additional_expenses) as $additionalExpense)
+                                                    <!-- Для каждого дополнительного расхода -->
+                                                    @foreach ($expense->additionalExpenses as $additionalExpense)
                                                         <tr>
-                                                            <td>Доп. расходы</td>
+                                                            <td>Дополнительные расходы</td>
                                                             <td>
-                                                                <div class="col-3">
-                                                                    <input type="text"
-                                                                        name="expense[{{ $index }}][additional_expenses][]"
-                                                                        value="{{ $additionalExpense }}"
-                                                                        class="input_editable">
-                                                                </div>
+                                                                <input type="text"
+                                                                    name="additional_expenses[{{ $additionalExpense->id }}][cost]"
+                                                                    value="{{ $additionalExpense->cost }}">
+                                                                <button
+                                                                    class="delete_additionalExpense btn btn-xs btn-danger"
+                                                                    data-target="additional_expenses"
+                                                                    data-id="{{ $additionalExpense->id }}">Удалить</button>
                                                             </td>
                                                         </tr>
                                                     @endforeach
@@ -363,8 +364,6 @@
                                             @endif
                                         </tbody>
                                     </table>
-                                    <button type="button" class="addMore-button btn btn-success mt-4"
-                                        data-target="expenses">Добавить еще</button>
                                 </div>
                             </div>
                         </div>
@@ -651,6 +650,8 @@
                     <input type="hidden" name="contact_ids[]" value="">
                     <input type="hidden" name="risk_ids[]" value="">
 
+                    <input type="hidden" name="project_id" value="{{ $project->id }}">
+
                     <input type="submit" class="btn btn-primary mt-4" value="Сохранить изменения"
                         id="save-changes-btn">
             </form>
@@ -741,19 +742,7 @@
                                                         </td>
                                                         <td style="border:none;">${removeButton} </td>
                                 </tr>`
-                        case 'expenses':
-                            return `
-                                    <tr data-target="${target}" data-index="${index}"> 
-                                        <td>Доп. расходы</td>
-                                        <td>
-                                            <div class="col-3">
-                                                <input type="text"
-                                                    name="expense[${index}][additional_expenses][]"
-                                                    class="input_editable">
-                                            </div>
-                                        </td>  
-                                        <td style="border:none;">${removeButton} </td>
-                                    </tr>`;
+
                         case 'contacts':
                             return `
                                 <tr data-target="${target}" data-index="${index}">
@@ -799,6 +788,16 @@
                                 </tr>`
                     }
                 }
+                
+                $(document).on('click', '.delete_additionalExpense', function(e) {
+                    e.preventDefault();
+                    $(this).closest('tr').remove(); // Удаляем ближайший родительский элемент <tr>
+                    let id = $(this).data('id');
+                    let target = $(this).data('target');
+                    let projectId = $('input[name="project_id"]').val();
+                    hideRow2(target, null, id, projectId);
+                });
+
                 $(document).on('click', '.remove-btn', function(e) {
                     e.preventDefault();
                     let target = $(this).data('target');
@@ -809,44 +808,25 @@
                     $(`[data-target=${target}][data-index=${index}]`).remove();
 
                     // Удаление соответствующего скрытого поля
-                    $(`input[name="equipment_ids\\[\\]"][value="${id}"]`).remove();
+                    $(`input[name="${target}_ids\\[\\]"][value="${id}"]`).remove();
                 });
 
-
-                // function hideRow(target, index, id) {
-                //     $(`[data-target=${target}][data-index=${index}][data-id=${id}]`).addClass('to-delete');
-                //     // Добавить идентификатор удаляемой строки в скрытое поле
-                //     $(`input[name="${target}_ids\\[\\]"]`).val(id);
-                // }
                 function hideRow(target, index, id) {
                     $(`[data-target=${target}][data-index=${index}][data-id=${id}]`).addClass('to-delete');
-                    // Добавить идентификатор удаляемой строки в скрытое поле
-                    switch (target) {
-                        case 'equipment':
-                            $(`input[name="equipment_ids[]"]`).val(id);
-                            break;
-                        case 'markups':
-                            $(`input[name="markup_ids[]"]`).val(id);
-                            break;
-                        case 'contacts':
-                            $(`input[name="contact_ids[]"]`).val(id);
-                            break;
-                        case 'risks':
-                            $(`input[name="risk_ids[]"]`).val(id);
-                            break;
-                        default:
-                            break;
-                    }
-
-                    // Отправить AJAX-запрос на удаление строки
                     $.ajax({
                         url: `/delete-row/${target}/${id}`,
-                        type: 'POST',
+                        type: 'POST', // Можно использовать DELETE, если сервер поддерживает DELETE-запросы
                         data: {
                             _token: '{{ csrf_token() }}'
                         },
                         success: function(response) {
                             console.log(response); // Для отладки
+                            if (response.success) {
+                                $(`[data-target=${target}][data-index=${index}][data-id=${id}]`)
+                                    .remove(); // Удаляем строку из таблицы
+                            } else {
+                                console.error(response.message);
+                            }
                         },
                         error: function(xhr, status, error) {
                             console.error(error); // Вывод ошибки в консоль
@@ -854,14 +834,29 @@
                     });
                 }
 
-                // $('#save-changes-btn').click(function() {
-                //     $('.to-delete').each(function() {
-                //         let target = $(this).data('target');
-                //         let id = $(this).data('id');
-                //         $(`#delete-marked-rows-form input[name="${target}_ids\\[\\]"]`).val(id);
-                //     });
-                //     $('#delete-marked-rows-form').submit();
-                // });
+                function hideRow2(target, index, id, projectId) {
+                    $(`[data-target=${target}][data-index=${index}][data-id=${id}]`).addClass('to-delete');
+                    $.ajax({
+                        url: `/delete-row/${target}/${id}`,
+                        type: 'POST', // Можно использовать DELETE, если сервер поддерживает DELETE-запросы
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            project_id: projectId // Передаем id проекта
+                        },
+                        success: function(response) {
+                            console.log(response); // Для отладки
+                            if (response.success) {
+                                $(`[data-target=${target}][data-index=${index}][data-id=${id}]`).remove();
+                            } else {
+                                console.error(response.message);
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error(error); // Вывод ошибки в консоль
+                        }
+                    });
+                }
+
                 $('#save-changes-btn').click(function() {
                     $('.to-delete').each(function() {
                         let target = $(this).data('target');

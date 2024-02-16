@@ -300,14 +300,14 @@
                                         <td>Поверка</td>
                                         <td>{{ $expense->check }}</td>
                                     </tr>
-                                    @foreach (json_decode($expense->additional_expenses) as $additionalExpense)
+                                    <!-- Добавляем отдельные строки для каждого дополнительного расхода -->
+                                    @foreach ($expense->additionalExpenses as $additionalExpense)
                                         <tr>
-                                            <td>Доп. расходы</td>
-                                            <td>
-                                                {{ $additionalExpense }}
-                                            </td>
+                                            <td>Дополнительные расходы (№: {{ $additionalExpense->id }})</td>
+                                            <td>{{ $additionalExpense->cost }}</td>
                                         </tr>
                                     @endforeach
+                                    <!-- Конец цикла для дополнительных расходов -->
                                 @endforeach
                             </tbody>
                             <tfoot>
@@ -1076,13 +1076,6 @@
                         <input type="riskName" class="form-control" name="risks[${index}][riskName]" id="riskName"
                             placeholder="Введите наименование риска">
                             ${removeButton}
-                    </div>`;
-            case 'expenses': // Добавленный case для дополнительных расходов
-                return `<div class="form-group mb-3 block" data-target="${target}" data-index="${index}">---
-                        <label for="additionalExpense">Дополнительный расход:</label>
-                        <input type="text" class="form-control" name="expenses[${index}][additionalExpense]" id="additionalExpense"
-                            placeholder="Введите дополнительный расход">
-                        ${removeButton}
                     </div>`;
         }
     }

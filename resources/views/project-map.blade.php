@@ -275,7 +275,7 @@
                             </div>
                             <button type="button" class="btn btn-secondary addMore-button" id="addMore-expenses"
                                 data-target="expenses">
-                                Добавить еще дополнительный расход
+                                Добавить дополнительный расход
                             </button>
                         </div>
                         {{-- Итого --}}
@@ -364,12 +364,14 @@
                 @csrf
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="offerModalLabel">Формирование коммерческого предложения для {{ $project->projNum }}
+                        <h5 class="modal-title" id="offerModalLabel">Формирование коммерческого предложения для
+                            {{ $project->projNum }}
                         </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <input type="hidden" class="form-control" name="project_num" id="projectNum" value="{{ $project->projNum }}">
+                        <input type="hidden" class="form-control" name="project_num" id="projectNum"
+                            value="{{ $project->projNum }}">
                         <div class="mb-3">
                             <!-- Другие поля формы -->
                             {{-- <div class="form-group mb-3">
@@ -492,6 +494,26 @@
             $('a[data-toggle="tab"]').on("click", function() {
                 const tabId = $(this).attr("aria-controls");
                 loadTabContent(tabId, '{{ $project->id }}'); // Pass both tabId and projectId
+            });
+
+
+            // При нажатии на кнопку "Добавить дополнительный расход"
+            $("#addMore-expenses").click(function() {
+                // Генерируем HTML для нового поля ввода
+                var html = `<div class="form-group mb-3">
+                        <label for="additional_expense">Дополнительный расход:</label>
+                        <input type="text" class="form-control" name="additional_expenses[]" placeholder="Введите дополнительный расход">
+                        <button type="button" class="btn btn-danger remove-expense">Удалить</button>
+                    </div>`;
+
+                // Добавляем новое поле ввода в конец контейнера
+                $("#expenses-inputs").append(html);
+            });
+
+            // При нажатии на кнопку "Удалить"
+            $(document).on("click", ".remove-expense", function() {
+                // Удаляем родительский элемент
+                $(this).parent().remove();
             });
         });
     </script>
