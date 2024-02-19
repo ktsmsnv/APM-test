@@ -982,14 +982,19 @@
             const target = $(this).data("target");
 
             // Добавление новой строки
-            // $(`#${target}-inputs`).append(getHtml(target, indices[target]));
-            // indices[target]++;
+            // $(#${target}-inputs).append(getHtml(target, indices[target]));
             // Проверяем, существует ли уже элемент с этим индексом
-            if ($(`#${target}-inputs [data-index=${indices[target]}]`).length === 0) {
+            if ($(#$ {
+                    target
+                } - inputs[data - index = $ {
+                    indices[target]
+                }]).length === 0) {
                 // Добавление новой строки
-                $(`#${target}-inputs`).append(getHtml(target, indices[target]));
+                $(#$ {
+                    target
+                } - inputs).append(getHtml(target, indices[target]));
             }
-
+            indices[target]++;
         });
     });
 
