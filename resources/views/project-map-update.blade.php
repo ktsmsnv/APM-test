@@ -28,7 +28,7 @@
                             </h2>
                             <div id="calculation-collapseOne" class="accordion-collapse collapse show"
                                 aria-labelledby="calculation-headingOne">
-                                <div class="accordion-body">
+                                <div class="accordion-body input-field">
                                     @csrf
                                     <div class="d-flex flex-column">
                                         <div class="input-field d-flex gap-3 mb-2">
@@ -127,6 +127,100 @@
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
+
+                                    <div class="mt-5">
+                                        <h4 class="text-center mb-3">Контакт-лист</h4>
+                                        <table id="markups-contacts-datatable" class="display nowrap projMap"
+                                            style="width:100%">
+                                            <thead>
+                                                <tr>
+                                                    {{-- <th>№</th> --}}
+                                                    <th>ФИО</th>
+                                                    <th>Должность</th>
+                                                    <th>Организация</th>
+                                                    <th>Зона ответственности</th>
+                                                    <th>Телефон</th>
+                                                    <th>эл.почта</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="contacts-inputs">
+                                                @if ($project->contacts->count() > 0)
+                                                    @foreach ($project->contacts as $index => $contact)
+                                                        <tr data-id="{{ $contact->id }}"
+                                                            data-index="{{ $index }}"
+                                                            data-target="markups-contacts">
+
+                                                            <input type="hidden" name="contact[{{ $index }}][id]"
+                                                                value="{{ $contact->id }}" class="input_editable"
+                                                                readonly>
+
+                                                            <td>
+                                                                <div class="col-3">
+                                                                    <input type="text"
+                                                                        name="contact[{{ $index }}][fio]"
+                                                                        value="{{ $contact->fio }}"
+                                                                        class="input_editable">
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="col-3">
+                                                                    <input type="text"
+                                                                        name="contact[{{ $index }}][post]"
+                                                                        value="{{ $contact->post }}"
+                                                                        class="input_editable">
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="col-3">
+                                                                    <input type="text"
+                                                                        name="contact[{{ $index }}][organization]"
+                                                                        value="{{ $contact->organization }}"
+                                                                        class="input_editable">
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="col-3">
+                                                                    <input type="text"
+                                                                        name="contact[{{ $index }}][responsibility]"
+                                                                        value="{{ $contact->responsibility }}"
+                                                                        class="input_editable">
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="col-3">
+                                                                    <input type="text"
+                                                                        name="contact[{{ $index }}][phone]"
+                                                                        value="{{ $contact->phone }}"
+                                                                        class="input_editable">
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="col-3">
+                                                                    <input type="text"
+                                                                        name="contact[{{ $index }}][email]"
+                                                                        value="{{ $contact->email }}"
+                                                                        class="input_editable">
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <a class="remove-btn btn btn-xs btn-danger"
+                                                                    data-index="{{ $index }}"
+                                                                    data-id="{{ $contact->id }}"
+                                                                    data-target="markups-contacts">
+                                                                    <i class="fa-solid fa-trash-can"></i>
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                @else
+                                                @endif
+                                            </tbody>
+                                        </table>
+                                        <button type="button" class="addMore-button btn btn-success mt-4"
+                                            data-target="contacts">Добавить
+                                            строку</button>
                                     </div>
                                 </div>
                             </div>
@@ -433,12 +527,11 @@
                                     <table id="markups-datatable" class="display nowrap projMap" style="width:100%">
                                         <thead>
                                             <tr>
-                                                <th>№</th>
                                                 <th>Дата</th>
                                                 <th>% наценки</th>
                                                 <th>Сумма подачи ТКП в руб. без НДС</th>
                                                 <th>С кем согласовано (Фамилия И.О.)</th>
-                                                <th></th>
+                                                {{-- <th></th> --}}
                                             </tr>
                                         </thead>
                                         <tbody id="markups-inputs">
@@ -446,14 +539,6 @@
                                                 @foreach ($project->markups as $index => $markup)
                                                     <tr data-id="{{ $markup->id }}" data-index="{{ $index }}"
                                                         data-target="markups">
-                                                        <td>
-                                                            <div class="col-3">
-                                                                <input type="text"
-                                                                    name="markup[{{ $index }}][id]"
-                                                                    value="{{ $markup->id }}" class="input_editable"
-                                                                    readonly>
-                                                            </div>
-                                                        </td>
                                                         <td>
                                                             <div class="col-3">
                                                                 <input type="date"
@@ -485,121 +570,27 @@
                                                                     class="input_editable">
                                                             </div>
                                                         </td>
-                                                        <td>
+                                                        {{-- <td>
                                                             <a class="remove-btn btn btn-xs btn-danger"
                                                                 data-index="{{ $index }}"
                                                                 data-id="{{ $markup->id }}" data-target="markups">
                                                                 <i class="fa-solid fa-trash-can"></i>
                                                             </a>
-                                                        </td>
+                                                        </td> --}}
                                                     </tr>
                                                 @endforeach
                                             @else
                                             @endif
                                         </tbody>
                                     </table>
-                                    <button type="button" class="addMore-button btn btn-success mt-4"
-                                        data-target="markups">Добавить
-                                        строку</button>
-                                    <div class="mt-5">
-                                        <h4 class="text-center mb-3">Контакт-лист</h4>
-                                        <table id="markups-contacts-datatable" class="display nowrap projMap"
-                                            style="width:100%">
-                                            <thead>
-                                                <tr>
-                                                    {{-- <th>№</th> --}}
-                                                    <th>ФИО</th>
-                                                    <th>Должность</th>
-                                                    <th>Организация</th>
-                                                    <th>Зона ответственности</th>
-                                                    <th>Телефон</th>
-                                                    <th>эл.почта</th>
-                                                    <th></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="contacts-inputs">
-                                                @if ($project->contacts->count() > 0)
-                                                    @foreach ($project->contacts as $index => $contact)
-                                                        <tr data-id="{{ $contact->id }}"
-                                                            data-index="{{ $index }}"
-                                                            data-target="markups-contacts">
+                                    {{-- <button type="button" class="addMore-button btn btn-success mt-4"
+                                        data-target="markups">Добавить строку</button> --}}
 
-                                                            <input type="hidden" name="contact[{{ $index }}][id]"
-                                                                value="{{ $contact->id }}" class="input_editable"
-                                                                readonly>
-
-                                                            <td>
-                                                                <div class="col-3">
-                                                                    <input type="text"
-                                                                        name="contact[{{ $index }}][fio]"
-                                                                        value="{{ $contact->fio }}"
-                                                                        class="input_editable">
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <div class="col-3">
-                                                                    <input type="text"
-                                                                        name="contact[{{ $index }}][post]"
-                                                                        value="{{ $contact->post }}"
-                                                                        class="input_editable">
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <div class="col-3">
-                                                                    <input type="text"
-                                                                        name="contact[{{ $index }}][organization]"
-                                                                        value="{{ $contact->organization }}"
-                                                                        class="input_editable">
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <div class="col-3">
-                                                                    <input type="text"
-                                                                        name="contact[{{ $index }}][responsibility]"
-                                                                        value="{{ $contact->responsibility }}"
-                                                                        class="input_editable">
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <div class="col-3">
-                                                                    <input type="text"
-                                                                        name="contact[{{ $index }}][phone]"
-                                                                        value="{{ $contact->phone }}"
-                                                                        class="input_editable">
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <div class="col-3">
-                                                                    <input type="text"
-                                                                        name="contact[{{ $index }}][email]"
-                                                                        value="{{ $contact->email }}"
-                                                                        class="input_editable">
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <a class="remove-btn btn btn-xs btn-danger"
-                                                                    data-index="{{ $index }}"
-                                                                    data-id="{{ $contact->id }}"
-                                                                    data-target="markups-contacts">
-                                                                    <i class="fa-solid fa-trash-can"></i>
-                                                                </a>
-                                                            </td>
-                                                        </tr>
-                                                    @endforeach
-                                                @else
-                                                @endif
-                                            </tbody>
-                                        </table>
-                                        <button type="button" class="addMore-button btn btn-success mt-4"
-                                            data-target="contacts">Добавить
-                                            строку</button>
-                                    </div>
                                     <div class="mt-5">
                                         <h4 class="text-center mb-3">Риски</h4>
                                         <table id="risks-datatable" class="display nowrap projMap" style="width:100%">
                                             <thead>
                                                 <tr>
-                                                    <th>№</th>
                                                     <th>Наименование риска</th>
                                                     <th></th>
                                                 </tr>
@@ -612,15 +603,7 @@
                                                             <td>
                                                                 <div class="col-3">
                                                                     <input type="text"
-                                                                        name="risk[{{ $index }}][id]"
-                                                                        value="{{ $risk->id }}"
-                                                                        class="input_editable" readonly>
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <div class="col-3">
-                                                                    <input type="text"
-                                                                        name="risk[{{ $index }}][riskName]"
+                                                                        name="risk[{{ $risk->id }}][riskName]"
                                                                         value="{{ $risk->calcRisk_name }}"
                                                                         class="input_editable">
                                                                 </div>
@@ -634,7 +617,6 @@
                                                             </td>
                                                         </tr>
                                                     @endforeach
-                                                @else
                                                 @endif
                                             </tbody>
                                         </table>
@@ -681,36 +663,42 @@
                     equipment: {{ count($project->equipment) }},
                     markups: {{ count($project->markups) }},
                     contacts: {{ count($project->contacts) }},
-                    risks: {{ count($project->risks) }},
+                    risks: {{ $project->calc_risks->count() }}, // Учитываем количество записей в таблице рисков
                 };
 
+                let maxRiskId = {{ $maxRiskId }};
                 $(".addMore-button").click(function(event) {
                     event.preventDefault();
                     const target = $(this).data("target");
-                    $(`#${target}-inputs`).append(getHtml(target, indices[target]));
+                    const newIndex = indices[target]; // Получаем новый индекс
+                    const newRiskId = maxRiskId + 1; // Новый id для риска
+                    $(`#${target}-inputs`).append(getHtml(target, newIndex, newRiskId));
                     indices[target]++;
+                    maxRiskId++; // Увеличиваем максимальный id для следующего риска
                 });
+
                 // функция возвращающая html в секцию
-                function getHtml(target, index) {
+                function getHtml(target, index, newRiskId) {
                     let removeButton =
                         `<button class="remove-btn btn btn-xs btn-danger" href="#" data-index="${index}" data-target="${target}"><i class="fa-solid fa-trash-can"></i></button>`;
                     switch (target) {
                         case 'equipment':
                             return `
-                                <tr data-target="${target}" data-index="${index}">    
-                                            <td>
-                                                <input type="text" class="form-control" name="equipment[${index}][nameTMC]" id="nameTMC"
-                                                placeholder="Введите наименование ТМЦ">
-                                            </td>
-                                                    <td> <input type="text" class="form-control" name="equipment[${index}][manufacture]" id="manufacture"
-                                                        placeholder="Введите производителя"></td>
-                                                    <td><input type="text" class="form-control" name="equipment[${index}][unit]" id="unit"
-                                                        placeholder="Введите ед.изм."></td>
-                                                    <td> <input type="text" class="form-control" name="equipment[${index}][count]" id="count"
-                                                        placeholder="Введите количество"></td>
-                                                    <td><input type="text" class="form-control" name="equipment[${index}][priceUnit]" id="priceUnit"
-                                                        placeholder="Введите цену за ед."></td>
-                                                        <td style="border:none;">${removeButton} </td>
+                                <tr data-target="${target}" data-index="${index}"> 
+                                    <input type="hidden" name="equipment[${index}][id]" value="">   
+                                    <td>
+                                        <input type="text" class="input_editable" name="equipment[${index}][nameTMC]" id="nameTMC"
+                                        placeholder="Введите наименование ТМЦ">
+                                    </td>
+                                    <td> <input type="text" class="input_editable" name="equipment[${index}][manufacture]" id="manufacture"
+                                        placeholder="Введите производителя"></td>
+                                    <td><input type="text" class="input_editable" name="equipment[${index}][unit]" id="unit"
+                                        placeholder="Введите ед.изм."></td>
+                                    <td> <input type="text" class="input_editable" name="equipment[${index}][count]" id="count"
+                                        placeholder="Введите количество"></td>
+                                    <td><input type="text" class="input_editable" name="equipment[${index}][priceUnit]" id="priceUnit"
+                                        placeholder="Введите цену за ед."></td>
+                                    <td style="border:none;">${removeButton} </td>
                                 </tr>`
                         case 'markups':
                             return `
@@ -751,28 +739,42 @@
                                                             <td>
                                                                 <div class="col-3">
                                                                     <input type="text"
-                                                                        name="contact[${index}][fio]"
+                                                                        name="contact[${index}][fio]" placeholder="Введите ФИО"
                                                                         class="input_editable">
                                                                 </div>
                                                             </td>
                                                             <td>
                                                                 <div class="col-3">
                                                                     <input type="text"
-                                                                        name="contact[${index}][post]"
+                                                                        name="contact[${index}][post]" placeholder="Введите должность"
                                                                         class="input_editable">
                                                                 </div>
                                                             </td>
                                                             <td>
                                                                 <div class="col-3">
                                                                     <input type="text"
-                                                                        name="contact[${index}][responsibility]"
+                                                                        name="contact[${index}][organization]" placeholder="Введите организацию"
                                                                         class="input_editable">
                                                                 </div>
                                                             </td>
                                                             <td>
                                                                 <div class="col-3">
                                                                     <input type="text"
-                                                                        name="contact[${index}][contact]"
+                                                                        name="contact[${index}][responsibility]" placeholder="Введите зону ответственности"
+                                                                        class="input_editable">
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="col-3">
+                                                                    <input type="text"
+                                                                        name="contact[${index}][phone]" placeholder="Введите телефон"
+                                                                        class="input_editable">
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="col-3">
+                                                                    <input type="text"
+                                                                        name="contact[${index}][email]" placeholder="Введите эл.почту"
                                                                         class="input_editable">
                                                                 </div>
                                                             </td>
@@ -781,6 +783,7 @@
                         case 'risks':
                             return `
                                 <tr data-target="${target}" data-index="${index}">
+                                    <input type="hidden" name="risk[${index}][id]" value="${newRiskId}">
                                     <td>
                                         <div class="col-3"> 
                                             <input type="text" name="risk[${index}][riskName]" class="input_editable">
@@ -795,7 +798,7 @@
                                         Доп. расход
                                     </td>
                                     <td>
-                                        <input type="text" class="form-control" name="additional_expenses[${index}][cost]" placeholder="Введите стоимость">
+                                        <input type="text" class="input_editable" name="additional_expenses[${index}][cost]" placeholder="Введите стоимость">
                                       ${removeButton}
                                     </td>
                                     
