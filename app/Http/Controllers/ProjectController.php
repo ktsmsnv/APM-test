@@ -224,12 +224,13 @@ class ProjectController extends Controller
     public function updateCalculation($id)
     {
         $project = Projects::find($id);
+        $maxRiskId = CalcRisk::max('id');
 
         if (!$project) {
             return response()->json(['error' => 'Project not found'], 404);
         }
 
-        return view('project-map-update', ['project' => $project]);
+        return view('project-map-update', ['project' => $project], ['maxRiskId' => $maxRiskId]);
     }
 
     // РЕДАКТИРОВАНИЕ данных для карты проекта -> РАСЧЕТ
@@ -273,30 +274,40 @@ class ProjectController extends Controller
                 break;
         }
 
-        // Обновление оборудование
+        // Обновление оборудования
         if ($req->has('equipment')) {
             $totalPrice = 0;
             foreach ($req->input('equipment') as $equipmentData) {
-                $equipment = Equipment::find($equipmentData['id']);
+                // Проверяем наличие идентификатора оборудования
+                if (!empty($equipmentData['id'])) {
+                    // Если есть идентификатор, ищем соответствующую запись в базе данных и обновляем её
+                    $equipment = Equipment::find($equipmentData['id']);
+                } else {
+                    // Если идентификатор отсутствует, создаем новую запись
+                    $equipment = new Equipment();
+                }
+
+                // Устанавливаем значение поля project_num
+                $equipment->project_num = $project->projNum;
 
                 $count = intval($equipmentData['count']);
                 $priceUnit = floatval($equipmentData['priceUnit']);
                 $price = $count * $priceUnit; // Расчёт стоимости
 
-                if ($equipment) {
-                    $equipment->fill([
-                        'nameTMC' => $equipmentData['nameTMC'],
-                        'manufacture' => $equipmentData['manufacture'],
-                        'unit' => $equipmentData['unit'],
-                        'count' => $equipmentData['count'],
-                        'priceUnit' => $equipmentData['priceUnit'],
-                        'price' => $price, //запись в бд расчитанной стоимости
-                    ]);
-                    $totalPrice += $price;
-                    $equipment->save();
-                }
+                // Заполнение или обновление данных оборудования
+                $equipment->fill([
+                    'nameTMC' => $equipmentData['nameTMC'],
+                    'manufacture' => $equipmentData['manufacture'],
+                    'unit' => $equipmentData['unit'],
+                    'count' => $equipmentData['count'],
+                    'priceUnit' => $equipmentData['priceUnit'],
+                    'price' => $price, // запись в бд расчитанной стоимости
+                ]);
+                $totalPrice += $price;
+                $equipment->save();
             }
         }
+
 
 
         // Прочие расходы
@@ -401,17 +412,16 @@ class ProjectController extends Controller
             foreach ($req->input('risk') as $index => $risksData) {
                 $criteria = [
                     'project_num' => $project->projNum,
-                    'id' => $risksData['id'],
                 ];
 
                 $updateData = [
                     'calcRisk_name' => $risksData['riskName'],
                 ];
 
+                // Не указываем идентификатор, пусть база данных сама назначит автоинкрементный идентификатор
                 CalcRisk::updateOrCreate($criteria, $updateData);
             }
         }
-
         return redirect()->route('project-data-one', ['id' => $project->id, 'tab' => '#calculation'])->with('success', 'Project data successfully updated');
     }
 
