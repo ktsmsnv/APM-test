@@ -411,7 +411,7 @@ class ProjectController extends Controller
         if ($req->has('risk')) {
             // Удаляем существующие риски проекта
             CalcRisk::where('project_num', $project->projNum)->delete();
-        
+
             $data_risks = [];
             foreach ($req->input('risk') as $index => $riskData) {
                 $item = [

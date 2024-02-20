@@ -3,6 +3,11 @@
         $project->equipment->first() &&
         $project->expenses()->exists() &&
         $project->expenses->first())
+
+    <a href="#" data-bs-toggle="modal" data-bs-target="#offerModal" class="btn btn-lg btn-primary mb-4">
+        Сформировать КП
+    </a>
+
     <div class="accordion calculation" id="accordionCalculation">
         <div class="accordion-item">
             <h2 class="accordion-header" id="calculation-headingOne">
@@ -965,6 +970,7 @@
             validateAndSubmit();
         });
     });
+    
     $(document).ready(function() {
         // индесы для каждого из разделов
         let indices = {
@@ -975,24 +981,19 @@
             risks: 1
         };
 
-        /* при нажатии на кнопки определяем какой у нас target и в зависимости от него добавляет HTML, 
+        /* при нажатии на кнопки определяем какой у нас target и в зависимости от него добавляет HTML,
            возвращенный функцией getHtml, в соответствующую секцию */
         $(".modal-content").on("click", ".addMore-button", function(event) {
             event.preventDefault();
             const target = $(this).data("target");
 
             // Добавление новой строки
-            // $(#${target}-inputs).append(getHtml(target, indices[target]));
+            // $(`#${target}-inputs`).append(getHtml(target, indices[target]));
+            // indices[target]++;
             // Проверяем, существует ли уже элемент с этим индексом
-            if ($(#$ {
-                    target
-                } - inputs[data - index = $ {
-                    indices[target]
-                }]).length === 0) {
+            if ($(`#${target}-inputs [data-index=${indices[target]}]`).length === 0) {
                 // Добавление новой строки
-                $(#$ {
-                    target
-                } - inputs).append(getHtml(target, indices[target]));
+                $(`#${target}-inputs`).append(getHtml(target, indices[target]));
             }
             indices[target]++;
         });
@@ -1004,7 +1005,7 @@
             `<button class="btn btn-danger remove-btn" data-index="${index}" data-target="${target}">Удалить</button>`;
         switch (target) {
             case 'equipment':
-                return `<tr data-target="${target}" data-index="${index}">        
+                return `<tr data-target="${target}" data-index="${index}">
                         <td><input type="text" class="form-control" name="equipment[${index}][nameTMC]" id="nameTMC"
                                 placeholder="Введите наименование ТМЦ"></td>
                         <td> <input type="text" class="form-control" name="equipment[${index}][manufacture]" id="manufacture"
@@ -1082,6 +1083,13 @@
                             placeholder="Введите наименование риска">
                             ${removeButton}
                     </div>`;
+            case 'expenses': // Добавленный case для дополнительных расходов
+                    return `<div class="form-group mb-3 block" data-target="${target}" data-index="${index}">
+                        <label for="additionalExpense">Дополнительный расход:</label>
+                        <input type="text" class="form-control" name="additional_expenses[]" id="additionalExpense"
+                            placeholder="Введите дополнительный расход">
+                        ${removeButton}
+                    </div>`;
         }
     }
 
@@ -1091,4 +1099,5 @@
         let index = $(this).data('index');
         $(`[data-target=${target}][data-index=${index}]`).remove();
     });
+    
 </script>
