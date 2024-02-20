@@ -780,17 +780,17 @@
                                                             </td>
                                 <td style="border:none;">${removeButton} </td>
                                 </tr>`
-                        case 'risks':
-                            return `
-                                <tr data-target="${target}" data-index="${index}">
-                                    <input type="hidden" name="risk[${index}][id]" value="${newRiskId}">
-                                    <td>
-                                        <div class="col-3"> 
-                                            <input type="text" name="risk[${index}][riskName]" class="input_editable">
-                                        </div>
-                                    </td>
-                                    <td style="border:none;">${removeButton} </td>
-                                </tr>`
+                    case 'risks':
+                    return `
+                        <tr data-target="${target}" data-index="${index}">
+                            <input type="hidden" name="risk[${index}][id]" value="${newRiskId}">
+                            <td>
+                                <div class="col-3"> 
+                                    <input type="text" name="risk[${index}][riskName]" class="input_editable">
+                                </div>
+                            </td>
+                            <td style="border:none;">${removeButton} </td>
+                        </tr>`
                         case 'additional_expenses':
                             return `
                                 <tr data-target="${target}" data-index="${index}">
