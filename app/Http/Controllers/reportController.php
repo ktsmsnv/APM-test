@@ -213,6 +213,10 @@ class reportController extends Controller
     {
         // Загружаем данные из базы данных
         $project = Projects::find($id);
+        // Проверяем, найден ли проект
+        if (!$project) {
+            return abort(404); // Вывести ошибку 404, если проект не найден
+        }
         $projNumProject = Projects::find($projNum);
 
         // Путь к шаблону Word
@@ -242,7 +246,7 @@ class reportController extends Controller
         $templateProcessor->setValue('projName', $project->basicReference->first()->projName);
         $templateProcessor->setValue('projNum', $project->projNum);
         $templateProcessor->setValue('projContractor', $project->contractor);
-        $templateProcessor->setValue('costRubW', $project->basicInfo->first()->contract_price *1.2);
+        $templateProcessor->setValue('costRubW', $project->basicInfo->first()->contract_price * 1.2);
         $templateProcessor->setValue('costRub', $project->basicInfo->first()->contract_price);
         $templateProcessor->setValue('expenseDirectPlan', $project->reports->first()->expenseDirectPlan);
         $templateProcessor->setValue('expenseDirectFact', $project->reports->first()->expenseDirectFact);
@@ -278,7 +282,7 @@ class reportController extends Controller
         $templateProcessor->setValue('resume', $project->report_notes->first()->resume);
 
         // Сохраняем измененный файл
-        $newFilePath = storage_path("reports/отчет {$projNumProject->projNum}.docx");
+        $newFilePath = storage_path("reports/отчет {$project->projNum}.docx");
         $templateProcessor->saveAs($newFilePath);
 
         // Возврат файла для загрузки

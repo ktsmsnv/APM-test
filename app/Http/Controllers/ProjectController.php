@@ -140,8 +140,8 @@ class ProjectController extends Controller
         $project->endCustomer = $request->endCustomer;
         $project->contractor = $request->contractor;
 
-        // $project->date_application = $request->date_application;
-        $project->date_offer = $request->date_offer;
+        $project->date_application = $request->date_application;
+        // $project->date_offer = $request->date_offer;
 
         $project->delivery = $request->has('delivery') ? 1 : 0;
         $project->pir = $request->has('pir') ? 1 : 0;
@@ -245,7 +245,7 @@ class ProjectController extends Controller
         $project->objectName = $req->input('objectName');
         $project->endCustomer = $req->input('endCustomer');
         $project->contractor = $req->input('contractor');
-        // $project->date_application = $req->input('date_application');
+        $project->date_application = $req->input('date_application');
         $project->date_offer = $req->input('date_offer');
 
         $project->delivery = $req->has('delivery') ? 1 : 0;
@@ -509,7 +509,7 @@ class ProjectController extends Controller
         $BasicReference->startDate = $req->input('startDate');
         $BasicReference->endDate = $req->input('endDate');
         $BasicReference->projGoal = $req->input('projGoal');
-        $BasicReference->projCurator = $req->input('projCurator2');
+        $BasicReference->projCurator = $req->input('projCurator');
         $BasicReference->projManager = $req->input('projManager');
         $BasicReference->save();
 
@@ -542,7 +542,7 @@ class ProjectController extends Controller
 
         // Состав рабочей группы и ответственность
         $workGroup = workGroup::where('project_num', $project->projNum)->first();
-        $workGroup->projCurator = $req->projCurator;
+        $workGroup->projCurator = $req->projCurator2;
         $workGroup->projDirector = $req->projDirector;
         $workGroup->techlid = $req->techlid;
         $workGroup->production = $req->production;

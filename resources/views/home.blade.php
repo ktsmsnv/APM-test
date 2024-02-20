@@ -45,7 +45,7 @@
                                     <thead>
                                         <!-- Заголовки столбцов -->
                                         <tr>
-                                            <th rowspan="2">№</th>
+                                            {{-- <th rowspan="2">№</th> --}}
                                             <th rowspan="2">Вн. Номер</th>
                                             <th rowspan="2">Наим.закупки</th>
                                             <th colspan="8" class="text-center">Виды работ</th>
@@ -76,7 +76,7 @@
                                         <!-- Контент таблицы -->
                                         @foreach ($RegSInteg as $item)
                                             <tr>
-                                                <td>{{ $item->id }}</td>
+                                                {{-- <td>{{ $item->id }}</td> --}}
                                                 <td>{{ $item->vnNum }}</td>
                                                 <td>{{ $item->purchaseName }}</td>
 
@@ -110,7 +110,8 @@
                                                 <td>{{ $item->object }}</td>
                                                 {{-- <td>{{ $item->area }}</td> --}}
                                                 <td>{{ date('d.m.Y', strtotime($item->receiptDate)) }}</td>
-                                                <td>{{ date('d.m.Y', strtotime($item->submissionDate)) }}</td>
+                                                {{-- <td>{{ date('d.m.Y', strtotime($item->submissionDate)) }}</td> --}}
+                                                <td>{{ $item->submissionDate ? date('d.m.Y', strtotime($item->submissionDate)) : '-' }}</td>
                                                 <td>{{ $item->projectManager }}</td>
                                                 {{-- <td>{{ $item->tech }}</td>
                                                 <td>{{ $item->primeCost }}</td>
@@ -129,7 +130,7 @@
                                     <thead>
                                         <!-- Заголовки столбцов -->
                                         <tr>
-                                            <th rowspan="2">№</th>
+                                            {{-- <th rowspan="2">№</th> --}}
                                             <th rowspan="2">Вн. Номер</th>
                                             <th rowspan="2">Наим.закупки</th>
                                             <th colspan="8" class="text-center">Виды работ</th>
@@ -160,7 +161,7 @@
                                         <!-- Контент таблицы -->
                                         @foreach ($RegEOB as $item)
                                             <tr>
-                                                <td>{{ $item->id }}</td>
+                                                {{-- <td>{{ $item->id }}</td> --}}
                                                 <td>{{ $item->vnNum }}</td>
                                                 <td>{{ $item->purchaseName }}</td>
 
@@ -194,7 +195,8 @@
                                                 <td>{{ $item->object }}</td>
                                                 {{-- <td>{{ $item->area }}</td> --}}
                                                 <td>{{ date('d.m.Y', strtotime($item->receiptDate)) }}</td>
-                                                <td>{{ date('d.m.Y', strtotime($item->submissionDate)) }}</td>
+                                                {{-- <td>{{ date('d.m.Y', strtotime($item->submissionDate)) }}</td> --}}
+                                                <td>{{ $item->submissionDate ? date('d.m.Y', strtotime($item->submissionDate)) : '-' }}</td>
                                                 <td>{{ $item->projectManager }}</td>
                                                 {{-- <td>{{ $item->tech }}</td>
                                                 <td>{{ $item->primeCost }}</td>
@@ -214,7 +216,7 @@
                                         <tr>
                                             <!-- Заголовки столбцов -->
                                         <tr>
-                                            <th rowspan="2">№</th>
+                                            {{-- <th rowspan="2">№</th> --}}
                                             <th rowspan="2">Вн. Номер</th>
                                             <th rowspan="2">Наим.закупки</th>
                                             <th colspan="8" class="text-center">Виды работ</th>
@@ -245,7 +247,7 @@
                                         <!-- Контент таблицы -->
                                         @foreach ($RegNHRS as $item)
                                             <tr>
-                                                <td>{{ $item->id }}</td>
+                                                {{-- <td>{{ $item->id }}</td> --}}
                                                 <td>{{ $item->vnNum }}</td>
                                                 <td>{{ $item->purchaseName }}</td>
 
@@ -279,7 +281,8 @@
                                                 <td>{{ $item->object }}</td>
                                                 {{-- <td>{{ $item->area }}</td> --}}
                                                 <td>{{ date('d.m.Y', strtotime($item->receiptDate)) }}</td>
-                                                <td>{{ date('d.m.Y', strtotime($item->submissionDate)) }}</td>
+                                                {{-- <td>{{ date('d.m.Y', strtotime($item->submissionDate)) }}</td> --}}
+                                                <td>{{ $item->submissionDate ? date('d.m.Y', strtotime($item->submissionDate)) : '-' }}</td>
                                                 <td>{{ $item->projectManager }}</td>
                                                 {{-- <td>{{ $item->tech }}</td>
                                                 <td>{{ $item->primeCost }}</td>
@@ -300,7 +303,7 @@
                                         <tr>
                                             <!-- Заголовки столбцов -->
                                         <tr>
-                                            <th rowspan="2">№</th>
+                                            {{-- <th rowspan="2">№</th> --}}
                                             <th rowspan="2">Вн. Номер</th>
                                             <th rowspan="2">Наим.закупки</th>
                                             <th colspan="8" class="text-center">Виды работ</th>
@@ -331,7 +334,7 @@
                                         <!-- Контент таблицы -->
                                         @foreach ($RegOther as $item)
                                             <tr>
-                                                <td>{{ $item->id }}</td>
+                                                {{-- <td>{{ $item->id }}</td> --}}
                                                 <td>{{ $item->vnNum }}</td>
                                                 <td>{{ $item->purchaseName }}</td>
 
@@ -365,7 +368,8 @@
                                                 <td>{{ $item->object }}</td>
                                                 {{-- <td>{{ $el->area }}</td> --}}
                                                 <td>{{ date('d.m.Y', strtotime($item->receiptDate)) }}</td>
-                                                <td>{{ date('d.m.Y', strtotime($item->submissionDate)) }}</td>
+                                                {{-- <td>{{ date('d.m.Y', strtotime($item->submissionDate)) }}</td> --}}
+                                                <td>{{ $item->submissionDate ? date('d.m.Y', strtotime($item->submissionDate)) : '-' }}</td>
                                                 <td>{{ $item->projectManager }}</td>
                                                 {{-- <td>{{ $el->tech }}</td>
                                                 <td>{{ $el->primeCost }}</td>

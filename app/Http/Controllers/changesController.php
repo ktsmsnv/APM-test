@@ -69,23 +69,36 @@ class changesController extends Controller
 
     public function update(Request $request, $id)
     {
+        // Находим объект изменения по его идентификатору
         $change = Change::find($id);
-
-
-        $change->contractor = $request->input('contractor');
-        $change->contract_num = $request->input('contract_num');
-        $change->change = $request->input('change');
-        $change->impact = $request->input('impact');
-        $change->stage = $request->input('stage');
-        $change->corrective = $request->input('corrective');
-        $change->responsible = $request->input('responsible');
-
-        // Save the changes
-        $change->save();
-
-        // Get the project ID from the change record
-        $projectId = $change->project_num;
-
-        return redirect()->route('project-data-one', ['id' => $projectId]);
+        
+        // Проверяем, найден ли объект изменения
+        if ($change) {
+            // Обновляем атрибуты изменения из запроса
+            $change->update([
+                'contractor' => $request->input('contractor'),
+                'contract_num' => $request->input('contract_num'),
+                'change' => $request->input('change'),
+                'impact' => $request->input('impact'),
+                'stage' => $request->input('stage'),
+                'corrective' => $request->input('corrective'),
+                'responsible' => $request->input('responsible'),
+            ]);
+            
+            // Получаем объект проекта через отношение project
+            $project = $change->project;
+            
+            // Проверяем, найден ли объект проекта
+            if ($project) {
+                // Получаем идентификатор проекта
+                $projectId = $project->id;
+                
+                // Перенаправляем пользователя с обновленным идентификатором проекта
+                return redirect()->route('project-data-one', ['id' => $projectId, 'tab' => '#changes'])->with('success', 'Project data successfully updated');
+            }
+        }
+        
+        // Если объект изменения не найден, возвращаем ошибку
+        return redirect()->back()->with('error', 'Change not found.');
     }
 }
