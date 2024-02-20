@@ -102,16 +102,18 @@
                                 @if ($project->contacts->count() > 0)
                                     @foreach ($project->contacts as $index => $contact)
                                         <tr>
-                                            {{-- <td>{{ $contact->id }}</td> --}}
-                                            <td>{{ $contact->fio }}</td>
-                                            <td>{{ $contact->post }}</td>
-                                            <td>{{ $contact->organization }}</td>
-                                            <td>{{ $contact->responsibility }}</td>
-                                            <td>{{ $contact->phone }}</td>
-                                            <td>{{ $contact->email }}</td>
+                                            <td>{{ $contact->fio ?? '-' }}</td>
+                                            <td>{{ $contact->post ?? '-' }}</td>
+                                            <td>{{ $contact->organization ?? '-' }}</td>
+                                            <td>{{ $contact->responsibility ?? '-' }}</td>
+                                            <td>{{ $contact->phone ?? '-' }}</td>
+                                            <td>{{ $contact->email ?? '-' }}</td>
                                         </tr>
                                     @endforeach
                                 @else
+                                    <tr>
+                                        <td colspan="6" class="text-center">Нет данных</td>
+                                    </tr>
                                 @endif
                             </tbody>
                         </table>
@@ -132,7 +134,6 @@
                         <table id="equipment-datatable" class="display nowrap projMap" style="width:100%">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
                                     <th>Наименование ТМЦ</th>
                                     <th>Производитель</th>
                                     <th>Ед. изм.</th>
@@ -144,102 +145,24 @@
                             <tbody>
                                 @foreach ($project->equipment as $item)
                                     <tr>
-                                        <td>{{ $item->id }}</td>
-                                        <td>{{ $item->nameTMC }}</td>
-                                        <td>{{ $item->manufacture }}</td>
-                                        <td>{{ $item->unit }}</td>
-                                        <td>{{ $item->count }}</td>
-                                        <td>{{ $item->priceUnit }}</td>
+                                        <td>{{ $item->nameTMC ?? '-'}}</td>
+                                        <td>{{ $item->manufacture ?? '-'}}</td>
+                                        <td>{{ $item->unit ?? '-'}}</td>
+                                        <td>{{ $item->count ?? '-'}}</td>
+                                        <td>{{ $item->priceUnit ?? '-'}}</td>
                                         {{-- <td class="total-equipment">{{ $item->count * $item->priceUnit }}</td> --}}
-                                        <td class="total-equipment">{{ $item->price }}</td>
+                                        <td class="total-equipment">{{ $item->price ?? '-'}}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <th colspan="6" class="text-align-right">Всего</th>
+                                    <th colspan="5" class="text-align-right">Всего</th>
                                     <th id="equipment-footer"></th>
                             </tfoot>
                         </table>
                     @else
                         <h4>Нет данных для отображения</h4>
-                        <a href="#" data-bs-toggle="modal" data-bs-target="#addEquipmentModal"
-                            class="btn btn-danger">
-                            Добавить оборудование
-                        </a>
-                        {{-- ------------- ДОБАВЛЕНИЕ ОБОРУДОВАНИЯ ------------ --}}
-                        <div class="modal fade" id="addEquipmentModal" tabindex="-1"
-                            aria-labelledby="addEquipmentModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <!-- Форма добавления оборудования -->
-                                <form id="addEquipmentForm" action="{{ route('addEquipment', $project->id) }}"
-                                    method="post">
-                                    @csrf
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="addEquipmentModalLabel">Добавить оборудование
-                                            </h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <div class="equipment-add alert pt-5">
-                                                <div>
-                                                    <div class="mb-3">
-                                                        <table id="equipment-datatable" class="display nowrap projMap"
-                                                            style="width:100%">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th>Наименование ТМЦ</th>
-                                                                    <th>Производитель</th>
-                                                                    <th>Ед. изм.</th>
-                                                                    <th>Кол-во</th>
-                                                                    <th>Цена за ед. (руб. без НДС)</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody id="equipment-inputs">
-                                                                <tr>
-                                                                    <td><input type="text" class="form-control"
-                                                                            name="equipment[0][nameTMC]" id="nameTMC"
-                                                                            placeholder="Введите наименование ТМЦ"></td>
-                                                                    <td> <input type="text" class="form-control"
-                                                                            name="equipment[0][manufacture]"
-                                                                            id="manufacture"
-                                                                            placeholder="Введите производителя"></td>
-                                                                    <td><input type="text" class="form-control"
-                                                                            name="equipment[0][unit]" id="unit"
-                                                                            placeholder="Введите ед.изм."></td>
-                                                                    <td> <input type="text" class="form-control"
-                                                                            name="equipment[0][count]" id="count"
-                                                                            placeholder="Введите количество"></td>
-                                                                    <td><input type="text" class="form-control"
-                                                                            name="equipment[0][priceUnit]"
-                                                                            id="priceUnit"
-                                                                            placeholder="Введите цену за ед."></td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                        <button id="addMore-equipment" data-target="equipment"
-                                                            class="btn btn-secondary addMore-button mt-3">Добавить еще
-                                                            оборудование</button>
-                                                        {{-- Стоимость расчитывается автоматически в ProjectController --}}
-                                                        {{-- <div class="form-group mb-3">
-                                                        <input type="text" class="form-control" name="equipment[0][price]" id="price"
-                                                            placeholder="Стоимость (руб. без НДС)" value="250">
-                                                    </div> --}}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {{-- Кнопки --}}
-                                        <div class="modal-footer d-flex justify-content-between">
-                                            <button type="submit" class="btn btn-primary">Добавить</button>
-                                            <button type="button" class="btn btn-secondary"
-                                                data-bs-dismiss="modal">Закрыть</button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
                     @endif
                 </div>
             </div>
@@ -267,43 +190,43 @@
                                 @foreach ($project->expenses as $index => $expense)
                                     <tr>
                                         <td>Командировочные</td>
-                                        <td>{{ $expense->commandir }}</td>
+                                        <td>{{ $expense->commandir ?? '-' }}</td>
                                     </tr>
                                     <tr>
                                         <td>РД</td>
-                                        <td>{{ $expense->rd }}</td>
+                                        <td>{{ $expense->rd ?? '-' }}</td>
                                     </tr>
                                     <tr>
                                         <td>ШМР</td>
-                                        <td>{{ $expense->shmr }}</td>
+                                        <td>{{ $expense->shmr ?? '-' }}</td>
                                     </tr>
                                     <tr>
                                         <td>ПНР</td>
-                                        <td>{{ $expense->pnr }}</td>
+                                        <td>{{ $expense->pnr ?? '-' }}</td>
                                     </tr>
                                     <tr>
                                         <td>Сертификаты</td>
-                                        <td>{{ $expense->cert }}</td>
+                                        <td>{{ $expense->cert ?? '-' }}</td>
                                     </tr>
                                     <tr>
                                         <td>Доставка/Логистика</td>
-                                        <td>{{ $expense->delivery }}</td>
+                                        <td>{{ $expense->delivery ?? '-' }}</td>
                                     </tr>
                                     <tr>
                                         <td>Растаможка</td>
-                                        <td>{{ $expense->rastam }}</td>
+                                        <td>{{ $expense->rastam ?? '-' }}</td>
                                     </tr>
                                     <tr>
                                         <td>Разработка ППО</td>
-                                        <td>{{ $expense->ppo }}</td>
+                                        <td>{{ $expense->ppo ?? '-' }}</td>
                                     </tr>
                                     <tr>
                                         <td>Банковская гарантия</td>
-                                        <td>{{ $expense->guarantee }}</td>
+                                        <td>{{ $expense->guarantee ?? '-' }}</td>
                                     </tr>
                                     <tr>
                                         <td>Поверка</td>
-                                        <td>{{ $expense->check }}</td>
+                                        <td>{{ $expense->check ?? '-' }}</td>
                                     </tr>
                                     <!-- Добавляем отдельные строки для каждого дополнительного расхода -->
                                     @foreach ($expense->additionalExpenses as $additionalExpense)
@@ -315,103 +238,29 @@
                                     <!-- Конец цикла для дополнительных расходов -->
                                 @endforeach
                             </tbody>
-                            <tfoot>
+                            {{-- <tfoot>
                                 <tr>
                                     <th class="text-align-right">Всего</th>
                                     <th>{{ $expense->total }}</th>
                                 </tr>
-                            </tfoot>
+                            </tfoot> --}}
+                            @if ($project->expenses->isNotEmpty() && $project->expenses->first()->total)
+                                <tfoot>
+                                    <tr>
+                                        <th class="text-align-right">Всего</th>
+                                        <th>{{ $project->expenses->first()->total }}</th>
+                                    </tr>
+                                </tfoot>
+                            @endif
                         </table>
                     @else
-                        <h4>Нет данных для отображения</h4>
-                        <a href="#" data-bs-toggle="modal" data-bs-target="#addExpensesModal"
-                            class="btn btn-danger">
-                            Добавить прочие расходы
-                        </a>
-                        {{-- ------------- ДОБАВЛЕНИЕ ПРОЧИХ РАСХОДОВ ------------ --}}
-                        <div class="modal fade" id="addExpensesModal" tabindex="-1"
-                            aria-labelledby="addExpensesModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <!-- Форма добавления прочих расходов -->
-                                <form id="addExpensesForm" action="{{ route('addExpenses', $project->id) }}"
-                                    method="post">
-                                    @csrf
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="addExpensesModalLabel">Добавить прочие расходы
-                                            </h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <div class="expenses-add alert">
-                                                <div class="form-group mb-3">
-                                                    <label for="commandir">Командировочные:</label>
-                                                    <input type="text" class="form-control" name="commandir"
-                                                        id="commandir" placeholder="Введите командировочные">
-                                                </div>
-                                                <div class="form-group mb-3">
-                                                    <label for="rd">РД:</label>
-                                                    <input type="text" class="form-control" name="rd"
-                                                        id="rd" placeholder="Введите РД">
-                                                </div>
-                                                <div class="form-group mb-3">
-                                                    <label for="shmr">ШМР:</label>
-                                                    <input type="text" class="form-control" name="shmr"
-                                                        id="shmr" placeholder="Введите ШМР">
-                                                </div>
-                                                <div class="form-group mb-3">
-                                                    <label for="pnr">ПНР:</label>
-                                                    <input type="text" class="form-control" name="pnr"
-                                                        id="pnr" placeholder="Введите ПНР">
-                                                </div>
-                                                <div class="form-group mb-3">
-                                                    <label for="cert">Сертификаты:</label>
-                                                    <input type="text" class="form-control" name="cert"
-                                                        id="cert" placeholder="Введите сертификаты">
-                                                </div>
-                                                <div class="form-group mb-3">
-                                                    <label for="delivery">Доставка/ Логистика:</label>
-                                                    <input type="text" class="form-control" name="delivery"
-                                                        id="delivery" placeholder="Введите доставку/логистику">
-                                                </div>
-                                                <div class="form-group mb-3">
-                                                    <label for="rastam">Растаможка:</label>
-                                                    <input type="text" class="form-control" name="rastam"
-                                                        id="rastam" placeholder="Введите растаможку">
-                                                </div>
-                                                <div class="form-group mb-3">
-                                                    <label for="ppo">Разработка ППО:</label>
-                                                    <input type="text" class="form-control" name="ppo"
-                                                        id="ppo" placeholder="Введите разработку ППО">
-                                                </div>
-                                                <div class="form-group mb-3">
-                                                    <label for="guarantee">Банковская гарантия:</label>
-                                                    <input type="text" class="form-control" name="guarantee"
-                                                        id="guarantee" placeholder="Введите банковскую гарантию">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="check">Поверка:</label>
-                                                    <input type="text" class="form-control" name="check"
-                                                        id="check" placeholder="Введите поверку">
-                                                </div>
-                                                {{-- всего расчитывается автоматически в ProjectController --}}
-                                                {{-- <div class="form-group mb-3">
-                                                <input type="text" class="form-control" name="total" id="total" placeholder="Всего"
-                                                    value="250">
-                                            </div> --}}
-                                            </div>
-                                        </div>
-                                        {{-- Кнопки --}}
-                                        <div class="modal-footer d-flex justify-content-between">
-                                            <button type="submit" class="btn btn-primary">Добавить</button>
-                                            <button type="button" class="btn btn-secondary"
-                                                data-bs-dismiss="modal">Закрыть</button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
+                        <table id="expenses-datatable" class="display nowrap projMap" style="width:100%">
+                            <tbody>
+                                <tr>
+                                    <td colspan="2" class="text-center">Нет данных</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     @endif
                 </div>
             </div>
@@ -431,95 +280,33 @@
                         @foreach ($project->totals as $totals)
                             <div class="d-flex gap-3">
                                 <p>Разработка РКД (дн.):</p>
-                                <span>{{ $totals['kdDays'] }}</span>
+                                <span>{{ $totals['kdDays'] ?? '-'}}</span>
                             </div>
                             <div class="d-flex gap-3">
                                 <p>Комплектация (дн.):</p>
-                                <span>{{ $totals['equipmentDays'] }}</span>
+                                <span>{{ $totals['equipmentDays'] ?? '-'}}</span>
                             </div>
                             <div class="d-flex gap-3">
                                 <p>Производство (дн.):</p>
-                                <span>{{ $totals['productionDays'] }}</span>
+                                <span>{{ $totals['productionDays'] ?? '-'}}</span>
                             </div>
                             <div class="d-flex gap-3">
                                 <p>Доставка (дн.):</p>
-                                <span>{{ $totals['shipmentDays'] }}</span>
+                                <span>{{ $totals['shipmentDays'] ?? '-'}}</span>
                             </div>
                             <div class="d-flex gap-4">
                                 <div class="d-flex gap-3">
                                     <p>Итого срок реализации (дн.)</p>
-                                    <span>{{ $totals['periodDays'] }}</span>
+                                    <span>{{ $totals['periodDays'] ?? '-'}}</span>
                                 </div>
                                 <div class="d-flex gap-3">
                                     <p>Себестоимость (руб. без НДС)</p>
-                                    <span>{{ $totals['price'] }}</span>
+                                    <span>{{ $totals['price'] ?? '-'}}</span>
                                 </div>
                             </div>
                         @endforeach
                     @else
-                        <h4>Нет данных для отображения</h4>
-                        <a href="#" data-bs-toggle="modal" data-bs-target="#addTotalsModal"
-                            class="btn btn-danger">
-                            Добавить итого
-                        </a>
-                        {{-- ------------- ДОБАВЛЕНИЕ ИТОГО ------------ --}}
-                        <div class="modal fade" id="addTotalsModal" tabindex="-1"
-                            aria-labelledby="addTotalsModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <!-- Форма добавления прочих расходов -->
-                                <form id="addTotalsForm" action="{{ route('addTotals', $project->id) }}"
-                                    method="post">
-                                    @csrf
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="addTotalsModalLabel">Добавить итого
-                                            </h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <div class="total-add alert">
-                                                <div class="form-group mb-3">
-                                                    <label for="kdDays">Разработка РКД (дн.):</label>
-                                                    <input type="text" class="form-control" name="kdDays"
-                                                        id="kdDays" placeholder="Введите кол-во дней">
-                                                </div>
-                                                <div class="form-group mb-3">
-                                                    <label for="equipmentDays">Комплектация (дн.):</label>
-                                                    <input type="text" class="form-control" name="equipmentDays"
-                                                        id="equipmentDays" placeholder="Введите кол-во дней">
-                                                </div>
-                                                <div class="form-group mb-3">
-                                                    <label for="productionDays">Производство (дн.):</label>
-                                                    <input type="text" class="form-control" name="productionDays"
-                                                        id="productionDays" placeholder="Введите кол-во дней">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="shipmentDays">Отгрузка (дн.):</label>
-                                                    <input type="text" class="form-control" name="shipmentDays"
-                                                        id="shipmentDays" placeholder="Введите кол-во дней">
-                                                </div>
-                                                {{-- Себестоимость и итого расчитывается автоматически в ProjectController --}}
-                                                {{-- <div class="form-group mb-3">
-                                                    <input type="text" class="form-control" name="periodDays" id="periodDays"
-                                                        placeholder="Итого срок  реализации (дн.)" value="250">
-                                                </div>
-                                                <div class="form-group mb-3">
-                                                    <input type="text" class="form-control" name="price" id="price"
-                                                        placeholder="Себестоимость  (руб. без НДС)" value="250">
-                                                </div> --}}
-                                            </div>
-                                        </div>
-                                        {{-- Кнопки --}}
-                                        <div class="modal-footer d-flex justify-content-between">
-                                            <button type="submit" class="btn btn-primary">Добавить</button>
-                                            <button type="button" class="btn btn-secondary"
-                                                data-bs-dismiss="modal">Закрыть</button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
+                        <h4>Нет данных</h4>
                     @endif
                 </div>
             </div>
@@ -539,7 +326,6 @@
                         <table id="markups-datatable" class="display nowrap projMap" style="width:100%">
                             <thead>
                                 <tr>
-                                    <th>№</th>
                                     <th>Дата</th>
                                     <th>% наценки</th>
                                     <th>Сумма подачи ТКП в руб. без НДС</th>
@@ -549,81 +335,16 @@
                             <tbody>
                                 @foreach ($project->markups as $index => $markup)
                                     <tr>
-                                        <td>{{ $markup->id }}</td>
-                                        <td>{{ $markup->date }}</td>
-                                        <td>{{ $markup->percentage }}</td>
-                                        <td>{{ $markup->priceSubTkp }}</td>
-                                        <td>{{ $markup->agreedFio }}</td>
+                                        <td>{{ $markup->date ?? '-'}}</td>
+                                        <td>{{ $markup->percentage ?? '-'}}</td>
+                                        <td>{{ $markup->priceSubTkp ?? '-'}}</td>
+                                        <td>{{ $markup->agreedFio ?? '-'}}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
                         </table>
                     @else
-                        <h4>Нет данных для отображения</h4>
-                        <a href="#" data-bs-toggle="modal" data-bs-target="#addMarkupsModal"
-                            class="btn btn-danger">
-                            Добавить уровень наценки
-                        </a>
-                        {{-- ------------- ДОБАВЛЕНИЕ  уровень наценки ------------ --}}
-                        <div class="modal fade" id="addMarkupsModal" tabindex="-1"
-                            aria-labelledby="addMarkupsModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <form id="addMarkupsForm" action="{{ route('addMarkups', $project->id) }}"
-                                    method="post">
-                                    @csrf
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="addMarkupsModalLabel">Добавить уровень наценки
-                                            </h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <div class="markups-add alert">
-                                                <div id="markups-inputs">
-                                                    <div class="mb-3">
-                                                        <div class="form-group mb-3">
-                                                            <label for="date">Дата:</label>
-                                                            <input type="date" class="form-control"
-                                                                name="markups[0][date]" id="date"
-                                                                placeholder="Выберите дату">
-                                                        </div>
-                                                        <div class="form-group mb-3">
-                                                            <label for="percentage">% наценки:</label>
-                                                            <input type="text" class="form-control"
-                                                                name="markups[0][percentage]" id="percentage"
-                                                                placeholder="Введитепроцент наценки">
-                                                        </div>
-                                                        <div class="form-group mb-3">
-                                                            <label for="priceSubTkp">Сумма подачи ТКП в руб. без
-                                                                НДС:</label>
-                                                            <input type="text" class="form-control"
-                                                                name="markups[0][priceSubTkp]" id="priceSubTkp"
-                                                                placeholder="Введите сумму">
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="agreedFio">С кем согласовано (Фамилия
-                                                                И.О.):</label>
-                                                            <input type="text" class="form-control"
-                                                                name="markups[0][agreedFio]" id="agreedFio"
-                                                                placeholder="Введите ФИО">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                {{-- <button id="addMore-markups" data-target="markups" class="btn btn-secondary addMore-button">Добавить еще
-                                                уровень наценки</button> --}}
-                                            </div>
-                                        </div>
-                                        {{-- Кнопки --}}
-                                        <div class="modal-footer d-flex justify-content-between">
-                                            <button type="submit" class="btn btn-primary">Добавить</button>
-                                            <button type="button" class="btn btn-secondary"
-                                                data-bs-dismiss="modal">Закрыть</button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
+                        <h4>Нет данных</h4>
                     @endif
 
                     <div class="mt-5">
@@ -634,65 +355,19 @@
                                     style="width:100%">
                                     <thead>
                                         <tr>
-                                            <th>№</th>
                                             <th>Наименование риска</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($project->calc_risks as $index => $risk)
                                             <tr>
-                                                <td>{{ $risk->id }}</td>
-                                                <td>{{ $risk->calcRisk_name }}</td>
+                                                <td>{{ $risk->calcRisk_name ?? '-'}}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>
                                 </table>
                             @else
-                                <h4>Нет данных для отображения</h4>
-                                <a href="#" data-bs-toggle="modal" data-bs-target="#addRisksModal"
-                                    class="btn btn-danger">
-                                    Добавить риски
-                                </a>
-                                {{-- ------------- ДОБАВЛЕНИЕ  риски ------------ --}}
-                                <div class="modal fade" id="addRisksModal" tabindex="-1"
-                                    aria-labelledby="addRisksModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <form id="addRisksForm" action="{{ route('addRisks', $project->id) }}"
-                                            method="post">
-                                            @csrf
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="addRisksModalLabel">Добавить риски
-                                                    </h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                        aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <div class="risks-add alert pt-3">
-                                                        <h4 class="text-center">Риски</h4>
-                                                        <div id="risks-inputs">
-                                                            <div class="form-group mb-3">
-                                                                <label for="riskName">Наименование риска:</label>
-                                                                <input type="riskName" class="form-control"
-                                                                    name="risks[0][riskName]" id="riskName"
-                                                                    placeholder="Введите наименование риска">
-                                                            </div>
-                                                        </div>
-                                                        <button id="addMore-risks" data-target="risks"
-                                                            class="btn btn-secondary addMore-button">Добавить еще
-                                                            риск</button>
-                                                    </div>
-                                                </div>
-                                                {{-- Кнопки --}}
-                                                <div class="modal-footer d-flex justify-content-between">
-                                                    <button type="submit" class="btn btn-primary">Добавить</button>
-                                                    <button type="button" class="btn btn-secondary"
-                                                        data-bs-dismiss="modal">Закрыть</button>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
+                                <h4>Нет данных </h4>
                             @endif
                         @endif
                     </div>
@@ -970,7 +645,7 @@
             validateAndSubmit();
         });
     });
-    
+
     $(document).ready(function() {
         // индесы для каждого из разделов
         let indices = {
@@ -1084,7 +759,7 @@
                             ${removeButton}
                     </div>`;
             case 'expenses': // Добавленный case для дополнительных расходов
-                    return `<div class="form-group mb-3 block" data-target="${target}" data-index="${index}">
+                return `<div class="form-group mb-3 block" data-target="${target}" data-index="${index}">
                         <label for="additionalExpense">Дополнительный расход:</label>
                         <input type="text" class="form-control" name="additional_expenses[]" id="additionalExpense"
                             placeholder="Введите дополнительный расход">
@@ -1099,5 +774,4 @@
         let index = $(this).data('index');
         $(`[data-target=${target}][data-index=${index}]`).remove();
     });
-    
 </script>

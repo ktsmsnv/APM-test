@@ -130,11 +130,27 @@ class ProjectController extends Controller
     {
         /* ---------------- РАСЧЕТ (ОБЩАЯ ИНФА И КОНТАКТ ЛИСТ) ----------------*/
 
-        // общая информация
+        // // общая информация
+        // $project = new Projects;
+        // // $project->projNum = $request->projNum;
+        // $project->projNum = $request->projNumPre . " " . $request->projNumSuf;
+        // $project->projNumSuf = $request->projNumSuf;
+
+        // Определение количества проектов в выбранной группе
+        $group = $request->projNumSuf;
+        $lastProjectInGroup = Projects::where('projNumSuf', $group)->orderBy('id', 'desc')->first();
+
+        // Определение номера проекта в пределах группы
+        $projectNumberInGroup = ($lastProjectInGroup) ? explode('-', $lastProjectInGroup->projNum)[0] + 1 : 1;
+
+        // Формирование номера проекта
+        $projectNumber = $projectNumberInGroup . '-' . $request->projNumPre . ' ' . $group;
+
+        // Создание записи проекта
         $project = new Projects;
-        // $project->projNum = $request->projNum;
-        $project->projNum = $request->projNumPre . " " . $request->projNumSuf;
-        $project->projNumSuf = $request->projNumSuf;
+        $project->projNum = $projectNumber;
+        $project->projNumSuf = $group;
+
         $project->projManager = $request->projManager;
         $project->objectName = $request->objectName;
         $project->endCustomer = $request->endCustomer;
