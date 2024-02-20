@@ -409,19 +409,34 @@ class ProjectController extends Controller
         }
         // риски
         if ($req->has('risk')) {
-            foreach ($req->input('risk') as $index => $risksData) {
-                $criteria = [
+            // Удаляем существующие риски проекта
+            CalcRisk::where('project_num', $project->projNum)->delete();
+        
+            $data_risks = [];
+            foreach ($req->input('risk') as $index => $riskData) {
+                $item = [
                     'project_num' => $project->projNum,
+                    'calcRisk_name' => $riskData['riskName'],
                 ];
-
-                $updateData = [
-                    'calcRisk_name' => $risksData['riskName'],
-                ];
-
-                // Не указываем идентификатор, пусть база данных сама назначит автоинкрементный идентификатор
-                CalcRisk::updateOrCreate($criteria, $updateData);
+                array_push($data_risks, $item);
             }
+            // Вставляем новые данные о рисках
+            CalcRisk::insert($data_risks);
         }
+        // if ($req->has('risk')) {
+        //     foreach ($req->input('risk') as $index => $risksData) {
+        //         $criteria = [
+        //             'project_num' => $project->projNum,
+        //         ];
+
+        //         $updateData = [
+        //             'calcRisk_name' => $risksData['riskName'],
+        //         ];
+
+        //         // Не указываем идентификатор, пусть база данных сама назначит автоинкрементный идентификатор
+        //         CalcRisk::updateOrCreate($criteria, $updateData);
+        //     }
+        // }
         return redirect()->route('project-data-one', ['id' => $project->id, 'tab' => '#calculation'])->with('success', 'Project data successfully updated');
     }
 
