@@ -200,6 +200,7 @@ class RegReestrKPController extends Controller
         $reestrKP->purchNum = $request->purchNum;
         $reestrKP->date = $request->date;
 
+        // Обработка замены файла word
         if ($request->hasFile('word_file')) {
             $wordFile = $request->file('word_file');
             $fileName = $wordFile->getClientOriginalName();
@@ -207,9 +208,6 @@ class RegReestrKPController extends Controller
 
             $reestrKP->word_file = $fileName;
             $reestrKP->original_file_name = $fileName;
-            $reestrKP->save();
-
-            return response()->json(['name' => $fileName]);
         }
 
         // Обработка загрузки дополнительных файлов
@@ -254,20 +252,34 @@ class RegReestrKPController extends Controller
                 }
             }
         }
-
-        // Редирект или возврат ответа в зависимости от вашей логики
-        return response()->json(['success' => true]);
+        // return response()->json(['success' => true]);
+        return redirect()->route('rco');
     }
 
-    public function deleteAdditionalFile($id) {
+    public function deleteAdditionalFile($id)
+    {
         // Находим запись дополнительного файла по ID
         $additionalFile = AdditionalFile::findOrFail($id);
-        
+
         // Удаление файла из базы данных
         $additionalFile->delete();
-    
+
         return response()->json(['success' => true]);
     }
+    // public function deleteWordFile($id)
+    // {
+    //     $reestrKP = RegReestrKP::findOrFail($id);
+
+    //     // Удаление файла из хранилища
+    //     // Storage::delete('word_files/' . $reestrKP->word_file);
+
+    //     // Удаление информации о файле из базы данных
+    //     $reestrKP->word_file = null;
+    //     $reestrKP->original_file_name = null;
+    //     $reestrKP->save();
+
+    //     return response()->json(['message' => 'Файл удален успешно']);
+    // }
 
     public function deleteKP($id)
     {

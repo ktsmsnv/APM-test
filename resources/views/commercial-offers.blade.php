@@ -137,6 +137,8 @@
                                         @if ($item->word_file)
                                             <a href="{{ route('download-kp', ['id' => $item->id]) }}" download
                                                 class="me-3" id="wordFileName">{{ $item->original_file_name }}</a>
+                                            {{-- <button type="button" class="btn btn-sm btn-danger"
+                                                id="deleteWordFileButton">Удалить файл</button> --}}
                                         @else
                                             Нет файла
                                         @endif
@@ -186,7 +188,9 @@
                                 <button type="submit" class="btn btn-primary">Сохранить изменения</button>
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
                             </div>
-                            <button type="button" class="btn btn-danger" id="deleteKPButton">Удалить КП</button>
+                            <a class="btn btn-xs btn-danger deleteKPButton" href="#" data-bs-toggle="modal"
+                                data-bs-target="#confirmDeleteKP" data-id="{{ $item->id }}">
+                                Удалить</a>
                             <input type="hidden" name="delete_offer" id="deleteOffer" value="0">
                         </div>
                     </div>
@@ -200,7 +204,8 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="confirmDeleteKPLabel">Подтверждение удаления КП</h5>
+                        <h5 class="modal-title" id="confirmDeleteKPLabel">Подтверждение удаления КП
+                            {{ $item->numIncoming }}</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -247,7 +252,7 @@
             });
 
 
-
+            // Передача данных
             $(document).on('click', '.editKPButton', function() {
                 var id = $(this).data('id');
                 var kpId = $(this).data('kp-id');
@@ -309,6 +314,7 @@
                 });
             });
 
+
             // Обработчик события изменения файла word
             $(document).on('change', '#wordFile', function() {
                 var file = this.files[0];
@@ -328,7 +334,7 @@
 
                 $.ajax({
                     url: '/reestr-kp/' + id,
-                    type: 'PUT',
+                    type: 'POST',
                     data: formData,
                     processData: false,
                     contentType: false,
@@ -340,6 +346,21 @@
                     }
                 });
             });
+            // Обработчик кнопки удаления файла word
+            // $(document).on('click', '#deleteWordFileButton', function() {
+            //     var id = $('#selectedRecordId').val();
+            //     $.ajax({
+            //         url: '/reestr-kp/delete-word-file/' + id,
+            //         type: 'DELETE',
+            //         success: function(response) {
+            //             $('#wordFileName').text('Нет файла');
+            //         },
+            //         error: function() {
+            //             alert('Ошибка при удалении файла');
+            //         }
+            //     });
+            // });
+
 
             // Обработчик события изменения дополнительного файла
             $(document).on('change', '.additionalFile', function() {
@@ -374,8 +395,6 @@
                     }
                 });
             });
-
-
             // Обработчик события для кнопки удаления дополнительного файла
             $(document).on('click', '.deleteFileButton', function() {
                 var fileId = $(this).data('file-id'); // Получаем ID файла
@@ -432,7 +451,8 @@
                     contentType: false,
                     success: function(response) {
                         // Обработка успешного ответа
-                        console.log(response);
+                        // console.log(response);
+                        window.location.href = '/register-commercial-offers';
                     },
                     error: function(xhr, status, error) {
                         // Обработка ошибок
@@ -442,6 +462,8 @@
             });
 
 
+
+            // Удаление кп
             let deleteItemId;
             // Получаем id КП при открытии модального окна
             $('#confirmDeleteKP').on('show.bs.modal', function(event) {

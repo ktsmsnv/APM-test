@@ -189,6 +189,7 @@
                                                 <th>Ед. изм.</th>
                                                 <th>Кол-во</th>
                                                 <th>Цена за ед. (руб. без НДС)</th>
+                                                <th></th>
                                             </tr>
                                         </thead>
                                         <tbody id="equipment-inputs">
@@ -207,6 +208,7 @@
                                                 <td><input type="text" class="form-control"
                                                         name="equipment[0][priceUnit]" id="priceUnit"
                                                         placeholder="Введите цену за ед."></td>
+                                                <td></td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -275,7 +277,7 @@
                             </div>
                             <button type="button" class="btn btn-secondary addMore-button" id="addMore-expenses"
                                 data-target="expenses">
-                                Добавить дополнительный расход
+                                Добавить еще дополнительный расход
                             </button>
                         </div>
                         {{-- Итого --}}
@@ -406,7 +408,7 @@
                             </div>
                             <div class="form-group mb-3">
                                 <label for="date">Дата:</label>
-                                <input type="text" class="form-control" name="offer[0][date]" id="date"
+                                <input type="date" class="form-control" name="offer[0][date]" id="date"
                                     value="{{ date('Y-m-d') }}">
                             </div>
                             <div class="form-group mb-3">
@@ -494,26 +496,6 @@
             $('a[data-toggle="tab"]').on("click", function() {
                 const tabId = $(this).attr("aria-controls");
                 loadTabContent(tabId, '{{ $project->id }}'); // Pass both tabId and projectId
-            });
-
-
-            // При нажатии на кнопку "Добавить дополнительный расход"
-            $("#addMore-expenses").click(function() {
-                // Генерируем HTML для нового поля ввода
-                var html = `<div class="form-group mb-3">
-                        <label for="additional_expense">Дополнительный расход:</label>
-                        <input type="text" class="form-control" name="additional_expenses[]" placeholder="Введите дополнительный расход">
-                        <button type="button" class="btn btn-danger remove-expense">Удалить</button>
-                    </div>`;
-
-                // Добавляем новое поле ввода в конец контейнера
-                $("#expenses-inputs").append(html);
-            });
-
-            // При нажатии на кнопку "Удалить"
-            $(document).on("click", ".remove-expense", function() {
-                // Удаляем родительский элемент
-                $(this).parent().remove();
             });
         });
     </script>
