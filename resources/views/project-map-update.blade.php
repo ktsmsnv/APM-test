@@ -235,7 +235,7 @@
                             </h2>
                             <div id="equipment-collapseTwo" class="accordion-collapse collapse"
                                 aria-labelledby="equipment-headingTwo">
-                                <div class="accordion-body">
+                                <div class="accordion-body input-field">
                                     <table id="equipment-datatable" class="display nowrap projMap" style="width:100%">
                                         <thead>
                                             <tr>

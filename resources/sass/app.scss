@@ -18,7 +18,8 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   background-color: #005aa50f !important;
-  
+  // background-image: url(/storage/apm_back.jpg);
+  background-image: url(http://apmtest.kst-energo.ru/storage/apm_back.jpg);
 }
 .navbar.bg-white {
   --bs-bg-opacity: 1;
@@ -513,4 +514,8 @@ column-gap: 8rem;
   padding: 2rem;
   box-shadow: -6px 1px 15px 7px rgba(34, 60, 80, 0.2);
 }
+}
+
+td.red-cell {
+  background-color: #4b72ad87!important;
 }
