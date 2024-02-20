@@ -71,7 +71,7 @@ class realizationController extends Controller
         // Состав рабочей группы и ответственность
         $workGroup = new workGroup;
             $workGroup->project_num = $project->projNum;
-            $workGroup->projCurator = $request->projCurator;
+            $workGroup->projCurator = $request->projCurator2;
             $workGroup->projDirector = $request->projDirector;
             $workGroup->techlid = $request->techlid;
             $workGroup->production = $request->production;

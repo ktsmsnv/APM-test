@@ -162,7 +162,7 @@
                             <tr>
                                 <td>Куратор проекта</td>
                                 <td>
-                                     <input type="text" class="form-control" name="projCurator" id="projCurator"
+                                     <input type="text" class="form-control" name="projCurator2" id="projCurator2"
                                     placeholder="Введите куратора проекта">
                                 </td>
                                 <td> Стратегическое управление проектом. <br>

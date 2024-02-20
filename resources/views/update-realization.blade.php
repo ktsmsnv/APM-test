@@ -78,7 +78,7 @@
                                             <th>Куратор проекта/Руководитель направления</th>
                                             <td colspan="3">
                                                 <div class="col-3">
-                                                    <input type="text" name="projCurator2"
+                                                    <input type="text" name="projCurator"
                                                         value="{{ $item->projCurator }}" class="input_editable">
                                                 </div>
                                             </td>
@@ -205,7 +205,7 @@
                                             <td>Куратор проекта</td>
                                             <td>
                                                 <div class="col-3">
-                                                    <input type="text" name="projCurator"
+                                                    <input type="text" name="projCurator2"
                                                         value="{{ $item->projCurator }}" class="input_editable">
                                                 </div>
                                             </td>

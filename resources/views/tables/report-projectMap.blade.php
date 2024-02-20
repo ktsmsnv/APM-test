@@ -41,8 +41,8 @@
                     </tr>
                     <tr>
                         <th class="costContract blue">Стоимость по контракту:</th>
-                        <td class="gray">{{$project->basicInfo->first()->contract_price  }}</td>
-                        <td class="gray">{{$project->basicInfo->first()->contract_price * 1.2 }}</td>
+                        <td class="gray">{{ $project->basicInfo->first()->contract_price }}</td>
+                        <td class="gray">{{ $project->basicInfo->first()->contract_price * 1.2 }}</td>
                     </tr>
                     <tr>
                         <td class="blue"></td>
@@ -378,7 +378,8 @@
                                         <tr>
                                             <th class="costContract blue">Стоимость по контракту:</th>
                                             <td class="gray"><input type="text" class="form-control"
-                                                    name="costRub" id="costRub_change" value="{{ $project->basicInfo->first()->contract_price }}">
+                                                    name="costRub" id="costRub_change"
+                                                    value="{{ $project->basicInfo->first()->contract_price }}">
                                             </td>
                                             <td class="gray"><input type="text" class="form-control"
                                                     name="costRubW" id="costRubW_change"
@@ -513,10 +514,10 @@
                                             <textarea type="text" class="form-control" name="projNotes" id="projNotes_change"
                                                 placeholder="Введите примечания к проекту">
                                                 @if ($project && $project->report_notes->first())
-{{ $project->report_notes->first()->projNotes }}
-@else
-нет записей
-@endif
+                                                        {{ $project->report_notes->first()->projNotes }}
+                                                        @else
+                                                        нет записей
+                                                        @endif
                                             </textarea>
                                         </td>
                                     </tr>
@@ -638,10 +639,10 @@
                                             <textarea type="text" class="form-control" name="teamNotes" id="teamNotes_change"
                                                 placeholder="Введите примечания к команде проекта">
                                                 @if ($project && $project->report_notes->first())
-{{ $project->report_notes->first()->teamNotes }}
-@else
-нет записей
-@endif
+                                                {{ $project->report_notes->first()->teamNotes }}
+                                                @else 
+                                                нет записей
+                                                @endif
                                             </textarea>
                                         </td>
                                     </tr>
@@ -748,10 +749,10 @@
                                             <textarea type="text" class="form-control" name="resume" id="resume" placeholder=""Введите общее резюме по
                                                 проекту">
                                                 @if ($project && $project->report_notes->first())
-{{ $project->report_notes->first()->resume }}
-@else
-нет записей
-@endif
+                                                {{ $project->report_notes->first()->resume }}
+                                                @else
+                                                нет записей
+                                                @endif
                                             </textarea>
                                         </td>
                                     </tr>
@@ -870,7 +871,7 @@
                 .on('input', calculateAndUpdateFields);
         });
     </script>
-@elseif($project && $project->totals && $project->totals->isEmpty())    
+@elseif($project && $project->totals && $project->totals->isEmpty())
     <p>Для добавления отчета необходимо заполнить "Расчет" полностью.</p>
     <a href="#" data-bs-toggle="modal" data-bs-target="#addContinueModal" class="btn btn-danger mb-4">
         Продолжить заполнение расчета
@@ -1182,8 +1183,8 @@
                                     </tr>
                                     <tr>
                                         <th class="projContractor gray">Контрагент:</th>
-                                        <td colspan="2" class="gray"><input type="text" class="form-control"
-                                                value="{{ $project->contractor }}" readonly>
+                                        <td colspan="2" class="gray"><input type="text"
+                                                class="form-control" value="{{ $project->contractor }}" readonly>
                                         </td>
                                     </tr>
                                     <tr>
