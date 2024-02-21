@@ -49,7 +49,7 @@
                                 </td>
                                 <td>
                                     @php
-                                        $additionalFiles = $item->additionalFiles; // Получаем дополнительные файлы для текущей записи
+                                        $additionalFiles = $item->additionalFiles; 
                                     @endphp
                                     @if ($additionalFiles->count() > 0)
                                         <ul>
