@@ -34,7 +34,6 @@ class ProjectController extends Controller
     // Отображение списка всех проектов на странице карты проекта
     public function allData()
     {
-        // dd(Contact::all());
         // $projects = new Projects;
         $projects = Projects::paginate(3);
         return view('all-maps', ['data' => $projects]);

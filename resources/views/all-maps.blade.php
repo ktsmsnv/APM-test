@@ -26,7 +26,6 @@
                                 class="btn btn-outline-primary">Детальнее</button></a>
                     </div>
                 @endforeach
-                {{-- Pagination --}}
                 <div class="d-flex justify-content-center">
                     {!! $data->links() !!}
                 </div>
