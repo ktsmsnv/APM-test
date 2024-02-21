@@ -41,6 +41,23 @@ class RegReestrKPController extends Controller
         return view('project-map', compact('numIncoming'));
     }
 
+    public function updateNote($id)
+    {
+        // Получаем данные из запроса
+        $data = request()->all();
+
+        // Находим запись по идентификатору
+        $record = RegReestrKP::find($id);
+
+        // Обновляем значение поля "Примечания"
+        $record->update([
+            $data['field'] => $data['value']
+        ]);
+
+        // Отправляем ответ в формате JSON
+        return response()->json(['message' => 'Note updated successfully']);
+    }
+
     // ----------------------- ДОБАВЛЕНИЕ КП --------------------------------------------
     public function store(Request $request)
     {
