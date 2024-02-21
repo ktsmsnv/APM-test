@@ -6,7 +6,8 @@
             <h3>{{ $el->projNum }}</h3>
             <p>{{ $el->projManager }}</p>
             <p><small>{{ $el->objectName }}</small></p>
-            <a href="{{ route('project-data-one', $el->id) }}"><button class="btn btn-warning">Детальнее</button></a>
+            <a href="{{ route('project-data-one', $el->id) }}"><button class="btn btn-outline-primary">Детальнее</button></a>
         </div>
     @endforeach
+
 @endif
