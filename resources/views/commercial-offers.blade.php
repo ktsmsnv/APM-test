@@ -397,6 +397,7 @@
             });
             // Обработчик события для кнопки удаления дополнительного файла
             $(document).on('click', '.deleteFileButton', function() {
+                event.preventDefault(); 
                 var fileId = $(this).data('file-id'); // Получаем ID файла
                 // Отправляем запрос на сервер для удаления файла
                 $.ajaxSetup({
@@ -410,7 +411,8 @@
                     type: 'DELETE',
                     success: function(response) {
                         // Скрываем файл на клиентской стороне
-                        $('#additionalFileName_' + fileId).hide();
+                        // $('#additionalFileName_' + fileId).hide();
+                        $('#additionalFileName_' + fileId).closest('li').remove(); // Удаляем соответствующий элемент из DOM
                     },
                     error: function() {
                         alert('Ошибка при удалении файла');

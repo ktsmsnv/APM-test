@@ -9,6 +9,12 @@ use Illuminate\Support\Facades\Log;
 
 class BaseRisksController extends Controller
 {
+    public function getBaseRisk($id)
+    {
+        $baseRisk = baseRisks::find($id);
+        return response()->json($baseRisk);
+    }
+
     public function index()
     {
         $baseRisks = baseRisks::all();
@@ -43,27 +49,26 @@ class BaseRisksController extends Controller
     {
         $itemId = $request->input('editItemId');
         $baseRisks = baseRisks::find($itemId);
-    
+
         $baseRisks->nameRisk = $request->input('nameRisk');
-    
+
         // Парсим JSON-строку, если она не является массивом
         $reasonRiskData = $request->input('reason_risk_edit');
-        $baseRisks->reasonRisk = json_encode(array_map(fn($reason) => ['reasonRisk' => $reason], $reasonRiskData));
-    
+        $baseRisks->reasonRisk = json_encode(array_map(fn ($reason) => ['reasonRisk' => $reason], $reasonRiskData));
+
         $conseqRiskData = $request->input('conseq_risk_edit');
-        $baseRisks->conseqRiskOnset = json_encode(array_map(fn($conseq) => ['conseqRiskOnset' => $conseq], $conseqRiskData));
-    
+        $baseRisks->conseqRiskOnset = json_encode(array_map(fn ($conseq) => ['conseqRiskOnset' => $conseq], $conseqRiskData));
+
         $counteringRiskData = $request->input('countering_risk_edit');
-        $baseRisks->counteringRisk = json_encode(array_map(fn($countering) => ['counteringRisk' => $countering], $counteringRiskData));
-    
+        $baseRisks->counteringRisk = json_encode(array_map(fn ($countering) => ['counteringRisk' => $countering], $counteringRiskData));
+
         $measuresRiskData = $request->input('measures_risk_edit');
-        $baseRisks->riskManagMeasures = json_encode(array_map(fn($measures) => ['riskManagMeasures' => $measures], $measuresRiskData));
-    
+        $baseRisks->riskManagMeasures = json_encode(array_map(fn ($measures) => ['riskManagMeasures' => $measures], $measuresRiskData));
+
         $baseRisks->term = $request->input('term');
-    
+
         $baseRisks->save();
-    
+
         return redirect()->route('baseRisks')->with('success', 'Record updated successfully');
     }
-
 }
