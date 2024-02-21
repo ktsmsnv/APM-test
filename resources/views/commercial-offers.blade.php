@@ -34,7 +34,11 @@
                                 <td>{{ $item->sender }}</td>
                                 <td>{{ $item->amountNDS }}</td>
                                 <td>{{ $item->purchNum }}</td>
-                                <td>{{ $item->note }}</td>
+                                {{-- <td>
+                                    {{ $item->note }}
+                                </td> --}}
+                                <td class="editable" data-field="note" data-id="{{ $item->id }}" contenteditable>
+                                    {{ $item->note }}</td>
                                 <td>
                                     @if ($item->word_file)
                                         <a href="{{ route('download-kp', ['id' => $item->id]) }}"
@@ -45,7 +49,7 @@
                                 </td>
                                 <td>
                                     @php
-                                        $additionalFiles = $item->additionalFiles; // Получаем дополнительные файлы для текущей записи
+                                        $additionalFiles = $item->additionalFiles; 
                                     @endphp
                                     @if ($additionalFiles->count() > 0)
                                         <ul>
@@ -397,7 +401,7 @@
             });
             // Обработчик события для кнопки удаления дополнительного файла
             $(document).on('click', '.deleteFileButton', function() {
-                event.preventDefault(); 
+                event.preventDefault();
                 var fileId = $(this).data('file-id'); // Получаем ID файла
                 // Отправляем запрос на сервер для удаления файла
                 $.ajaxSetup({
@@ -412,7 +416,8 @@
                     success: function(response) {
                         // Скрываем файл на клиентской стороне
                         // $('#additionalFileName_' + fileId).hide();
-                        $('#additionalFileName_' + fileId).closest('li').remove(); // Удаляем соответствующий элемент из DOM
+                        $('#additionalFileName_' + fileId).closest('li')
+                            .remove(); // Удаляем соответствующий элемент из DOM
                     },
                     error: function() {
                         alert('Ошибка при удалении файла');
@@ -490,6 +495,45 @@
                     }
                 });
                 $('#confirmDeleteKP').modal('hide');
+            });
+
+
+            // Получаем все ячейки с классом "editable"
+            const editableCells = document.querySelectorAll('.editable');
+
+            // Добавляем обработчик событий для каждой ячейки
+            editableCells.forEach(cell => {
+                cell.addEventListener('blur', function() {
+                    const id = this.getAttribute('data-id'); // Получаем идентификатор записи
+                    const field = this.getAttribute('data-field'); // Получаем название поля
+                    const value = this.innerText.trim(); // Получаем значение из ячейки
+
+                    // Отправляем данные на сервер с помощью AJAX
+                    fetch(`/update-note/${id}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}' // Добавляем токен CSRF для защиты от CSRF атак
+                            },
+                            body: JSON.stringify({
+                                field: field,
+                                value: value
+                            })
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            console.log(data);
+                        })
+                        .catch(error => {
+                            console.error('There has been a problem with your fetch operation:',
+                                error);
+                        });
+                });
             });
 
         });
