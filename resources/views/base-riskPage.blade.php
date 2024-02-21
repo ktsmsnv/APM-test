@@ -60,7 +60,7 @@
                                 <a class="editProduct btn btn-xs btn-info" href="#" data-bs-toggle="modal"
                                     data-bs-target="#editBaseRisks" data-id="{{ $item->id }}"><i
                                         class="fa-solid fa-edit"></i></a>
-                                <a class="deleteProduct btn btn-xs btn-danger" href="#" data-bs-toggle="modal"
+                                <a class="deleteProduct btn btn-xs btn-danger" data-bs-toggle="modal"
                                     data-bs-target="#confirmationModal" data-id="{{ $item->id }}"><i
                                         class="fa-solid fa-trash-can"></i></a>
                             </div>
@@ -150,8 +150,8 @@
     <div class="modal fade" id="editBaseRisks" tabindex="-1" role="dialog" aria-labelledby="editBaseRisksLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-            <form id="editBaseRisksForm" action="{{ route('baseRisks-update', ['id' => $item->id]) }}"
-                method="post">
+            {{-- <form id="editBaseRisksForm" action="{{ route('baseRisks-update', ['id' => $item->id]) }}" method="post"> --}}
+            <form id="editBaseRisksForm" method="post" action="">
                 @csrf
                 <div class="modal-content">
                     <div class="modal-header">
@@ -271,8 +271,8 @@
                     targets: 0
                 }
             ],
-            pageLength: 15,
-            lengthMenu: [15, 25, 35, 45, 100, -1],
+            pageLength: 5,
+            lengthMenu: [5, 25, 35, 45, 100, -1],
             language: {
                 search: 'Поиск:',
                 info: 'Показано с _START_ по _END_ из _TOTAL_ записей',
@@ -379,52 +379,76 @@
 
     // вывод значений записи для редактирования риска
     $(document).ready(function() {
-        $('.editProduct').click(function() {
+        $('.editProduct').click(function(event) {
             event.preventDefault();
             var itemId = $(this).data('id');
-            var itemData = $('[data-id="' + itemId + '"]');
-
             var modalIdRisks = '#editBaseRisks';
-            var formActionRisks = '/base-risks/baseRisks-update/' + itemId;
+            var formActionRisks = '{{ route('baseRisks-update', ['id' => ':id']) }}'.replace(':id',
+                itemId);
 
             $(modalIdRisks + ' #editItemId').val(itemId);
             $(modalIdRisks + ' #editBaseRisksForm').attr('action', formActionRisks);
 
-            $(modalIdRisks + ' #nameRiskEdit').val(itemData.find('[data-label="nameRisk"]').text());
-            $(modalIdRisks + ' #term_Edit').val(itemData.find('[data-label="term"]').text());
 
-            var reasonRiskInputs = '';
-            itemData.find('[data-label="reasonRisk"] li').each(function(index) {
-                reasonRiskInputs +=
-                    '<input type="text" class="form-control mb-2" name="reason_risk_edit[]" value="' +
-                    $(this).text() + '" placeholder="Введите причину риска">';
-            });
-            $(modalIdRisks + ' #reasonRiskEdit').html(reasonRiskInputs);
+            // Отправляем AJAX-запрос для получения данных из базы данных
+            $.ajax({
+                url: '/get-base-risk/' + itemId,
+                type: 'GET',
+                success: function(response) {
+                    console.log(itemId);
+                    $(modalIdRisks + ' #nameRiskEdit').val(response.nameRisk);
+                    $(modalIdRisks + ' #term_Edit').val(response.term);
 
-            var conseqRiskInputs = '';
-            itemData.find('[data-label="conseqRiskOnset"] li').each(function(index) {
-                conseqRiskInputs +=
-                    '<input type="text" class="form-control mb-2" name="conseq_risk_edit[]" value="' +
-                    $(this).text() + '" placeholder="Введите последствия наступления риска">';
-            });
-            $(modalIdRisks + ' #conseqRiskOnsetEdit').html(conseqRiskInputs);
+                    // Преобразуем строки JSON в массивы объектов для каждого поля
+                    var reasonRiskData = JSON.parse(response.reasonRisk);
+                    var conseqRiskData = JSON.parse(response.conseqRiskOnset);
+                    var counteringRiskData = JSON.parse(response.counteringRisk);
+                    var measuresRiskData = JSON.parse(response.riskManagMeasures);
 
-            var counteringRiskInputs = '';
-            itemData.find('[data-label="counteringRisk"] li').each(function(index) {
-                counteringRiskInputs +=
-                    '<input type="text" class="form-control mb-2" name="countering_risk_edit[]" value="' +
-                    $(this).text() + '" placeholder="Введите противодействие риску">';
-            });
-            $(modalIdRisks + ' #counteringRiskEdit').html(counteringRiskInputs);
+                    // Добавляем причины риска
+                    var reasonRiskInputs = '';
+                    $.each(reasonRiskData, function(index, reason) {
+                        reasonRiskInputs +=
+                            '<input type="text" class="form-control mb-2" name="reason_risk_edit[]" value="' +
+                            reason.reasonRisk +
+                            '" placeholder="Введите причину риска">';
+                    });
+                    $(modalIdRisks + ' #reasonRiskEdit').html(reasonRiskInputs);
 
-            var measuresRiskInputs = '';
-            itemData.find('[data-label="riskManagMeasures"] li').each(function(index) {
-                measuresRiskInputs +=
-                    '<input type="text" class="form-control mb-2" name="measures_risk_edit[]" value="' +
-                    $(this).text() +
-                    '" placeholder="Введите мероприятия при осуществлении риска">';
+                    // Добавляем последствия наступления риска
+                    var conseqRiskInputs = '';
+                    $.each(conseqRiskData, function(index, conseq) {
+                        conseqRiskInputs +=
+                            '<input type="text" class="form-control mb-2" name="conseq_risk_edit[]" value="' +
+                            conseq.conseqRiskOnset +
+                            '" placeholder="Введите последствия наступления риска">';
+                    });
+                    $(modalIdRisks + ' #conseqRiskOnsetEdit').html(conseqRiskInputs);
+
+                    // Добавляем противодействие риску
+                    var counteringRiskInputs = '';
+                    $.each(counteringRiskData, function(index, countering) {
+                        counteringRiskInputs +=
+                            '<input type="text" class="form-control mb-2" name="countering_risk_edit[]" value="' +
+                            countering.counteringRisk +
+                            '" placeholder="Введите противодействие риску">';
+                    });
+                    $(modalIdRisks + ' #counteringRiskEdit').html(counteringRiskInputs);
+
+                    // Добавляем мероприятия при осуществлении риска
+                    var measuresRiskInputs = '';
+                    $.each(measuresRiskData, function(index, measure) {
+                        measuresRiskInputs +=
+                            '<input type="text" class="form-control mb-2" name="measures_risk_edit[]" value="' +
+                            measure.riskManagMeasures +
+                            '" placeholder="Введите мероприятия при осуществлении риска">';
+                    });
+                    $(modalIdRisks + ' #riskManagMeasuresEdit').html(measuresRiskInputs);
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                }
             });
-            $(modalIdRisks + ' #riskManagMeasuresEdit').html(measuresRiskInputs);
 
             $(modalIdRisks).modal('show');
         });

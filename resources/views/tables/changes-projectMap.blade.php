@@ -65,7 +65,7 @@
                 @method('put')
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="editChangesLabel">Редактирование изменений</h5>
+                        <h5 class="modal-title" id="editChangesLabel">Редактирование изменений"</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -132,17 +132,12 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
-                    <button type="button" class="btn btn-danger" id="confirmDeleteChanges"
+                    <button type="button" class="btn btn-danger" id="confirmDelete_Changes"
                         data-id="{{ $item->id }}">Удалить</button>
                 </div>
             </div>
         </div>
     </div>
-@elseif($project && $project->totals && $project->totals->isEmpty())    
-    <p>Для добавления изменений необходимо заполнить "Расчет" полностью.</p>
-    <a href="#" data-bs-toggle="modal" data-bs-target="#addContinueModal" class="btn btn-danger mb-4">
-        Продолжить заполнение расчета
-    </a>
 @elseif (!$project->changes()->exists() && !$project->basicReference()->exists())
     {{-- если отчета и реализации нет --}}
     <h4 class="mb-3">Заполните сначала реализацию</h4>
@@ -188,13 +183,8 @@
         });
 
         // Подтверждение удаления
-        let itemIdToDelete;
-        $('#confirmationModalChanges').on('show.bs.modal', function(event) {
-            itemIdToDelete = $(event.relatedTarget).data('id');
-            projId = $(".modalId").data('id');
-        });
-
-        $('#confirmDeleteChanges').click(function() {
+        $(document).on('click', '#confirmDelete_Changes', function() {
+            itemIdToDelete = $(this).data('id');
             console.log('Item ID to delete:', itemIdToDelete);
             $.ajax({
                 method: 'GET',
@@ -203,10 +193,8 @@
                     toastr.success('Запись была удалена', 'Успешно');
                     let projectId = data.projectId;
                     setTimeout(function() {
-                        // window.location.reload(1);
-                        window.location.href =
-                            `/project-maps/all/${projId}/#changes`;
-                    }, 2000);
+                        window.location.reload();
+                    }, 1600);
                 },
                 error: function(error) {
                     if (error.responseText) {

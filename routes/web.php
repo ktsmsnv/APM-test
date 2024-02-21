@@ -76,6 +76,8 @@ Route::middleware(['auth'])->group(function () {
     // редактирование записи в базе рисков
     Route::post('/base-risks/baseRisks-update/{id}', 'App\Http\Controllers\BaseRisksController@update')->name('baseRisks-update');
 
+    Route::get('/get-base-risk/{id}', 'App\Http\Controllers\BaseRisksController@getBaseRisk');
+
 
     //создание новой записи в базе рисков
     Route::post('/base-risks/basePossibilities-store', 'App\Http\Controllers\BasePossibilitiesController@store')->name('basePossibilities-store');
