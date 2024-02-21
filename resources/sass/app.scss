@@ -14,6 +14,7 @@
   --black1: #222;
   --black2: #999;
 }
+
 body {
   min-height: 100vh;
   overflow-x: hidden;
@@ -519,7 +520,6 @@ column-gap: 8rem;
 td.red-cell {
   background-color: #4b72ad87!important;
 }
-
 .pagination {
   --bs-pagination-bg: #ffffffa8!important;
   --bs-pagination-disabled-bg: #ffffffa8!important;
