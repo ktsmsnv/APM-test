@@ -19,11 +19,11 @@
     {{-- @vite(['resources/sass/app.scss', 'resources/js/app.js']) --}}
     @vite(['resources/sass/app.scss'])
 
-    <!-- Используйте base_url() для генерации абсолютного URL -->
+    {{-- <!-- Используйте base_url() для генерации абсолютного URL -->
     <link rel="stylesheet" href="{{ asset('storage/sass/app.scss') }}">
 
     <!-- Или для скриптов -->
-    <script src="{{ asset('storage/js/app.js') }}"></script>
+    <script src="{{ asset('storage/js/app.js') }}"></script> --}}
 
     <!-- Подключение скриптов DataTables и их плагинов -->
     <script src="https://code.jquery.com/jquery-3.7.0.js"></script>

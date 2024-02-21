@@ -19,7 +19,7 @@ body {
   overflow-x: hidden;
   background-color: #005aa50f !important;
   // background-image: url(/storage/apm_back.jpg);
-  background-image: url(http://apmtest.kst-energo.ru/storage/apm_back.jpg);
+  background-image: url(https://apmtest.kst-energo.ru/storage/apm_back.jpg);
 }
 .navbar.bg-white {
   --bs-bg-opacity: 1;
@@ -84,7 +84,7 @@ h3 {
 
 
 main {
-  padding: 140px 0 20px;
+  padding: 110px 0 20px;
 }
 .container {
   position: relative;
@@ -96,7 +96,7 @@ main {
 
 
 .login__page {
-  background-image: url(/storage/apm_back.jpg);
+  // background-image: url(/storage/apm_back.jpg);
   backdrop-filter: brightness(0.5);
   .card {
     padding: 2rem;
@@ -518,4 +518,9 @@ column-gap: 8rem;
 
 td.red-cell {
   background-color: #4b72ad87!important;
+}
+
+.pagination {
+  --bs-pagination-bg: #ffffffa8!important;
+  --bs-pagination-disabled-bg: #ffffffa8!important;
 }

@@ -35,8 +35,9 @@ class ProjectController extends Controller
     public function allData()
     {
         // dd(Contact::all());
-        $projects = new Projects;
-        return view('all-maps', ['data' => $projects->all()]);
+        // $projects = new Projects;
+        $projects = Projects::paginate(3);
+        return view('all-maps', ['data' => $projects]);
     }
 
     // Отображение одного проекта и связанных данных (отображает данные по id) на странице карты проекта
