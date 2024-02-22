@@ -500,20 +500,17 @@
 
             // Получаем все ячейки с классом "editable"
             const editableCells = document.querySelectorAll('.editable');
-
             // Добавляем обработчик событий для каждой ячейки
             editableCells.forEach(cell => {
                 cell.addEventListener('blur', function() {
                     const id = this.getAttribute('data-id'); // Получаем идентификатор записи
                     const field = this.getAttribute('data-field'); // Получаем название поля
                     const value = this.innerText.trim(); // Получаем значение из ячейки
-
-                    // Отправляем данные на сервер с помощью AJAX
                     fetch(`/update-note/${id}`, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}' // Добавляем токен CSRF для защиты от CSRF атак
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}' /
                             },
                             body: JSON.stringify({
                                 field: field,
@@ -522,7 +519,7 @@
                         })
                         .then(response => {
                             if (!response.ok) {
-                                throw new Error('Network response was not ok');
+                                throw new Error('Ошибка сохранения');
                             }
                             return response.json();
                         })
@@ -530,8 +527,7 @@
                             console.log(data);
                         })
                         .catch(error => {
-                            console.error('There has been a problem with your fetch operation:',
-                                error);
+                            console.error('Ошибка:',error);
                         });
                 });
             });
