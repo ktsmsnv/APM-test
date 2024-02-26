@@ -10,7 +10,7 @@
             <thead>
                 <tr>
                     <th>№</th>
-                    <th>Наименование риска</th>
+                    <th>Наименование 111риска</th>
                     <th>Причина риска</th>
                     <th>Последствия наступления риска</th>
                     <th>Противодействие риску</th>
@@ -304,7 +304,7 @@
             countering_risk: 1,
             measures_risk: 1
         };
-        /* при нажатии на кнопки определяем какой у нас target и взависимости от него добавляет HTML, 
+        /* при нажатии на кнопки определяем какой у нас target и взависимости от него добавляет HTML,
            возвращенный функцией getHtml, в соответствующую секцию */
         $(".addMore-button").click(function(event) {
             event.preventDefault();
@@ -376,7 +376,6 @@
             $('#confirmationModal').modal('hide');
         });
     });
-
     // вывод значений записи для редактирования риска
     $(document).ready(function() {
         $('.editProduct').click(function(event) {
