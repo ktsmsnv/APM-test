@@ -38,8 +38,7 @@
 
                     <div class="tab-content" id="myTabContent">
                         <!-- Содержимое первой вкладки -->
-                        <div class="tab-pane fade show active" id="SInteg" role="tabpanel"
-                            aria-labelledby="SInteg-tab">
+                        <div class="tab-pane fade show active" id="SInteg" role="tabpanel" aria-labelledby="SInteg-tab">
                             <div class="card-body">
                                 <table id="equipment-datatable-SInteg" class="display nowrap table" style="width:100%">
                                     <thead>
@@ -111,7 +110,8 @@
                                                 {{-- <td>{{ $item->area }}</td> --}}
                                                 <td>{{ date('d.m.Y', strtotime($item->receiptDate)) }}</td>
                                                 {{-- <td>{{ date('d.m.Y', strtotime($item->submissionDate)) }}</td> --}}
-                                                <td>{{ $item->submissionDate ? date('d.m.Y', strtotime($item->submissionDate)) : '-' }}</td>
+                                                <td>{{ $item->submissionDate ? date('d.m.Y', strtotime($item->submissionDate)) : '-' }}
+                                                </td>
                                                 <td>{{ $item->projectManager }}</td>
                                                 {{-- <td>{{ $item->tech }}</td>
                                                 <td>{{ $item->primeCost }}</td>
@@ -189,14 +189,15 @@
                                                 <td class="{{ $item->smr == 1 ? 'red-cell' : '' }}">
                                                     {{-- {{ $item->smr }} --}}
                                                 </td>
-                                                
+
                                                 <td>{{ $item->purchaseOrg }}</td>
                                                 <td>{{ $item->endUser }}</td>
                                                 <td>{{ $item->object }}</td>
                                                 {{-- <td>{{ $item->area }}</td> --}}
                                                 <td>{{ date('d.m.Y', strtotime($item->receiptDate)) }}</td>
                                                 {{-- <td>{{ date('d.m.Y', strtotime($item->submissionDate)) }}</td> --}}
-                                                <td>{{ $item->submissionDate ? date('d.m.Y', strtotime($item->submissionDate)) : '-' }}</td>
+                                                <td>{{ $item->submissionDate ? date('d.m.Y', strtotime($item->submissionDate)) : '-' }}
+                                                </td>
                                                 <td>{{ $item->projectManager }}</td>
                                                 {{-- <td>{{ $item->tech }}</td>
                                                 <td>{{ $item->primeCost }}</td>
@@ -282,7 +283,8 @@
                                                 {{-- <td>{{ $item->area }}</td> --}}
                                                 <td>{{ date('d.m.Y', strtotime($item->receiptDate)) }}</td>
                                                 {{-- <td>{{ date('d.m.Y', strtotime($item->submissionDate)) }}</td> --}}
-                                                <td>{{ $item->submissionDate ? date('d.m.Y', strtotime($item->submissionDate)) : '-' }}</td>
+                                                <td>{{ $item->submissionDate ? date('d.m.Y', strtotime($item->submissionDate)) : '-' }}
+                                                </td>
                                                 <td>{{ $item->projectManager }}</td>
                                                 {{-- <td>{{ $item->tech }}</td>
                                                 <td>{{ $item->primeCost }}</td>
@@ -369,7 +371,8 @@
                                                 {{-- <td>{{ $el->area }}</td> --}}
                                                 <td>{{ date('d.m.Y', strtotime($item->receiptDate)) }}</td>
                                                 {{-- <td>{{ date('d.m.Y', strtotime($item->submissionDate)) }}</td> --}}
-                                                <td>{{ $item->submissionDate ? date('d.m.Y', strtotime($item->submissionDate)) : '-' }}</td>
+                                                <td>{{ $item->submissionDate ? date('d.m.Y', strtotime($item->submissionDate)) : '-' }}
+                                                </td>
                                                 <td>{{ $item->projectManager }}</td>
                                                 {{-- <td>{{ $el->tech }}</td>
                                                 <td>{{ $el->primeCost }}</td>
@@ -387,20 +390,22 @@
             </div>
         </div>
     </div>
-    
+
     <script>
         $(document).ready(function() {
             // Инициализируются настройки открытой вкладки с таблицой
             $('#equipment-datatable-SInteg').DataTable({
                 retrieve: true,
                 responsive: true,
-                rowReorder: {
-                    selector: 'td:nth-child(2)'
-                },
                 columnDefs: [{
-                    width: "10%",
-                    targets: 0
-                }],
+                        width: "10%",
+                        targets: 0
+                    }, // Первый столбец
+                    {
+                        width: "20%",
+                        targets: 1
+                    }, // Второй столбец
+                ],
                 pageLength: 15, // Количество записей на странице по умолчанию
                 lengthMenu: [15, 35, 50, 100, -1], // Выбор количества записей
                 language: {
