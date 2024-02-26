@@ -33,7 +33,7 @@
                 <h4 style="color: white;">Нет карт проекта</h4>
             @endif
         </div>
-        
+
     </div>
 
     <script>
@@ -46,8 +46,33 @@
                     data: {
                         search: searchText
                     },
-                    success: function(data) {
-                        $("#resultsContainer").html(data);
+                    success: function(response) {
+                        $("#resultsContainer").html(
+                        response); // Обновляем контейнер с результатами поиска
+                    },
+                    error: function(error) {
+                        console.log(error);
+                    }
+                });
+            });
+
+            // Перехватываем клик на пагинацию
+            $(document).on('click', '.pagination a', function(event) {
+                event.preventDefault();
+
+                var page = $(this).attr('href').split('page=')[1]; // Получаем номер страницы
+                var searchText = $("#searchInput").val();
+
+                $.ajax({
+                    url: "{{ route('search-projects') }}",
+                    type: "GET",
+                    data: {
+                        page: page, // Передаем номер страницы
+                        search: searchText // Передаем текст поиска
+                    },
+                    success: function(response) {
+                        $("#resultsContainer").html(
+                        response); // Обновляем контейнер с результатами поиска
                     },
                     error: function(error) {
                         console.log(error);

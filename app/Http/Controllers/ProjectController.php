@@ -655,14 +655,14 @@ class ProjectController extends Controller
         $data = Projects::where('projManager', 'LIKE', '%' . $search_text . '%')
             ->orWhere('projNum', 'LIKE', '%' . $search_text . '%')
             ->orWhere('objectName', 'LIKE', '%' . $search_text . '%')
-            ->get();
+            ->paginate(3);
 
         if ($data->isEmpty()) {
             // Выводим текст, если результаты поиска пусты
             return view('search', ['noResults' => true]);
         }
 
-        return view('search', compact('data'));
+       return view('search', compact('data', 'search_text'));
     }
 
 
