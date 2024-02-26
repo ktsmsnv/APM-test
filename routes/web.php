@@ -159,7 +159,7 @@ Route::middleware(['auth'])->group(function () {
     //удаление карты проекта ОТЧЕТ пуе
     Route::post('/project-maps/all/{id}/report-delete', 'App\Http\Controllers\reportController@deleteMessage')->name('report-delete');
 
-
+    Route::delete('/deleteRow/{id}', 'App\Http\Controllers\reportController@deleteRow')->name('deleteRow');
 
 
     //создание новой записи в карта проекта -> РИСКИ -> сохранение в БД
