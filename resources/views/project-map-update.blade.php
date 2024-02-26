@@ -41,8 +41,31 @@
                                         <div class="input-field d-flex gap-3 mb-2">
                                             <p>Руководитель проекта:</p>
                                             <div class="col-3" style="width: 20%;">
-                                                <input type="text" name="projManager" value="{{ $project->projManager }}"
-                                                    class="input_editable">
+                                                {{-- <input type="text" name="projManager" value="{{ $project->projManager }}"
+                                                    class="input_editable"> --}}
+
+                                                <select class="form-control" name="projManager" id="projManager" required>
+                                                    @foreach ($projectManagers as $manager)
+                                                        @php
+                                                            $projNumSuf = $project->projNumSuf;
+                                                            $groupNum = $manager->groupNum;
+                                                            $projNumSufToGroupNum = [
+                                                                'Группа 1' => 1,
+                                                                'Группа 2' => 2,
+                                                                'Группа 3' => 3,
+                                                                'Группа 4' => 4,
+                                                            ];
+                                                        @endphp
+
+                                                        @if ($projNumSufToGroupNum[$projNumSuf] == $groupNum)
+                                                            <option value="{{ $manager->fio }}"
+                                                                data-group="{{ $groupNum }}"
+                                                                {{ $project->projManager == $manager->fio ? 'selected' : '' }}>
+                                                                {{ $manager->fio }}
+                                                            </option>
+                                                        @endif
+                                                    @endforeach
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="input-field d-flex gap-3 mb-2">
@@ -780,8 +803,8 @@
                                                             </td>
                                 <td style="border:none;">${removeButton} </td>
                                 </tr>`
-                    case 'risks':
-                    return `
+                        case 'risks':
+                            return `
                         <tr data-target="${target}" data-index="${index}">
                             <input type="hidden" name="risk[${index}][id]" value="${newRiskId}">
                             <td>

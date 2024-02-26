@@ -60,6 +60,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/tables/notes-edit/{project}/{note}', 'App\Http\Controllers\ProjectController@edit')->name('tables.notes-edit');
     Route::put('/tables/notes-update/{project}/{note}', 'App\Http\Controllers\ProjectController@update')->name('tables.notes-update');
 
+    Route::get('/notes-download/{project}/{projNum}', 'App\Http\Controllers\ProjectController@exportNotesWord')->name('notes-word');
 
 
     // реестр КП

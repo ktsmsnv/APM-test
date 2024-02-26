@@ -27,6 +27,8 @@ use App\Models\RegNHRS;
 use App\Models\RegOther;
 use App\Models\RegSInteg;
 
+use PhpOffice\PhpWord\TemplateProcessor;
+
 use Illuminate\Support\Facades\DB;
 
 class ProjectController extends Controller
@@ -101,8 +103,42 @@ class ProjectController extends Controller
         return redirect()->route('project-data-one', ['id' => $project->id, 'tab' => '#notes'])->with('success', 'Project data successfully updated');
     }
 
+    // скачивание дневника
+    public function exportNotesWord($id, $projNum)
+    {
+        // Загружаем данные из базы данных
+        $project = Projects::find($id);
 
+        // Проверяем, найден ли проект
+        if (!$project) {
+            return abort(404); // Вывести ошибку 404, если проект не найден
+        }
 
+        // Путь к существующему файлу Word
+        $templatePath = storage_path("notes_template.docx");
+        $templateProcessor = new TemplateProcessor($templatePath);
+        
+        // Получение данных из базы данных
+        $notes = DB::table('notes')->where('project_num', $projNum)->get();
+
+        $templateProcessor->cloneRow('date', count($notes));
+
+        // Обход каждой строки данных и добавление значений в соответствующие ячейки
+        foreach ($notes as $index => $note) {
+            $templateProcessor->setValue('date#' . ($index + 1), $note->date);
+            $templateProcessor->setValue('comment#' . ($index + 1), $note->comment);
+        }
+
+        $templateProcessor->setValue('projNum', $project->projNum);
+
+         // Сохраняем измененный файл
+         $newFilePath = storage_path("notes/дневник {$project->projNum}.docx");
+         $templateProcessor->saveAs($newFilePath);
+         
+ 
+         // Возврат файла для загрузки
+         return response()->download($newFilePath)->deleteFileAfterSend();
+    }
 
     // переход на страницу СОЗДАНИЯ КАРТЫ ПРОЕКТА
     public function create()
@@ -241,12 +277,17 @@ class ProjectController extends Controller
     {
         $project = Projects::find($id);
         $maxRiskId = CalcRisk::max('id');
+        $projectManagers = ProjectManager::all();
 
         if (!$project) {
             return response()->json(['error' => 'Project not found'], 404);
         }
 
-        return view('project-map-update', ['project' => $project], ['maxRiskId' => $maxRiskId]);
+        return view('project-map-update', [
+            'project' => $project,
+            'maxRiskId' => $maxRiskId,
+            'projectManagers' => $projectManagers
+        ]);
     }
 
     // РЕДАКТИРОВАНИЕ данных для карты проекта -> РАСЧЕТ

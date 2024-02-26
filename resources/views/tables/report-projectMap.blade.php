@@ -1079,10 +1079,8 @@
 									</tr>
 									<tr>
 										<th class="projNotes green">Примечания к проекту:</th>
-										<td colspan="2">
-											<textarea type="text" class="form-control" name="projNotes" id="projNotes"
-												placeholder="Введите примечания к проекту"></textarea>
-										</td>
+										<td colspan="2"><textarea type="text" class="form-control" name="projNotes" id="projNotes"
+												placeholder="Введите примечания к проекту"></textarea></td>
 									</tr>
 								</tbody>
 							</table>
@@ -1182,10 +1180,8 @@
 									</tr>
 									<tr>
 										<th class="teamNotes green">Примечания к команде проекта:</th>
-										<td colspan="3">
-											<textarea type="text" class="form-control" name="teamNotes" id="teamNotes"
-												placeholder="Введите примечания к команде проекта"></textarea>
-										</td>
+										<td colspan="3"><textarea type="text" class="form-control" name="teamNotes" id="teamNotes"
+												placeholder="Введите примечания к команде проекта"></textarea></td>
 									</tr>
 								</tfoot>
 							</table>
@@ -1278,10 +1274,8 @@
 									<tr>
 										<th class="resume green">Общее резюме по проекту (что улучшить, точки роста)
 										</th>
-										<td colspan="2">
-											<textarea type="text" class="form-control" name="resume" id="resume"
-												placeholder="Введите общее резюме по проекту"></textarea>
-										</td>
+										<td colspan="2"><textarea type="text" class="form-control" name="resume" id="resume"
+												placeholder="Введите общее резюме по проекту"></textarea></td>
 									</tr>
 								</tbody>
 							</table>
