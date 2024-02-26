@@ -16,14 +16,12 @@ use Illuminate\Support\Facades\DB;
 
 class reportController extends Controller
 {
-
     // Отображение данных из расчета
     public function showDataCalculation($id)
     {
         $project = Projects::with('equipment', 'expenses', 'totals', 'markups', 'contacts', 'risks', 'basicReference', 'basicInfo',  'ReportTeam')->find($id);
         return view('report-projectMap', compact('project'));
     }
-
 
     // сохранение полей в бд
     public function store(Request $request, $id)
@@ -56,7 +54,6 @@ class reportController extends Controller
         $Report->profitFact     = $request->profitFact;
         $Report->projProfitFact = $request->projProfitFact;
         $Report->save();
-
         //команда проекта
         if ($request->has('roles')) {
             $data_roles = array();
@@ -74,8 +71,6 @@ class reportController extends Controller
             }
             ReportTeam::insert($data_roles);
         }
-
-
         //Рефлексия по проекту
         $ReportReflection = new ReportReflection;
         $ReportReflection->project_num = $project->projNum;
@@ -88,7 +83,6 @@ class reportController extends Controller
         $ReportReflection->production_dis = $request->production_dis;
         $ReportReflection->shipment_dis = $request->shipment_dis;
         $ReportReflection->save();
-
         //примечания
         $ReportNotes = new ReportNotes;
         $ReportNotes->project_num = $project->projNum;
@@ -100,23 +94,17 @@ class reportController extends Controller
         return redirect()->route('project-data-one', ['id' => $id]);
     }
 
-
     // РЕДАКТИРОВАНИЕ данных для отчета
     public function updateMessageSubmit($id, Request $req)
     {
         // Обновление отчет
         $project = Projects::find($id);
-
         // общая информация
         $report = Report::where('project_num', $project->projNum)->first();
-
-        // If the report doesn't exist, create a new instance
         if (!$report) {
             $report = new Report;
             $report->project_num = $project->projNum;
         }
-
-        // Update report fields
         $report->costRubW = $req->costRubW;
         $report->costRub = $req->costRub;
         $report->expenseDirectPlan = $req->expenseDirectPlan;
@@ -139,10 +127,7 @@ class reportController extends Controller
         $report->profitFact = $req->profitFact;
         $report->projProfitPlan = $req->projProfitPlan;
         $report->projProfitFact = $req->projProfitFact;
-
         $report->save();
-
-
         // команда проекта
         if ($req->has('roles')) {
             foreach ($req->input('roles') as $index => $rolesData) {
@@ -151,7 +136,7 @@ class reportController extends Controller
                     'roleDescription' => $rolesData['roleDescription'],
                     'roleImpact' => $rolesData['roleImpact'],
                     'roleBonus' => $rolesData['roleBonus'],
-                    'premium_part' => $rolesData['premiumPart'],
+                    'premium_part' => $rolesData['premium_part'],
                 ];
 
                 $existingRole = $project->report_team()->find($rolesData['roleId']);
@@ -163,7 +148,6 @@ class reportController extends Controller
                 }
             }
         }
-
         //Рефлексия по проекту
         $ReportReflection = ReportReflection::where('project_num', $project->projNum)->first();
         $ReportReflection->project_num = $project->projNum;
@@ -176,7 +160,6 @@ class reportController extends Controller
         $ReportReflection->production_dis = $req->production_dis;
         $ReportReflection->shipment_dis = $req->shipment_dis;
         $ReportReflection->save();
-
         //примечания
         $ReportNotes = ReportNotes::where('project_num', $project->projNum)->first();
         // $ReportNotes = new ReportNotes;
@@ -185,7 +168,6 @@ class reportController extends Controller
         $ReportNotes->teamNotes = $req->teamNotes;
         $ReportNotes->resume = $req->resume;
         $ReportNotes->save();
-
         return redirect()->route('project-data-one', ['id' => $id, 'tab' => 'report'])->with('success', 'Changes successfully updated');
     }
 
@@ -287,5 +269,18 @@ class reportController extends Controller
 
         // Возврат файла для загрузки
         return response()->download($newFilePath)->deleteFileAfterSend();
+    }
+
+
+    // Define the deleteRow method in your controller
+    public function deleteRow($id)
+    {
+        try {
+            ReportTeam::find($id)->delete();
+
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
     }
 }
