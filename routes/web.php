@@ -19,6 +19,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Главная страница (отображение реестров)
     Route::get('/home', 'App\Http\Controllers\DataController@index')->name('home');
+    Route::get('/getData_group_1', 'App\Http\Controllers\DataController@getData_group_1');
 
     // Все карты проекта
     Route::get('/project-maps/all', 'App\Http\Controllers\ProjectController@allData')->name('project-maps');

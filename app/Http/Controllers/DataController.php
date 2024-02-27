@@ -20,13 +20,11 @@ class DataController extends Controller
         return view('home', compact('RegSInteg', 'RegEOB', 'RegNHRS', 'RegOther'));
     }
 
-    public function govno()
+    public function getData_group_1()
     {
         $RegSInteg = RegSInteg::all();
-        $RegEOB = RegEOB::all();
-        $RegNHRS = RegNHRS::all();
-        $RegOther = RegOther::all();
 
-        return view('govno', compact('RegSInteg', 'RegEOB', 'RegNHRS', 'RegOther'));
+        // Возвращаем данные в формате JSON
+        return response()->json($RegSInteg);
     }
 }
