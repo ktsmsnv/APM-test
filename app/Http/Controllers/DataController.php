@@ -27,4 +27,25 @@ class DataController extends Controller
         // Возвращаем данные в формате JSON
         return response()->json($RegSInteg);
     }
+    public function getData_group_2()
+    {
+        $RegEOB = RegEOB::all();
+
+        // Возвращаем данные в формате JSON
+        return response()->json($RegEOB);
+    }
+    public function getData_group_3()
+    {
+        $RegNHRS = RegNHRS::all();
+
+        // Возвращаем данные в формате JSON
+        return response()->json($RegNHRS);
+    }
+    public function getData_group_4()
+    {
+        $RegOther = RegOther::all();
+
+        // Возвращаем данные в формате JSON
+        return response()->json($RegOther);
+    }
 }
