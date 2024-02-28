@@ -6,12 +6,7 @@
 <div class="card mb-5">
     <div class="card-body">
         @csrf
-        <table id="baseRisksTable" data-toolbar="#toolbar" data-search="true" data-show-refresh="true"
-            data-show-toggle="true" data-show-fullscreen="true" data-show-columns="true"
-            data-show-columns-toggle-all="true" data-detail-view="true" data-show-export="true"
-            data-click-to-select="true" data-detail-formatter="detailFormatter" data-minimum-count-columns="12"
-            data-show-pagination-switch="true" data-pagination="true" data-id-field="id"
-            data-response-handler="responseHandler">
+        <table class="display nowrap table" id="baseRisksTable" style="width:100%">
             <thead>
                 <tr>
                     <th>№</th>
@@ -243,109 +238,62 @@
 
 {{-- СКРИПТЫ ДЛЯ РИСКОВ --}}
 <script>
-    var $table = $('#baseRisksTable');
-    var selections = [];
+    // таблица DataTable
+    $(document).ready(function() {
+        $('.table').DataTable({
+            responsive: true,
+            columnDefs: [{
+                    width: "4%",
+                    targets: 0
+                },
+                {
+                    width: "16%",
+                    targets: 0
+                },
+                {
+                    width: "16%",
+                    targets: 0
+                },
+                {
+                    width: "16%",
+                    targets: 0
+                },
+                {
+                    width: "16%",
+                    targets: 0
+                },
+                {
+                    width: "16%",
+                    targets: 0
+                },
+                {
+                    width: "16%",
+                    targets: 0
+                }
+            ],
+            pageLength: 5,
+            lengthMenu: [5, 25, 35, 45, 100, -1],
+            language: {
+                search: 'Поиск:',
+                info: 'Показано с _START_ по _END_ из _TOTAL_ записей',
+                infoEmpty: 'Показано с 0 по 0 из 0 записей',
+                infoFiltered: '(отфильтровано из _MAX_ записей)',
+                lengthMenu: 'Показать _MENU_ записей',
+                sEmptyTable: "НЕТ ЗАПИСЕЙ В ТАБЛИЦЕ",
+                paginate: {
+                    next: 'Следующая',
+                    previous: 'Предыдущая',
+                },
+            },
+            initComplete: function() {
+                var select = $('select[name="baseRisksTable_length"]');
+                select.find('option[value="-1"]').text('Все');
 
-    function getIdSelections($table) {
-        return $.map($table.bootstrapTable('getSelections'), function(row) {
-            return row.id;
+                var select2 = $('select[name="basePossibilitiesTable_length"]');
+                select2.find('option[value="-1"]').text('Все');
+            },
         });
-    }
-
-    function responseHandler(res) {
-        $.each(res.rows, function(i, row) {
-            row.state = $.inArray(row.id, selections) !== -1;
-        });
-        return res;
-    }
-
-    function detailFormatter(index, row) {
-        var fieldNames = {
-            'id': '№',
-            'nameRisk': 'Наименование риска',
-            'reasonRisk': 'Причина риска',
-            'conseqRiskOnset': 'Последствия наступления риска',
-            'counteringRisk': 'Противодействие риску',
-            'term': 'Срок',
-            'riskManagMeasures': 'Мероприятия при осуществлении риска'
-        };
-        var html = [];
-        $.each(row, function(key, value) {
-            var fieldName = fieldNames[key] ||
-                key;
-            html.push('<p><b>' + fieldName + ':</b> ' + value + '</p>');
-        });
-        return html.join('');
-    }
-
-    function initTable($table, data) {
-        $table.bootstrapTable('destroy').bootstrapTable({
-            // height: 550,
-            locale: $('#locale').val(),
-            pagination: true,
-            pageNumber: 1,
-            pageSize: 10,
-            pageList: [10, 25, 50, 'all'],
-            columns: [
-                [{
-                    title: '№',
-                    field: 'id',
-                    align: 'center',
-                    valign: 'middle',
-                    sortable: true,
-                }, {
-                    title: 'Наименование риска',
-                    field: 'nameRisk',
-                    align: 'center',
-                    valign: 'middle',
-                    sortable: true,
-                },{
-                    title: 'Причина риска',
-                    field: 'reasonRisk',
-                    align: 'center',
-                    valign: 'middle',
-                    sortable: true
-                }, {
-                    title: 'Последствия наступления риска',
-                    field: 'conseqRiskOnset',
-                    align: 'center',
-                    valign: 'middle',
-                    sortable: true
-                }, {
-                    title: 'Противодействие риску',
-                    field: 'counteringRisk',
-                    align: 'center',
-                    valign: 'middle',
-                    sortable: true
-                },{
-                    title: 'Срок',
-                    field: 'term',
-                    align: 'center',
-                    valign: 'middle',
-                    sortable: true
-                },{
-                    title: 'Мероприятия при осуществлении риска',
-                    field: 'riskManagMeasures',
-                    align: 'center',
-                    valign: 'middle',
-                    sortable: true
-                }],
-            ]
-        });
-
-        $table.on('check.bs.table uncheck.bs.table ' +
-            'check-all.bs.table uncheck-all.bs.table',
-            function() {
-                $remove.prop('disabled', !$table.bootstrapTable('getSelections').length);
-                // save your data, here just save the current page
-                selections = getIdSelections($table);
-                // push or splice the selections if you want to save all data selections
-            });
-
-        $table.on('all.bs.table', function(e, name, args) {
-            console.log(name, args);
-        });
-    }
+    });
 
     //Доп.строки
     $(document).ready(function() {
