@@ -192,6 +192,7 @@
             });
         }
 
+        
         function responseHandler(res) {
             $.each(res.rows, function(i, row) {
                 row.state = $.inArray(row.id, selections) !== -1;

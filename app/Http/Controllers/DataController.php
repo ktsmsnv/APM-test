@@ -48,4 +48,5 @@ class DataController extends Controller
         // Возвращаем данные в формате JSON
         return response()->json($RegOther);
     }
+    
 }

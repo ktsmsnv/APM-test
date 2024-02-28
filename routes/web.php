@@ -35,7 +35,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/tables/{tab}/{id}', 'App\Http\Controllers\TabController@show')->name('tab.show');
 
 
-
     // обновление (редактирование) карты проекта -> РАСЧЕТ
     Route::get('/project-maps/all/{id}/{tab}/update-calculation', 'App\Http\Controllers\ProjectController@updateCalculation')->name('project-map-update');
     Route::post('/project-maps/all/{id}/calculation-update', 'App\Http\Controllers\ProjectController@updateCalculationSubmit')->name('project-map-update-submit');
