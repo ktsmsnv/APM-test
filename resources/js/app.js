@@ -7,8 +7,6 @@
 import './bootstrap';
 import { createApp } from 'vue';
 
-// import 'node_modules/bootstrap-table';
-
 /**
  * Next, we will create a fresh Vue application instance. You may then begin
  * registering components with the application instance so they are ready

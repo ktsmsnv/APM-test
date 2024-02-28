@@ -20,11 +20,6 @@ Route::middleware(['auth'])->group(function () {
     // Главная страница (отображение реестров)
     Route::get('/home', 'App\Http\Controllers\DataController@index')->name('home');
 
-    Route::get('/getData_group_1', 'App\Http\Controllers\DataController@getData_group_1');
-    Route::get('/getData_group_2', 'App\Http\Controllers\DataController@getData_group_2');
-    Route::get('/getData_group_3', 'App\Http\Controllers\DataController@getData_group_3');
-    Route::get('/getData_group_4', 'App\Http\Controllers\DataController@getData_group_4');
-
     // Все карты проекта
     Route::get('/project-maps/all', 'App\Http\Controllers\ProjectController@allData')->name('project-maps');
     // одна карта проекта
@@ -33,6 +28,7 @@ Route::middleware(['auth'])->group(function () {
 
     // ТАБЫ на странице КАРТА ПРОЕКТА
     Route::get('/tables/{tab}/{id}', 'App\Http\Controllers\TabController@show')->name('tab.show');
+
 
 
     // обновление (редактирование) карты проекта -> РАСЧЕТ
