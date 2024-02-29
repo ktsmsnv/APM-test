@@ -276,7 +276,7 @@
             return html.join('');
         }
 
-        
+
         function initTable($table, data) {
             $table.bootstrapTable('destroy').bootstrapTable({
                 // height: 550,
@@ -353,7 +353,7 @@
                         sortable: true,
                         cellStyle: cellStyle,
                         formatter: function(value, row, index, field) {
-                            return ''; 
+                            return '';
                         }
                     }, {
                         field: 'pir',
@@ -361,7 +361,7 @@
                         sortable: true,
                         cellStyle: cellStyle,
                         formatter: function(value, row, index, field) {
-                            return ''; 
+                            return '';
                         }
                     }, {
                         field: 'kd',
@@ -369,7 +369,7 @@
                         sortable: true,
                         cellStyle: cellStyle,
                         formatter: function(value, row, index, field) {
-                            return ''; 
+                            return '';
                         }
                     }, {
                         field: 'prod',
@@ -377,7 +377,7 @@
                         sortable: true,
                         cellStyle: cellStyle,
                         formatter: function(value, row, index, field) {
-                            return ''; 
+                            return '';
                         }
                     }, {
                         field: 'shmr',
@@ -385,7 +385,7 @@
                         sortable: true,
                         cellStyle: cellStyle,
                         formatter: function(value, row, index, field) {
-                            return ''; 
+                            return '';
                         }
                     }, {
                         field: 'pnr',
