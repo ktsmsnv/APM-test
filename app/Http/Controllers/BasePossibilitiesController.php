@@ -15,6 +15,13 @@ class BasePossibilitiesController extends Controller
         return view('base-risks', compact('basePossibilities'));
     }
 
+    public function getBasePossibility($id)
+    {
+        $basePossibilities = basePossibilities::find($id);
+        return response()->json($basePossibilities);
+    }
+
+
     // сохранение полей в бд
     public function store(Request $request)
     {
@@ -40,9 +47,9 @@ class BasePossibilitiesController extends Controller
     public function update(Request $request)
     {
         $itemId = $request->input('editItemId_possib');
-    
+
         $basePossibilities = BasePossibilities::find($itemId);
-    
+
         if (!$basePossibilities) {
             abort(404, 'BasePossibilities not found');
         }

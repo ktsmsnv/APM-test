@@ -7,7 +7,11 @@
  <div class="card mb-5">
      <div class="card-body">
          @csrf
-         <table class="display nowrap table" id="basePossibilitiesTable" style="width:100%">
+         <table id="basePossibilitiesTable" data-toolbar="#toolbar" data-search="true" data-show-refresh="true"
+             data-show-toggle="true" data-show-fullscreen="true" data-show-columns="true"
+             data-show-columns-toggle-all="true" data-show-export="true" data-click-to-select="true"
+             data-minimum-count-columns="12" data-show-pagination-switch="true" data-pagination="true"
+             data-id-field="id" data-response-handler="responseHandler">
              <thead>
                  <tr>
                      <th>№</th>
@@ -59,7 +63,8 @@
                          <td>
                              <div class="d-flex gap-2">
                                  <a class="editPossibility btn btn-xs btn-info" href="#" data-bs-toggle="modal"
-                                     data-bs-target="#editBasePossibilities" data-id="{{ $possibility->id }}"><i
+                                     data-bs-target="#editBasePossibilities" data-id="{{ $possibility->id }}"
+                                     data-nameRisk_possib="{{ $possibility->nameRisk }}"><i
                                          class="fa-solid fa-edit"></i></a>
                                  <a class="deletePossibilities btn btn-xs btn-danger" href="#"
                                      data-bs-toggle="modal" data-bs-target="#confirmationModal_Possibilities"
@@ -157,12 +162,12 @@
      <div class="modal fade" id="editBasePossibilities" tabindex="-1" role="dialog"
          aria-labelledby="editBasePossibilitiesLabel" aria-hidden="true">
          <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-            <form id="editBasePossibilitiesForm" action="{{ route('basePossibilities-update', ['id' => $possibility->id]) }}" method="post">
+             <form id="editBasePossibilitiesForm"
+                 action="{{ route('basePossibilities-update', ['id' => $possibility->id]) }}" method="post">
                  @csrf
                  <div class="modal-content">
                      <div class="modal-header">
-                         <h5 class="modal-title" id="editBasePossibilitiesLabel">Редактирование возможности
-                             "{{ $possibility->nameRisk }}"</h5>
+                         <h5 class="modal-title" id="editBasePossibilitiesLabel"></h5>
                          <button type="button" class="btn-close" data-bs-dismiss="modal"
                              aria-label="Close"></button>
                      </div>
@@ -234,7 +239,7 @@
                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                  </div>
                  <div class="modal-body">
-                     Вы уверены что хотите удалить возможность "{{ $possibility->nameRisk }}"?
+                     {{-- Вы уверены что хотите удалить возможность "{{ $possibility->nameRisk }}"? --}}
                  </div>
                  <div class="modal-footer">
                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
@@ -249,6 +254,153 @@
 
  {{-- СКРИПТЫ ДЛЯ ВОЗМОЖНОСТЕЙ --}}
  <script>
+     $(function() {
+         var $table = $('#basePossibilitiesTable');
+
+         // инициализация таблицы и ее настроек
+         function initTable($table) {
+             $table.bootstrapTable({
+                 locale: $('#locale').val(),
+                 pagination: true,
+                 pageNumber: 1,
+                 pageSize: 5,
+                 pageList: [5, 15, 50, 'all'],
+                 columns: [{
+                         field: 'id',
+                         title: '№',
+                         valign: 'middle',
+                         sortable: true,
+                     },
+                     {
+                         field: 'nameRisk',
+                         title: 'Наименование риска',
+                         valign: 'middle',
+                         sortable: true,
+                     },
+                     {
+                         field: 'reasonRisk',
+                         title: 'Причина риска',
+                         valign: 'middle',
+                         sortable: true
+                     },
+                     {
+                         field: 'conseqRiskOnset',
+                         title: 'Последствия наступления риска',
+                         valign: 'middle',
+                         sortable: true
+                     },
+                     {
+                         field: 'counteringRisk',
+                         title: 'Противодействие риску',
+                         valign: 'middle',
+                         sortable: true
+                     },
+                     {
+                         field: 'term',
+                         title: 'Срок',
+                         valign: 'middle',
+                         sortable: true
+                     },
+                     {
+                         field: 'riskManagMeasures',
+                         title: 'Мероприятия при осуществлении риска',
+                         valign: 'middle',
+                         sortable: true
+                     }
+                 ]
+             });
+
+             // привязываем обработчик событий к родительскому элементу таблицы
+             $table.on('click', '.editPossibility', function(event) {
+                 event.preventDefault();
+                 var itemId = $(this).closest('tr').data('id');
+                 var nameRiskToEdit = $(this).closest('tr').find('[data-label="nameRisk_possib"]')
+             .text();
+                 console.log(nameRiskToEdit);
+                 console.log(itemId);
+                 let modal = $('#editBasePossibilities');
+                 modal.find('.modal-title').text(`Редактирование возможности "${nameRiskToEdit}"`);
+                 modal.data('nameRisk',
+                 nameRiskToEdit); // Добавляем атрибут data-nameRisk к модальному окну
+                 modal.find('#editItemId').val(itemId);
+                 fillEditModal(itemId);
+                 modal.modal('show');
+             });
+         }
+
+         // Функция для заполнения модального окна данными
+         function fillEditModal(itemId) {
+             var modalIdPossibilities = '#editBasePossibilities';
+             var formActionPossibilities = '/base-possibilities/basePossibilities-update/' + itemId;
+             // Устанавливаем атрибут action формы редактирования возможности
+             $(modalIdPossibilities + ' #editBasePossibilitiesForm').attr('action', formActionPossibilities);
+             // Отправляем AJAX-запрос для получения данных из базы данных
+             $.ajax({
+                 url: '/get-base-possibility/' + itemId,
+                 type: 'GET',
+                 success: function(response) {
+                     console.log(response);
+                     $(modalIdPossibilities + ' #nameRiskEdit_possib').val(response.nameRisk);
+                     $(modalIdPossibilities + ' #termEdit_possib').val(response.term);
+
+                     // Преобразуем строки JSON в массивы объектов для каждого поля
+                     var reasonPossibData = JSON.parse(response.reasonRisk);
+                     var conseqPossibData = JSON.parse(response.conseqRiskOnset);
+                     var counteringPossibData = JSON.parse(response.counteringRisk);
+                     var measuresPossibData = JSON.parse(response.riskManagMeasures);
+
+                     // Добавляем причины возможности
+                     var reasonPossibInputs = '';
+                     $.each(reasonPossibData, function(index, reason) {
+                         reasonPossibInputs +=
+                             '<input type="text" class="form-control mb-2" name="reason_possib_edit[]" value="' +
+                             reason.reasonRisk +
+                             '" placeholder="Введите причину возможности">';
+                     });
+                     $(modalIdPossibilities + ' #reasonRiskEdit_possib').html(reasonPossibInputs);
+
+                     // Добавляем последствия наступления возможности
+                     var conseqPossibInputs = '';
+                     $.each(conseqPossibData, function(index, conseq) {
+                         conseqPossibInputs +=
+                             '<input type="text" class="form-control mb-2" name="conseq_possib_edit[]" value="' +
+                             conseq.conseqRiskOnset +
+                             '" placeholder="Введите последствия наступления возможности">';
+                     });
+                     $(modalIdPossibilities + ' #conseqRiskOnsetEdit_possib').html(
+                         conseqPossibInputs);
+
+                     // Добавляем противодействие возможности
+                     var counteringPossibInputs = '';
+                     $.each(counteringPossibData, function(index, countering) {
+                         counteringPossibInputs +=
+                             '<input type="text" class="form-control mb-2" name="countering_possib_edit[]" value="' +
+                             countering.counteringRisk +
+                             '" placeholder="Введите противодействие возможности">';
+                     });
+                     $(modalIdPossibilities + ' #counteringRiskEdit_possib').html(
+                         counteringPossibInputs);
+
+                     // Добавляем мероприятия при осуществлении возможности
+                     var measuresPossibInputs = '';
+                     $.each(measuresPossibData, function(index, measure) {
+                         measuresPossibInputs +=
+                             '<input type="text" class="form-control mb-2" name="measures_possib_edit[]" value="' +
+                             measure.riskManagMeasures +
+                             '" placeholder="Введите мероприятия при осуществлении возможности">';
+                     });
+                     $(modalIdPossibilities + ' #riskManagMeasuresEdit_possib').html(
+                         measuresPossibInputs);
+                 },
+                 error: function(xhr, status, error) {
+                     console.error(error);
+                 }
+             });
+         }
+         // Инициализация таблицы при загрузке страницы
+         initTable($table);
+     });
+
      //Доп.строки
      $(document).ready(function() {
          // индесы для каждого из разделов
@@ -311,8 +463,17 @@
      // Подтверждение удаления
      $(document).ready(function() {
          let itemIdToDelete;
+         let nameRisk_Possib_ToDelete;
          $('#confirmationModal_Possibilities').on('show.bs.modal', function(event) {
-             itemIdToDelete = $(event.relatedTarget).data('id');
+             let button = $(event.relatedTarget);
+             itemIdToDelete = button.data('id');
+             nameRisk_Possib_ToDelete = button.closest('tr').find('[data-label="nameRisk_possib"]')
+             .text();
+             console.log(itemIdToDelete);
+             console.log(nameRisk_Possib_ToDelete);
+             let modal = $(this);
+             modal.find('.modal-body').text(
+                 `Вы уверены, что хотите удалить возможность "${nameRisk_Possib_ToDelete}"?`);
          });
          $('#confirmDelete_Possibilities').click(function() {
              $.ajax({
@@ -334,62 +495,62 @@
      });
 
      // вывод значений записи для редактирования возможности
-     $(document).ready(function() {
-         $('.editPossibility').click(function(e) {
-             event.preventDefault();
-             var itemId = $(this).data('id');
-             var itemData = $('[data-id="' + itemId + '"]');
+     //  $(document).ready(function() {
+     //      $('.editPossibility').click(function(e) {
+     //          event.preventDefault();
+     //          var itemId = $(this).data('id');
+     //          var itemData = $('[data-id="' + itemId + '"]');
 
-             var modalIdPossibilities = '#editBasePossibilities';
-             var formActionPossibilities = '/base-possibilities/basePossibilities-update/' + itemId;
+     //          var modalIdPossibilities = '#editBasePossibilities';
+     //          var formActionPossibilities = '/base-possibilities/basePossibilities-update/' + itemId;
 
-             $(modalIdPossibilities + ' #editItemId_possib').val(itemId);
-             $(modalIdPossibilities + ' #editBasePossibilitiesForm').attr('action',
-                 formActionPossibilities);
+     //          $(modalIdPossibilities + ' #editItemId_possib').val(itemId);
+     //          $(modalIdPossibilities + ' #editBasePossibilitiesForm').attr('action',
+     //              formActionPossibilities);
 
-             $(modalIdPossibilities + ' #nameRiskEdit_possib').val(itemData.find(
-                 '[data-label="nameRisk_possib"]').text());
+     //          $(modalIdPossibilities + ' #nameRiskEdit_possib').val(itemData.find(
+     //              '[data-label="nameRisk_possib"]').text());
 
-             $(modalIdPossibilities + ' #termEdit_possib').val(itemData.find(
-                 '[data-label="term_possib"]').text());
+     //          $(modalIdPossibilities + ' #termEdit_possib').val(itemData.find(
+     //              '[data-label="term_possib"]').text());
 
-             var reasonPossibInputs = '';
-             itemData.find('[data-label="reasonRisk_possib"] li').each(function(index) {
-                 reasonPossibInputs +=
-                     '<input type="text" class="form-control mb-2" name="reason_possib_edit[]" value="' +
-                     $(this).text() + '" placeholder="Введите причину возможности">';
-             });
-             $(modalIdPossibilities + ' #reasonRiskEdit_possib').html(reasonPossibInputs);
+     //          var reasonPossibInputs = '';
+     //          itemData.find('[data-label="reasonRisk_possib"] li').each(function(index) {
+     //              reasonPossibInputs +=
+     //                  '<input type="text" class="form-control mb-2" name="reason_possib_edit[]" value="' +
+     //                  $(this).text() + '" placeholder="Введите причину возможности">';
+     //          });
+     //          $(modalIdPossibilities + ' #reasonRiskEdit_possib').html(reasonPossibInputs);
 
-             var conseqPossibInputs = '';
-             itemData.find('[data-label="conseqRiskOnset_possib"] li').each(function(index) {
-                 conseqPossibInputs +=
-                     '<input type="text" class="form-control mb-2" name="conseq_possib_edit[]" value="' +
-                     $(this).text() +
-                     '" placeholder="Введите последствия наступления возможности">';
-             });
-             $(modalIdPossibilities + ' #conseqRiskOnsetEdit_possib').html(conseqPossibInputs);
+     //          var conseqPossibInputs = '';
+     //          itemData.find('[data-label="conseqRiskOnset_possib"] li').each(function(index) {
+     //              conseqPossibInputs +=
+     //                  '<input type="text" class="form-control mb-2" name="conseq_possib_edit[]" value="' +
+     //                  $(this).text() +
+     //                  '" placeholder="Введите последствия наступления возможности">';
+     //          });
+     //          $(modalIdPossibilities + ' #conseqRiskOnsetEdit_possib').html(conseqPossibInputs);
 
-             var counteringPossibInputs = '';
-             itemData.find('[data-label="counteringRisk_possib"] li').each(function(index) {
-                 counteringPossibInputs +=
-                     '<input type="text" class="form-control mb-2" name="countering_possib_edit[]" value="' +
-                     $(this).text() + '" placeholder="Введите противодействие возможности">';
-             });
-             $(modalIdPossibilities + ' #counteringRiskEdit_possib').html(counteringPossibInputs);
+     //          var counteringPossibInputs = '';
+     //          itemData.find('[data-label="counteringRisk_possib"] li').each(function(index) {
+     //              counteringPossibInputs +=
+     //                  '<input type="text" class="form-control mb-2" name="countering_possib_edit[]" value="' +
+     //                  $(this).text() + '" placeholder="Введите противодействие возможности">';
+     //          });
+     //          $(modalIdPossibilities + ' #counteringRiskEdit_possib').html(counteringPossibInputs);
 
-             var measuresPossibInputs = '';
-             itemData.find('[data-label="riskManagMeasures_possib"] li').each(function(index) {
-                 measuresPossibInputs +=
-                     '<input type="text" class="form-control mb-2" name="measures_possib_edit[]" value="' +
-                     $(this).text() +
-                     '" placeholder="Введите мероприятия при осуществлении возможности">';
-             });
-             $(modalIdPossibilities + ' #riskManagMeasuresEdit_possib').html(measuresPossibInputs);
+     //          var measuresPossibInputs = '';
+     //          itemData.find('[data-label="riskManagMeasures_possib"] li').each(function(index) {
+     //              measuresPossibInputs +=
+     //                  '<input type="text" class="form-control mb-2" name="measures_possib_edit[]" value="' +
+     //                  $(this).text() +
+     //                  '" placeholder="Введите мероприятия при осуществлении возможности">';
+     //          });
+     //          $(modalIdPossibilities + ' #riskManagMeasuresEdit_possib').html(measuresPossibInputs);
 
-             $(modalIdPossibilities).modal('show');
-         });
-     });
+     //          $(modalIdPossibilities).modal('show');
+     //      });
+     //  });
 
      // добавление доп. строк для редактирования
      $(document).ready(function() {

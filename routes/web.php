@@ -87,7 +87,7 @@ Route::middleware(['auth'])->group(function () {
     // редактирование записи в базе рисков
     Route::post('/base-possibilities/basePossibilities-update/{id}', 'App\Http\Controllers\BasePossibilitiesController@update')->name('basePossibilities-update');
 
-
+    Route::get('/get-base-possibility/{id}', 'App\Http\Controllers\BasePossibilitiesController@getBasePossibility');
 
 
     // создание карты проекта -> РАСЧЕТ (ОБЩАЯ ИНФА И КОНТАКТ ЛИСТ)
