@@ -20,6 +20,11 @@ Route::middleware(['auth'])->group(function () {
     // Главная страница (отображение реестров)
     Route::get('/home', 'App\Http\Controllers\DataController@index')->name('home');
 
+    Route::get('/getData_group_1', 'App\Http\Controllers\DataController@getData_group_1');
+    Route::get('/getData_group_2', 'App\Http\Controllers\DataController@getData_group_2');
+    Route::get('/getData_group_3', 'App\Http\Controllers\DataController@getData_group_3');
+    Route::get('/getData_group_4', 'App\Http\Controllers\DataController@getData_group_4');
+
     // Все карты проекта
     Route::get('/project-maps/all', 'App\Http\Controllers\ProjectController@allData')->name('project-maps');
     // одна карта проекта
@@ -28,7 +33,6 @@ Route::middleware(['auth'])->group(function () {
 
     // ТАБЫ на странице КАРТА ПРОЕКТА
     Route::get('/tables/{tab}/{id}', 'App\Http\Controllers\TabController@show')->name('tab.show');
-
 
 
     // обновление (редактирование) карты проекта -> РАСЧЕТ
@@ -48,10 +52,10 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/project-maps/all/{id}/changes-update', 'App\Http\Controllers\ProjectController@updateChangesSubmit')->name('changes-update-submit');
 
 
-   
+
     //удаление карты проекта (НЕАКТУАЛЬНО)
     Route::get('/project-maps/all/{id}/delete', 'App\Http\Controllers\ProjectController@deleteMessage')->name('project-map-delete');
-    
+
     //Добавление дневника проекта
     Route::post('/tables/notes-add/{project}', 'App\Http\Controllers\ProjectController@store')->name('tables.notes-add');
     //Удаление записи из дневника проекта
@@ -133,7 +137,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/project-maps/create/changes-{id}/create', 'App\Http\Controllers\changesController@create')->name('changes-create');
     // создание карты проекта ИЗМЕНЕНИЯ -> сохранение в БД
     Route::post('/project-maps/create/changes-{id}/save', 'App\Http\Controllers\changesController@storeNew')->name('changes-store');
-    // обновление (редактирование) карты проекта ИЗМЕНЕНИЯ 
+    // обновление (редактирование) карты проекта ИЗМЕНЕНИЯ
     Route::put('/project-maps/changes-update/{id}', 'App\Http\Controllers\ChangesController@update')->name('changes-update');
     // ссоздание карты проекта ИЗМЕНЕНИЯ -> вывод связанных таблиц
     Route::get('/project-maps/create/changes-{id}', 'App\Http\Controllers\changesController@showDataCalculation')->name('changes-create');
@@ -155,7 +159,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/project-maps/all/{id}/store-report', 'App\Http\Controllers\reportController@store')->name('report-store');
     // карта проекта ОТЧЕТ -> выгрузка в word
     Route::get('/project-maps/all/{id}/{projNum}/export-word', 'App\Http\Controllers\reportController@exportWord')->name('report-word');
-    // обновление (редактирование) карты проекта ОТЧЕТ 
+    // обновление (редактирование) карты проекта ОТЧЕТ
     Route::post('/project-maps/all/{id}/{tab}/update-report', 'App\Http\Controllers\reportController@updateMessageSubmit')->name('report-update-submit');
     //удаление карты проекта ОТЧЕТ пуе
     Route::post('/project-maps/all/{id}/report-delete', 'App\Http\Controllers\reportController@deleteMessage')->name('report-delete');
