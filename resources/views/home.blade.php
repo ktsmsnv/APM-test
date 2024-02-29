@@ -36,7 +36,6 @@
                         </li>
                     </ul>
 
-
                     <div class="tab-content" id="myTabContent">
                         <div class="select">
                             <select class="form-control d-none" id="locale">
@@ -192,7 +191,7 @@
             });
         }
 
-        
+
         function responseHandler(res) {
             $.each(res.rows, function(i, row) {
                 row.state = $.inArray(row.id, selections) !== -1;
