@@ -121,12 +121,50 @@
                             </div>
                 </div>
             </div>
+        </div>
     </nav>
 
     {{-- Content --}}
     <main class="mainPage">
         @yield('content')
+        <button onclick="topFunction()" id="scrollToTopBtn" title="Подняться наверх">
+            <i class="fas fa-arrow-up"></i>
+        </button>
     </main>
+    <style>
+        #scrollToTopBtn {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 15px;
+            z-index: 99;
+            font-size: 24px;
+            border: none;
+            border-radius: 10%;
+            padding: 4px 10px;
+            outline: none;
+            background-color: #6b99d9;
+            color: #fff;
+            cursor: pointer;
+        }
+    </style>
+
+    <script>
+        window.onscroll = function() {scrollFunction()};
+
+        function scrollFunction() {
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                document.getElementById("scrollToTopBtn").style.display = "block";
+            } else {
+                document.getElementById("scrollToTopBtn").style.display = "none";
+            }
+        }
+
+        function topFunction() {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+        }
+    </script>
 </div>
 </body>
 

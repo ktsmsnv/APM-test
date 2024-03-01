@@ -203,5 +203,4 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/delete-kp/{id}', 'App\Http\Controllers\RegReestrKPController@deleteKP')->name('delete-kp');
     Route::delete('/delete-kp-additionalfile/{id}', 'App\Http\Controllers\RegReestrKPController@deleteAdditionalFile');
     // Route::delete('/reestr-kp/delete-word-file/{id}',  'App\Http\Controllers\RegReestrKPController@deleteWordFile')->name('reestr-kp.delete-word-file');
-
 });
