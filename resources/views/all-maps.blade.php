@@ -1,5 +1,7 @@
 @extends('layouts.app')
-
+@section('title')
+    {{ "APM | КСТ | Карты проекта" }}
+@endsection
 @section('content')
     <div class="container">
         <div class="d-flex gap-4 align-items-center mb-2">

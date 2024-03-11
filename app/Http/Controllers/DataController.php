@@ -16,7 +16,6 @@ class DataController extends Controller
         $RegEOB = RegEOB::all();
         $RegNHRS = RegNHRS::all();
         $RegOther = RegOther::all();
-
         return view('home', compact('RegSInteg', 'RegEOB', 'RegNHRS', 'RegOther'));
     }
 

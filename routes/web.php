@@ -30,6 +30,8 @@ Route::middleware(['auth'])->group(function () {
     // одна карта проекта
     Route::get('/project-maps/all/{id}/{tab?}', 'App\Http\Controllers\ProjectController@showOneMessage')->name('project-data-one');
 
+    Route::get('/get-project-id/{vnNum}', 'App\Http\Controllers\ProjectController@getProjectIdByVnNum');
+
 
     // ТАБЫ на странице КАРТА ПРОЕКТА
     Route::get('/tables/{tab}/{id}', 'App\Http\Controllers\TabController@show')->name('tab.show');

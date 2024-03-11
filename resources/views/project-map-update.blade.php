@@ -1,5 +1,7 @@
 @extends('layouts.app')
-
+@section('title')
+    {{ "APM | КСТ | Редактирование карты проекта $project->projNum" }}
+@endsection
 @section('content')
     <div class="container updateProject">
         <h1 class="mb-5">Редактирование расчета для карты проекта {{ $project->projNum }}</h1>
@@ -707,8 +709,8 @@
                     switch (target) {
                         case 'equipment':
                             return `
-                                <tr data-target="${target}" data-index="${index}"> 
-                                    <input type="hidden" name="equipment[${index}][id]" value="">   
+                                <tr data-target="${target}" data-index="${index}">
+                                    <input type="hidden" name="equipment[${index}][id]" value="">
                                     <td>
                                         <input type="text" class="input_editable" name="equipment[${index}][nameTMC]" id="nameTMC"
                                         placeholder="Введите наименование ТМЦ">
@@ -725,7 +727,7 @@
                                 </tr>`
                         case 'markups':
                             return `
-                                <tr data-target="${target}" data-index="${index}">        
+                                <tr data-target="${target}" data-index="${index}">
                                                         <td>
                                                             <div class="col-3">
                                                                 <input type="date"
@@ -808,7 +810,7 @@
                         <tr data-target="${target}" data-index="${index}">
                             <input type="hidden" name="risk[${index}][id]" value="${newRiskId}">
                             <td>
-                                <div class="col-3"> 
+                                <div class="col-3">
                                     <input type="text" name="risk[${index}][riskName]" class="input_editable">
                                 </div>
                             </td>
@@ -824,7 +826,7 @@
                                         <input type="text" class="input_editable" name="additional_expenses[${index}][cost]" placeholder="Введите стоимость">
                                       ${removeButton}
                                     </td>
-                                    
+
                                 </tr>`;
                     }
                 }
