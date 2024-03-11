@@ -41,6 +41,12 @@ class ProjectController extends Controller
         return view('all-maps', ['data' => $projects]);
     }
 
+    function getProjectIdByVnNum($vnNum) {
+        $project = DB::table('projects')->where('projNum', $vnNum)->first();
+        return $project ? $project->id : null;
+    }
+
+
     // Отображение одного проекта и связанных данных (отображает данные по id) на странице карты проекта
     public function showOneMessage($id, $tab = null)
     {
@@ -117,7 +123,7 @@ class ProjectController extends Controller
         // Путь к существующему файлу Word
         $templatePath = storage_path("notes_template.docx");
         $templateProcessor = new TemplateProcessor($templatePath);
-        
+
         // Получение данных из базы данных
         $notes = DB::table('notes')->where('project_num', $projNum)->get();
 
@@ -134,8 +140,8 @@ class ProjectController extends Controller
          // Сохраняем измененный файл
          $newFilePath = storage_path("notes/дневник {$project->projNum}.docx");
          $templateProcessor->saveAs($newFilePath);
-         
- 
+
+
          // Возврат файла для загрузки
          return response()->download($newFilePath)->deleteFileAfterSend();
     }

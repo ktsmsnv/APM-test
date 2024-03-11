@@ -1,5 +1,7 @@
 @extends('layouts.app')
-
+@section('title')
+    {{ "APM | КСТ | Редактирование изменений для карты проекта $project->projNum" }}
+@endsection
 @section('content')
     <div class="container updateProject">
         <h1 class="mb-5">Редактирование изменений для карты проекта {{ $project->projNum }}</h1>
@@ -136,7 +138,7 @@
                 });
                 // функция возвращающая html в секцию
                 function getHtml(index) {
-                    return `<tr> 
+                    return `<tr>
                                 <td>
                                     <input type="hidden" class="form-control" name="changes[${index}][id]" value="" class="input_editable">
                                     <input type="text" class="form-control" name="changes[${index}][project_num]"  id="project_num" value="{{ $project->projNum }}" readonly>

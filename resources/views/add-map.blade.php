@@ -1,5 +1,7 @@
 @extends('layouts.app')
-
+@section('title')
+    {{ "APM | КСТ | Добавление карты проекта" }}
+@endsection
 @section('content')
     <div class="container">
         <h1 class="pb-5">Добавить карту проекта</h1>
@@ -157,7 +159,7 @@
             let indices = {
                 contacts: 1,
             };
-            /* при нажатии на кнопки определяем какой у нас target и взависимости от него добавляет HTML, 
+            /* при нажатии на кнопки определяем какой у нас target и взависимости от него добавляет HTML,
                возвращенный функцией getHtml, в соответствующую секцию */
             $(".addMore-button").click(function(event) {
                 event.preventDefault();

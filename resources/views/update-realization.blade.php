@@ -1,5 +1,7 @@
 @extends('layouts.app')
-
+@section('title')
+    {{ "APM | КСТ | Редактирование реализации для карты проекта $project->projNum" }}
+@endsection
 @section('content')
     <div class="container updateProject">
         <h1 class="mb-5">Редактирование реализации для карты проекта {{ $project->projNum }}</h1>

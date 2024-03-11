@@ -1,5 +1,7 @@
 @extends('layouts.app')
-
+@section('title')
+    {{ "APM | КСТ | Реестр коммерческих предложений" }}
+@endsection
 @section('content')
     <div class="container">
         <h1 class="mb-5">Реестр КП</h1>
@@ -312,7 +314,7 @@
             }
             setEditableCells();
 
-            
+
             // Передача данных
             $(document).on('click', '.editKPButton', function() {
                 var id = $(this).data('id');

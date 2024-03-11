@@ -97,6 +97,7 @@
             </div>
         </div>
     </div>
+
     <script>
         var $table = $('#table');
         var $tableEob = $('#table_eob');
@@ -180,7 +181,18 @@
             return html.join('');
         }
 
-
+        function getProjectIdByVnNum(vnNum) {
+            var projectId = null;
+            $.ajax({
+                url: '/get-project-id/' + vnNum,
+                type: 'GET',
+                async: false, // Делаем запрос синхронным, чтобы получить результат перед возвратом
+                success: function(data) {
+                    projectId = data;
+                }
+            });
+            return projectId;
+        }
         function initTable($table, data) {
             $table.bootstrapTable('destroy').bootstrapTable({
                 // height: 550,
@@ -197,6 +209,16 @@
                         align: 'center',
                         valign: 'middle',
                         sortable: true,
+                        formatter: function(value, row, index, field) {
+                            var vnNum = value; // Получаем значение поля 'vnNum'
+                            // Преобразуем значение vnNum в JSON и передаем в JavaScript
+                            // Вызываем JavaScript функцию для получения projectId
+                            var projectId = getProjectIdByVnNum(vnNum);
+                            // Создаем ссылку
+                            var href = "/project-maps/all/" + projectId + '#calculation';
+                            // Используем значение поля vnNum в качестве текста ссылки
+                            return '<a href="' + href + '">' + vnNum + '</a>';
+                        }
                     }, {
                         field: 'purchaseName',
                         title: 'Наим. закупки',

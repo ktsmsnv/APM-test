@@ -5,17 +5,18 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <link type="image/x-icon" rel="shortcut icon" href="{{ URL::asset('storage/favicon.ico') }}">
+
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'APM') }}</title>
+    <title>@yield('title', 'APM | КСТ | Главная страница')</title>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
 
     @vite(['resources/sass/app.scss'])
-
 
     <!-- Подключение скриптов DataTables и их плагинов -->
     <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
@@ -105,6 +106,9 @@
                                         <a>
                                             {{ Auth::user()->name }}
                                         </a>
+                                        <div class="userName_info">
+                                            почта: {{ Auth::user()->email }}
+                                        </div>
                                     </div>
                                     <div class="LogOutBtn">
                                         <a type="button" class="btn btn btn-secondary btn-rounded" href="{{ route('logout') }}"
