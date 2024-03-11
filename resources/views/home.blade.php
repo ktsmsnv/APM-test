@@ -97,107 +97,11 @@
             </div>
         </div>
     </div>
-
-    {{-- <script>
-        $(document).ready(function() {
-            // Инициализируются настройки открытой вкладки с таблицой
-            $('#equipment-datatable-SInteg').DataTable({
-                retrieve: true,
-                responsive: true,
-                columnDefs: [{
-                        width: "10%",
-                        targets: 0
-                    }, // Первый столбец
-                    {
-                        width: "20%",
-                        targets: 1
-                    }, // Второй столбец
-                ],
-                pageLength: 15, // Количество записей на странице по умолчанию
-                lengthMenu: [15, 35, 50, 100, -1], // Выбор количества записей
-                language: {
-                    search: 'Поиск:',
-                    info: 'Показано с _START_ по _END_ из _TOTAL_ записей',
-                    infoEmpty: 'Записи не найдены',
-                    infoFiltered: '(отфильтровано из _MAX_ записей)',
-                    lengthMenu: 'Показать _MENU_ записей',
-                    sEmptyTable: "НЕТ ЗАПИСЕЙ В ТАБЛИЦЕ",
-                    paginate: {
-                        next: 'Следующая',
-                        previous: 'Предыдущая',
-                    },
-                },
-                // Добавьте следующий блок для замены -1 на "все"
-                initComplete: function() {
-                    var select = $('select[name="equipment-datatable-SInteg_length"]');
-                    select.find('option[value="-1"]').text('Все');
-                }
-            });
-
-            // Инициализируются остальные вкладки с таблицами, при их открывании
-            $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
-                var target = $(e.target).attr("href"); // получаем id вкладки
-
-                if (target === "#SInteg" || target === "#EOB" || target === "#NHRS" || target ===
-                    "#Other") {
-                    // Применяем настройки для таблицы
-                    var table = $(target + ' table').DataTable({
-                        retrieve: true,
-                        responsive: true,
-                        rowReorder: {
-                            selector: 'td:nth-child(2)'
-                        },
-                        columnDefs: [{
-                            width: "10%",
-                            targets: 0
-                        }],
-                        pageLength: 15, // Количество записей на странице по умолчанию
-                        lengthMenu: [15, 35, 50, 100, -1], // Выбор количества записей
-                        language: {
-                            search: 'Поиск:',
-                            info: 'Показано с _START_ по _END_ из _TOTAL_ записей',
-                            infoEmpty: 'Записи не найдены',
-                            infoFiltered: '(отфильтровано из _MAX_ записей)',
-                            lengthMenu: 'Показать _MENU_ записей',
-                            sEmptyTable: "НЕТ ЗАПИСЕЙ В ТАБЛИЦЕ",
-                            paginate: {
-                                next: 'Следующая',
-                                previous: 'Предыдущая',
-                            },
-                        },
-                        // Добавьте следующий блок для замены -1 на "все"
-                        initComplete: function() {
-                            var select = $('select[name="equipment-datatable-' + target
-                                .substring(1) + '_length"]');
-                            select.find('option[value="-1"]').text('Все');
-                        }
-                    });
-                }
-            });
-        });
-    </script> --}}
-
     <script>
         var $table = $('#table');
         var $tableEob = $('#table_eob');
         var $tableNHRS = $('#table_nhrs');
         var $tableOther = $('#table_other');
-        var $remove = $('#remove');
-        var selections = [];
-
-        function getIdSelections($table) {
-            return $.map($table.bootstrapTable('getSelections'), function(row) {
-                return row.id;
-            });
-        }
-
-
-        function responseHandler(res) {
-            $.each(res.rows, function(i, row) {
-                row.state = $.inArray(row.id, selections) !== -1;
-            });
-            return res;
-        }
 
         function cellStyle(value, row, index, field) {
             if (value === 1) {
@@ -294,12 +198,12 @@
                         valign: 'middle',
                         sortable: true,
                     }, {
-                        title: 'Наим. закупки',
                         field: 'purchaseName',
+                        title: 'Наим. закупки',
                         rowspan: 2,
                         align: 'center',
                         valign: 'middle',
-                        sortable: true,
+                        sortable: true
                     }, {
                         title: 'Виды работ',
                         colspan: 8,
@@ -422,19 +326,6 @@
                         console.error(xhr.responseText);
                     }
                 }
-            });
-
-            $table.on('check.bs.table uncheck.bs.table ' +
-                'check-all.bs.table uncheck-all.bs.table',
-                function() {
-                    $remove.prop('disabled', !$table.bootstrapTable('getSelections').length);
-                    // save your data, here just save the current page
-                    selections = getIdSelections($table);
-                    // push or splice the selections if you want to save all data selections
-                });
-
-            $table.on('all.bs.table', function(e, name, args) {
-                console.log(name, args);
             });
         }
     </script>

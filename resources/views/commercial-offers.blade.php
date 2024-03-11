@@ -5,7 +5,15 @@
         <h1 class="mb-5">Реестр КП</h1>
         <div class="card">
             <div class="card-body">
-                <table id="equipment-datatable" class="display nowrap table" style="width:100%">
+                <select class="form-control d-none" id="locale">
+                    <option value="ru-RU">ru-RU</option>
+                </select>
+                <table id="kp-datatable" data-toolbar="#toolbar" data-search="true" data-show-refresh="true"
+                       data-show-toggle="true" data-show-fullscreen="true" data-show-columns="true"
+                       data-show-columns-toggle-all="true" data-detail-view="true" data-show-export="true"
+                       data-click-to-select="true" data-detail-formatter="detailFormatter"
+                       data-minimum-count-columns="12" data-show-pagination-switch="true" data-pagination="true"
+                       data-id-field="id" data-response-handler="responseHandler">
                     <thead>
                         <tr>
                             <th>№ исходящего</th>
@@ -49,7 +57,7 @@
                                 </td>
                                 <td>
                                     @php
-                                        $additionalFiles = $item->additionalFiles; 
+                                        $additionalFiles = $item->additionalFiles;
                                     @endphp
                                     @if ($additionalFiles->count() > 0)
                                         <ul>
@@ -226,36 +234,85 @@
 
     <script>
         $(document).ready(function() {
-            $('.table').DataTable({
-                responsive: true,
-                rowReorder: {
-                    selector: 'td:nth-child(2)'
-                },
-                columnDefs: [{
-                    width: "10%",
-                    targets: 0
-                }],
-                pageLength: 20, // Количество записей на странице по умолчанию
-                lengthMenu: [20, 40, 60, 100, -1], // Выбор количества записей
-                language: {
-                    search: 'Поиск:',
-                    info: 'Показано с _START_ по _END_ из _TOTAL_ записей',
-                    infoEmpty: 'Показано с 0 по 0 из 0 записей',
-                    infoFiltered: '(отфильтровано из _MAX_ записей)',
-                    lengthMenu: 'Показать _MENU_ записей',
-                    sEmptyTable: "НЕТ ЗАПИСЕЙ В ТАБЛИЦЕ",
-                    paginate: {
-                        next: 'Следующая',
-                        previous: 'Предыдущая',
-                    },
-                },
-                initComplete: function() {
-                    var select = $('select[name="equipment-datatable_length"]');
-                    select.find('option[value="-1"]').text('Все');
-                },
-            });
+            var $table = $('#kp-datatable');
+            initTable($table);
+            function initTable($table) {
+                $table.bootstrapTable({
+                    locale: $('#locale').val(),
+                    pagination: true,
+                    pageNumber: 1,
+                    pageSize: 5,
+                    pageList: [5, 15, 50, 'all'],
+                    // columns: [
+                    //     {
+                    //         field: 'numIncoming',
+                    //         title: '№ исходящего',
+                    //         valign: 'middle',
+                    //         sortable: true,
+                    //     },
+                    //     {
+                    //         field: 'date',
+                    //         title: 'Дата',
+                    //         valign: 'middle',
+                    //         sortable: true,
+                    //     },
+                    //     {
+                    //         field: 'orgName',
+                    //         title: 'Наименование организации',
+                    //         valign: 'middle',
+                    //         sortable: true
+                    //     },
+                    //     {
+                    //         field: 'whom',
+                    //         title: 'Кому',
+                    //         valign: 'middle',
+                    //         sortable: true
+                    //     },
+                    //     {
+                    //         field: 'sender',
+                    //         title: 'Отправитель',
+                    //         valign: 'middle',
+                    //         sortable: true
+                    //     },
+                    //     {
+                    //         field: 'amountNDS',
+                    //         title: 'Сумма (руб. c НДС)',
+                    //         valign: 'middle',
+                    //         sortable: true
+                    //     },
+                    //     {
+                    //         field: 'purchNum',
+                    //         title: '№ закупки',
+                    //         valign: 'middle',
+                    //         sortable: true
+                    //     },
+                    //     {
+                    //         field: 'note',
+                    //         title: 'Примечания',
+                    //         valign: 'middle',
+                    //         sortable: true
+                    //     },
+                    //     {
+                    //         field: 'word_file',
+                    //         title: 'Документ',
+                    //         valign: 'middle',
+                    //         sortable: true
+                    //     },
+                    //     {
+                    //         field: 'original_file_name',
+                    //         title: 'Доп. файлы',
+                    //         valign: 'middle',
+                    //         sortable: true
+                    //     }
+                    // ]
+                }).on('post-body.bs.table', function () {
+                    // После загрузки данных в таблицу
+                    setEditableCells();
+                });
+            }
+            setEditableCells();
 
-
+            
             // Передача данных
             $(document).on('click', '.editKPButton', function() {
                 var id = $(this).data('id');
@@ -350,22 +407,6 @@
                     }
                 });
             });
-            // Обработчик кнопки удаления файла word
-            // $(document).on('click', '#deleteWordFileButton', function() {
-            //     var id = $('#selectedRecordId').val();
-            //     $.ajax({
-            //         url: '/reestr-kp/delete-word-file/' + id,
-            //         type: 'DELETE',
-            //         success: function(response) {
-            //             $('#wordFileName').text('Нет файла');
-            //         },
-            //         error: function() {
-            //             alert('Ошибка при удалении файла');
-            //         }
-            //     });
-            // });
-
-
             // Обработчик события изменения дополнительного файла
             $(document).on('change', '.additionalFile', function() {
                 var file = this.files[0];
@@ -399,6 +440,7 @@
                     }
                 });
             });
+
             // Обработчик события для кнопки удаления дополнительного файла
             $(document).on('click', '.deleteFileButton', function() {
                 event.preventDefault();
@@ -468,8 +510,6 @@
                 });
             });
 
-
-
             // Удаление кп
             let deleteItemId;
             // Получаем id КП при открытии модального окна
@@ -497,11 +537,12 @@
                 $('#confirmDeleteKP').modal('hide');
             });
 
-
+            function setEditableCells() {
             // Получаем все ячейки с классом "editable"
             const editableCells = document.querySelectorAll('.editable');
             // Добавляем обработчик событий для каждой ячейки
             editableCells.forEach(cell => {
+                cell.setAttribute('contenteditable', 'true');
                 cell.addEventListener('blur', function() {
                     const id = this.getAttribute('data-id'); // Получаем идентификатор записи
                     const field = this.getAttribute('data-field'); // Получаем название поля
@@ -510,7 +551,7 @@
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}' 
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
                             },
                             body: JSON.stringify({
                                 field: field,
@@ -531,7 +572,7 @@
                         });
                 });
             });
-
+            }
         });
     </script>
 @endsection
