@@ -19,3 +19,4 @@ yarn-error.log
 /.vscode
 .env
 /resources/sass/app.css
+.env
