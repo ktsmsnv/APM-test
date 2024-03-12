@@ -119,7 +119,6 @@
                 initTable($table, data);
                 // Получаем общее количество строк и устанавливаем атрибут data-total-rows
                 var totalRows = data.length;
-                console.log(totalRows);
                 $table.attr('data-total-rows', totalRows);
             });
 
@@ -128,7 +127,6 @@
                 initTable($tableNHRS, data);
                 // Получаем общее количество строк и устанавливаем атрибут data-total-rows
                 var totalRows = data.length;
-                console.log(totalRows);
                 $tableNHRS.attr('data-total-rows', totalRows);
             });
 
@@ -137,7 +135,6 @@
                 initTable($tableEob, data);
                 // Получаем общее количество строк и устанавливаем атрибут data-total-rows
                 var totalRows = data.length;
-                console.log(totalRows);
                 $tableEob.attr('data-total-rows', totalRows);
             });
             // Отправляем AJAX запрос и при получении данных инициализируем вторую таблицу
@@ -145,7 +142,6 @@
                 initTable($tableOther, data);
                 // Получаем общее количество строк и устанавливаем атрибут data-total-rows
                 var totalRows = data.length;
-                console.log(totalRows);
                 $tableOther.attr('data-total-rows', totalRows);
             });
         });

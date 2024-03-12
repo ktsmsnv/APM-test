@@ -316,8 +316,7 @@
                  var itemId = $(this).closest('tr').data('id');
                  var nameRiskToEdit = $(this).closest('tr').find('[data-label="nameRisk_possib"]')
              .text();
-                 console.log(nameRiskToEdit);
-                 console.log(itemId);
+
                  let modal = $('#editBasePossibilities');
                  modal.find('.modal-title').text(`Редактирование возможности "${nameRiskToEdit}"`);
                  modal.data('nameRisk',
@@ -339,7 +338,7 @@
                  url: '/get-base-possibility/' + itemId,
                  type: 'GET',
                  success: function(response) {
-                     console.log(response);
+
                      $(modalIdPossibilities + ' #nameRiskEdit_possib').val(response.nameRisk);
                      $(modalIdPossibilities + ' #termEdit_possib').val(response.term);
 
@@ -410,7 +409,7 @@
              countering_possib: 1,
              measures_possib: 1
          };
-         /* при нажатии на кнопки определяем какой у нас target и взависимости от него добавляет HTML, 
+         /* при нажатии на кнопки определяем какой у нас target и взависимости от него добавляет HTML,
             возвращенный функцией getHtml, в соответствующую секцию */
          $(".addMorePossibilities-button").click(function(event) {
              event.preventDefault();
@@ -469,8 +468,8 @@
              itemIdToDelete = button.data('id');
              nameRisk_Possib_ToDelete = button.closest('tr').find('[data-label="nameRisk_possib"]')
              .text();
-             console.log(itemIdToDelete);
-             console.log(nameRisk_Possib_ToDelete);
+             // console.log(itemIdToDelete);
+             // console.log(nameRisk_Possib_ToDelete);
              let modal = $(this);
              modal.find('.modal-body').text(
                  `Вы уверены, что хотите удалить возможность "${nameRisk_Possib_ToDelete}"?`);

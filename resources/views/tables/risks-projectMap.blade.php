@@ -442,7 +442,7 @@
         }
         // Привязка функции validateAndSubmit к событию клика кнопки отправки
         $('#submitBtn').click(function() {
-            console.log('Button clicked!');
+            // console.log('Button clicked!');
             validateAndSubmit();
         });
 

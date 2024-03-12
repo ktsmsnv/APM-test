@@ -309,8 +309,8 @@
                 event.preventDefault();
                 var itemId = $(this).closest('tr').data('id');
                 var nameRiskToEdit = $(this).closest('tr').find('[data-label="nameRisk"]').text();
-                console.log(nameRiskToEdit);
-                console.log(itemId);
+                // console.log(nameRiskToEdit);
+                // console.log(itemId);
                 let modal = $('#editBaseRisks');
                 modal.find('.modal-title').text(`Редактирование риска "${nameRiskToEdit}"`);
                 modal.data('nameRisk',
@@ -334,7 +334,7 @@
                 url: '/get-base-risk/' + itemId,
                 type: 'GET',
                 success: function(response) {
-                    console.log(response)
+                    // console.log(response)
                     $(modalIdRisks + ' #nameRiskEdit').val(response.nameRisk);
                     $(modalIdRisks + ' #term_Edit').val(response.term);
 
@@ -402,12 +402,12 @@
             countering_risk: 1,
             measures_risk: 1
         };
-        /* при нажатии на кнопки определяем какой у нас target и взависимости от него добавляет HTML, 
+        /* при нажатии на кнопки определяем какой у нас target и взависимости от него добавляет HTML,
            возвращенный функцией getHtml, в соответствующую секцию */
         $(".addMore-button").click(function(event) {
             event.preventDefault();
             const target = $(this).data("target");
-            console.log(`Clicked on ${target} button`);
+            // console.log(`Clicked on ${target} button`);
             $(`#${target}-inputs`).append(getHtml(target, indices[target]));
             indices[target]++;
         });
@@ -459,8 +459,8 @@
             let button = $(event.relatedTarget);
             itemIdToDelete = button.data('id');
             nameRiskToDelete = button.closest('tr').find('[data-label="nameRisk"]').text();
-            console.log(itemIdToDelete);
-            console.log(nameRiskToDelete);
+            // console.log(itemIdToDelete);
+            // console.log(nameRiskToDelete);
             let modal = $(this);
             modal.find('.modal-body').text(
                 `Вы уверены, что хотите удалить риск "${nameRiskToDelete}"?`);

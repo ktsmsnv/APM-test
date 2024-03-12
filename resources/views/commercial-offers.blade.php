@@ -326,7 +326,7 @@
                     url: '/get-kp-details/' + id,
                     type: 'GET',
                     success: function(response) {
-                        console.log(response);
+                        // console.log(response);
                         // Заполнение полей формы данными из ответа
                         $('#numIncomingDisplay').text(response
                             .numIncoming); // Устанавливаем номер проекта
@@ -567,7 +567,7 @@
                             return response.json();
                         })
                         .then(data => {
-                            console.log(data);
+                            // console.log(data);
                         })
                         .catch(error => {
                             console.error('Ошибка:',error);

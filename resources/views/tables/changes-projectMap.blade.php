@@ -157,7 +157,7 @@
     $(document).ready(function() {
         $(document).on('click', '.editChanges', function() {
             let changeId = $(this).data('id');
-            console.log('Change ID:', changeId);
+            // console.log('Change ID:', changeId);
             let projectNum = $(this).closest('tr').find('td:eq(1)').text().trim();
             let contractor = $(this).closest('tr').find('td:eq(2)').text().trim();
             let contractNum = $(this).closest('tr').find('td:eq(3)').text().trim();
@@ -185,7 +185,7 @@
         // Подтверждение удаления
         $(document).on('click', '#confirmDelete_Changes', function() {
             itemIdToDelete = $(this).data('id');
-            console.log('Item ID to delete:', itemIdToDelete);
+            // console.log('Item ID to delete:', itemIdToDelete);
             $.ajax({
                 method: 'GET',
                 url: `/project-maps/changes-delete/${itemIdToDelete}`,
