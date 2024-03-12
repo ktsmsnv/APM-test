@@ -512,7 +512,7 @@
         var total = 0;
         values.each(function() {
             var value = parseFloat($(this).text().replace(',', '.'));
-            console.log('Value:', value, 'Type:', typeof value);
+            // console.log('Value:', value, 'Type:', typeof value);
             if (!isNaN(value)) {
                 total += value;
             }
@@ -641,7 +641,7 @@
         }
         // Привязка функции validateAndSubmit к событию клика кнопки отправки
         $('#submitBtn').click(function() {
-            console.log('Button clicked!');
+            // console.log('Button clicked!');
             validateAndSubmit();
         });
     });

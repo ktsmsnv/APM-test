@@ -457,7 +457,7 @@
             let url = location.href.replace(/\/$/, "");
 
             function loadTabContent(tabId, projectId) {
-                console.log(`Fetching content for tab: ${tabId}, project ID: ${projectId}`);
+                // console.log(`Fetching content for tab: ${tabId}, project ID: ${projectId}`);
                 $.ajax({
                     url: `/tables/${tabId}/${projectId}`, // Use the correct URL with both tabId and projectId
                     type: 'GET',

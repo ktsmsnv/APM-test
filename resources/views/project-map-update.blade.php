@@ -863,7 +863,7 @@
                             _token: '{{ csrf_token() }}'
                         },
                         success: function(response) {
-                            console.log(response); // Для отладки
+                            // console.log(response); // Для отладки
                             if (response.success) {
                                 $(`[data-target=${target}][data-index=${index}][data-id=${id}]`)
                                     .remove(); // Удаляем строку из таблицы
@@ -887,7 +887,7 @@
                             project_id: projectId // Передаем id проекта
                         },
                         success: function(response) {
-                            console.log(response); // Для отладки
+                            // console.log(response); // Для отладки
                             if (response.success) {
                                 $(`[data-target=${target}][data-index=${index}][data-id=${id}]`).remove();
                             } else {

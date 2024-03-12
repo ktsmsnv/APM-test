@@ -222,7 +222,7 @@
             $('#projNumSuf').change(function() {
                 var selectedGroup = $('datalist#projNumbs option[value="' + $(this).val() + '"]').data(
                     'group');
-                console.log(selectedGroup);
+
 
                 // Очищаем текущий список руководителей
                 $('#projManager').empty();

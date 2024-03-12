@@ -43,7 +43,7 @@ class ProjectController extends Controller
 
     function getProjectIdByVnNum($vnNum) {
         $project = DB::table('projects')->where('projNum', $vnNum)->first();
-        return $project ? $project->id : null;
+//        return $project ? $project->id : null;
     }
 
 

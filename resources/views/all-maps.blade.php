@@ -53,7 +53,7 @@
                         response); // Обновляем контейнер с результатами поиска
                     },
                     error: function(error) {
-                        console.log(error);
+
                     }
                 });
             });
@@ -77,7 +77,7 @@
                         response); // Обновляем контейнер с результатами поиска
                     },
                     error: function(error) {
-                        console.log(error);
+
                     }
                 });
             });

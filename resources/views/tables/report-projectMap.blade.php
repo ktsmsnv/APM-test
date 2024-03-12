@@ -320,7 +320,7 @@
 				data-bs-target="#reportChange">Редактировать</button>
 			{{-- <form action="{{ route('report-delete', $project->id) }}" method="post">
 					@csrf
-					@method('delete') 
+					@method('delete')
 					<button type="submit" class="btn btn-danger">Удалить</button>
 				</form> --}}
 		</div>
@@ -838,19 +838,19 @@
 			$('.deleteTeam_Btn').click(function() {
 				event.preventDefault();
 				var rowId = $(this).data('id');
-				var rowToDelete = $(this).closest('tr'); 
+				var rowToDelete = $(this).closest('tr');
 
 				$.ajax({
 					url: "{{ route('deleteRow', ['id' => '__id__']) }}".replace('__id__', rowId),
 					method: "DELETE",
 					headers: {
-								'X-CSRF-TOKEN': '{{ csrf_token() }}' 
+								'X-CSRF-TOKEN': '{{ csrf_token() }}'
 							},
 					data: {
 						id: rowId
 					},
 					success: function(response) {
-						console.log(response);
+						// console.log(response);
 						rowToDelete.remove();
 					},
 					error: function(xhr, status, error) {
