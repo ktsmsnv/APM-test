@@ -90,6 +90,10 @@
                         <a href="{{ route('project-maps') }}"
                            class="nav-link @if (Request::is('project-maps/all')) active @endif">Карты проекта</a>
                     </li>
+                    <li class="nav-item">
+                        <a href="{{ route('contractStorage') }}"
+                           class="nav-link @if (Request::is('contractStorage')) active @endif">Хранилище договоров</a>
+                    </li>
                 </ul>
                 <div class="d-flex align-items-center gap-4">
                     @guest

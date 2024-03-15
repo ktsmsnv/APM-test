@@ -54,6 +54,20 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/project-maps/all/{id}/changes-update', 'App\Http\Controllers\ProjectController@updateChangesSubmit')->name('changes-update-submit');
 
 
+    // Хранилище договоров
+    Route::get('/contract-storage', 'App\Http\Controllers\ContractStorageController@index')->name('contractStorage');
+    Route::post('/contract-storage/store', 'App\Http\Controllers\ContractStorageController@contractStorageStore')->name('uploadContracts');
+    Route::get('/download-cs-additional/{id}', 'App\Http\Controllers\ContractStorageController@downloadCSAdditional')->name('download-csAdditional');
+    Route::delete('/delete-cs/{id}', 'App\Http\Controllers\ContractStorageController@deleteCS')->name('delete-cs');
+
+    Route::get('/get-cs-details/{id}', 'App\Http\Controllers\ContractStorageController@getCSDetails')->name('get-cs-details');
+    Route::put('/contract-storage/additional-files/{id}', 'App\Http\Controllers\ContractStorageController@updateAdditionalFile')->name('updateAdditionalFile');
+
+    Route::put('/contract-storage/{id}', 'App\Http\Controllers\ContractStorageController@update')->name('cs-update');
+    Route::delete('/delete-cs-additionalfile/{id}', 'App\Http\Controllers\ContractStorageController@deleteAdditionalFile');
+
+
+
 
     //удаление карты проекта (НЕАКТУАЛЬНО)
     Route::get('/project-maps/all/{id}/delete', 'App\Http\Controllers\ProjectController@deleteMessage')->name('project-map-delete');
